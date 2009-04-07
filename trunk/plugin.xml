@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+<!--   <extension
+         id="annotation"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="utcn.annotation.Main">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="Perspective"
+            class="utcn.annotation.Perspective"
+            id="Plugin.perspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            name="View"
+            class="utcn.annotation.View"
+            id="Plugin.view">
+      </view>
+   </extension>-->
+<extension
+  point="org.eclipse.team.ui.synchronizeParticipants">
+  <participant
+      persistent="false"
+      icon="k.gif"
+      class="ivc.sync.LocalSubscriber"
+      name="Latest From Local History"
+      id="sync.LocalSubscriber"/>
+</extension>
+
+<extension
+  point="org.eclipse.team.ui.synchronizeWizards">
+  <wizard
+    class="ivc.sync.Wizard"
+    icon="k.gif"
+    description="Synchronize resources with their previous contents in the local history"
+    name="Synchronize with Latest From Local History"
+    id="sync.Wizard"/>
+</extension>
+
+</plugin>
