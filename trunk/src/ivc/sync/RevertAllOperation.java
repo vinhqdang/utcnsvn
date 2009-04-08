@@ -22,7 +22,7 @@ public class RevertAllOperation extends SynchronizeModelOperation {
 		final SyncInfo infos[] = getSyncInfoSet().getSyncInfos();
 		if(infos.length == 0) return;
 			
-//		 operation= new WorkspaceModifyOperation() {
+//		  operation= new WorkspaceModifyOperation() {
 //			public void execute(IProgressMonitor pm) throws InvocationTargetException {
 //				try {
 //					pm.beginTask("Reverting from local history", 100 * infos.length);	 //$NON-NLS-1$

@@ -21,13 +21,14 @@ import org.eclipse.team.core.variants.IResourceVariant;
 import org.eclipse.team.ui.synchronize.AbstractSynchronizeParticipant;
 import org.eclipse.team.ui.synchronize.ISynchronizeModelElement;
 import org.eclipse.team.ui.synchronize.ISynchronizePageConfiguration;
+import org.eclipse.team.ui.synchronize.SubscriberParticipant;
 import org.eclipse.team.ui.synchronize.SynchronizeModelAction;
 import org.eclipse.team.ui.synchronize.SynchronizeModelOperation;
 import org.eclipse.team.ui.synchronize.SynchronizePageActionGroup;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IPageBookViewPage;
 
-public class LocalSubscriber extends AbstractSynchronizeParticipant {
+public class LocalSubscriber extends SubscriberParticipant {
 	
 	public IResource[] members(IResource resource) throws TeamException {
 		try {
@@ -127,12 +128,7 @@ public class LocalSubscriber extends AbstractSynchronizeParticipant {
 	public void dispose() {
 		// TODO Auto-generated method stub
 
-	}
-
-	public IPageBookViewPage createPage(ISynchronizePageConfiguration arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	}	
 
 	public void run(IWorkbenchPart arg0) {
 		// TODO Auto-generated method stub
