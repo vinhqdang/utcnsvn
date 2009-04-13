@@ -1,9 +1,11 @@
 package data;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class File {
 	
+	private UUID fileID;
 	private String path;
 	private Long creatorID;
 	private Date creationTime;
@@ -43,6 +45,20 @@ public class File {
 
 	public void setProjectID(Long projectID) {
 		this.projectID = projectID;
+	}
+
+	/**
+	 * @return the fileID
+	 */
+	public UUID getFileID() {
+		return fileID;
+	}
+
+	/**
+	 * @param fileID the fileID to set
+	 */
+	public void setFileID(UUID fileID) {
+		this.fileID = fileID;
 	}
 	
 	
