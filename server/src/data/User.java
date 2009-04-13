@@ -1,19 +1,21 @@
 package data;
 
+import java.util.UUID;
+
 public class User {
 	
-	private Long userID;
+	private UUID userID;
 	private String userName;
 	
 	public User() {
 		super();
 	}
 
-	public Long getUserID() {
+	public UUID getUserID() {
 		return userID;
 	}
 
-	public void setUserID(Long userID) {
+	public void setUserID(UUID userID) {
 		this.userID = userID;
 	}
 
