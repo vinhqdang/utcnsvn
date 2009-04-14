@@ -21,7 +21,6 @@ import org.eclipse.team.ui.synchronize.ISynchronizeScope;
 import org.eclipse.team.ui.synchronize.ISynchronizeView;
 import org.eclipse.team.ui.synchronize.SubscriberParticipant;
 import org.eclipse.team.ui.synchronize.SubscriberParticipantWizard;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 public class Wizard extends org.eclipse.jface.wizard.Wizard {
