@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+	<extension
+      point="org.eclipse.ui.startup">
+	</extension>
+	
+	<extension point="org.eclipse.core.runtime.preferences">
+   		<initializer class="org.tigris.subversion.subclipse.core.PreferenceInitializer"/>
+   	</extension>
+   	   
+   	<extension
+         point="org.eclipse.team.core.ignore">
+      <ignore
+            enabled="true"
+            pattern=".svn">
+      </ignore>
+      <ignore
+            enabled="true"
+            pattern="_svn">
+      </ignore>
+   </extension>
+<!--   <extension
+         id="annotation"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="utcn.annotation.Main">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="Perspective"
+            class="utcn.annotation.Perspective"
+            id="Plugin.perspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            name="View"
+            class="utcn.annotation.View"
+            id="Plugin.view">
+      </view>
+   </extension>-->
+   <extension    point="org.eclipse.team.core.repository">     
+    	<repository            
+    		class="ivc.plugin.Reprovider"            
+    			id="ivc.reprovider"
+    			metaFilePaths=".ass,.project" >
+    	</repository>
+    
+    </extension>
+    <extension
+      point="org.eclipse.team.ui.configurationWizards">
+</extension>
+
+<extension point="org.eclipse.ui.decorators"> 
+	<decorator 
+	    id="ivc.fireworks.decorator.Decorator" 
+	    label="Decorator Example" 
+	    state="false" 
+	    class= "ivc.fireworks.decorator.Decorator" 
+	  objectClass="org.eclipse.core.resources.IResource" 
+	    adaptable="true"> 
+	    <description> 
+	      This is an example to illustrate the use of decorators 
+	    </description> 
+	</decorator> 
+</extension>
+
+</plugin>
