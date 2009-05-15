@@ -26,6 +26,8 @@ public class ProjectsManager {
 		}
 		return instance;
 	}
+	
+	
 
 	public void findProjects() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -43,11 +45,11 @@ public class ProjectsManager {
 		IFolder folder = project.getFolder(".ivc");
 
 		if (folder.exists()) {
-			
+
 			if (!projects.contains(project)) {
 				System.out.println("found " + project.getName());
 				projects.add(project);
-				List<IResource> list=new ArrayList<IResource>();
+				List<IResource> list = new ArrayList<IResource>();
 				list.add(project);
 				Decorator.getDecorator().refresh(list);
 			}
