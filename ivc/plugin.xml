@@ -30,10 +30,25 @@
 		<wizard
 			name="IVCSharing"
 			icon="icons/full/wizards/newconnect_wiz.png"	
-			class="ivc.repository.IVCSharingWizard"
+			class="ivc.wizards.NewMergeFileAssociationWizard"
 			id="ivc.repository.IVCSharingWizard">
 		</wizard>
 	</extension>
+	<extension
+     point="org.eclipse.ui.decorators">
+  <decorator
+        objectClass="org.eclipse.core.resources.IResource"
+        adaptable="true"
+        label="Decor"
+        state="false"
+        class="org.eclipse.team.internal.ccvs.ui.CVSDecorator"
+        id="org.eclipse.team.cvs.ui.decorator">
+     <description>
+       Weird decoraors
+     </description>
+  </decorator>
+</extension>
+	
 
 
 
