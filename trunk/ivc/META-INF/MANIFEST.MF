@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Plugin Plug-in
 Bundle-SymbolicName: Plugin; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-Activator: ivc.plugin.Activator
+Bundle-Activator: ivc.plugin.IVCPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jface,
  org.eclipse.ui,

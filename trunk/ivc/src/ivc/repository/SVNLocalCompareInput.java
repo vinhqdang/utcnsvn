@@ -10,12 +10,10 @@
  ******************************************************************************/
 package ivc.repository;
 
-
-import ivc.plugin.Activator;
+import ivc.resource.IVCException;
 import ivc.util.Utilities;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -41,78 +39,84 @@ import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 /**
- * A compare input for comparing local resource with its remote revision
- * Perform textual check on:
- * - any local modification
- * - revision numbers don't match
+ * A compare input for comparing local resource with its remote revision Perform
+ * textual check on: - any local modification - revision numbers don't match
  */
 public class SVNLocalCompareInput extends CompareEditorInput implements ISaveableWorkbenchPart {
-    //private final SVNRevision remoteRevision;
+	// private final SVNRevision remoteRevision;
 	private IResource resource;
 	private Shell shell;
-	private final IResource remoteResource; // the remote resource to compare to or null if it does not exist
+	private final IResource remoteResource; // the remote resource to compare to
+	// or null if it does not exist
 	private boolean readOnly;
-	
-    /**
-     * Differencer that only uses teh status to determine if a file has changed
-     */
-    class StatusAwareDifferencer extends Differencer {
-        
-        /* (non-Javadoc)
-         * @see org.eclipse.compare.structuremergeviewer.Differencer#contentsEqual(java.lang.Object, java.lang.Object)
-         */
-        protected boolean contentsEqual(Object left, Object right) {
-            IResource local = null;
-            
-            if (left instanceof SVNLocalCompareInput.SVNLocalResourceNode) {
-                local = ((SVNLocalCompareInput.SVNLocalResourceNode)left).getResource();
-            }
-            
-            if (local == null || right == null) {
-                return false;
-            }
-            
-//            try {
-//                //if (!local.isManaged()) {
-//                    return false;
-//                }
-//                //return !(local.isDirty());
-//            } catch (SVNException e) {
-//            }
-            
-            return super.contentsEqual(left, right);
-        }
-    }
-    
+
 	/**
-	 * Node representing a local SVN file.  We can query the status of the resource to determine if
-     * it has changed.  It is also used to write the contents back to the file when setContent is called.
+	 * Differencer that only uses teh status to determine if a file has changed
+	 */
+	class StatusAwareDifferencer extends Differencer {
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.compare.structuremergeviewer.Differencer#contentsEqual
+		 * (java.lang.Object, java.lang.Object)
+		 */
+		protected boolean contentsEqual(Object left, Object right) {
+			IResource local = null;
+
+			if (left instanceof SVNLocalCompareInput.SVNLocalResourceNode) {
+				local = ((SVNLocalCompareInput.SVNLocalResourceNode) left).getResource();
+			}
+
+			if (local == null || right == null) {
+				return false;
+			}
+
+			// try {
+			// //if (!local.isManaged()) {
+			// return false;
+			// }
+			// //return !(local.isDirty());
+			// } catch (SVNException e) {
+			// }
+
+			return super.contentsEqual(left, right);
+		}
+	}
+
+	/**
+	 * Node representing a local SVN file. We can query the status of the
+	 * resource to determine if it has changed. It is also used to write the
+	 * contents back to the file when setContent is called.
 	 */
 	class SVNLocalResourceNode extends ResourceNode {
-		
+
 		private final IResource svnResource;
 		private ArrayList fChildren = null;
-        
-        public SVNLocalResourceNode(IResource svnResource) {
+
+		public SVNLocalResourceNode(IResource svnResource) {
 			super(svnResource);
-            this.svnResource = svnResource;
+			this.svnResource = svnResource;
 		}
+
 		protected InputStream createStream() throws CoreException {
-			return ((IFile)getResource()).getContents();
+			return ((IFile) getResource()).getContents();
 		}
-		
-        public IResource getLocalResource() {
-            return svnResource;
-        }
-        
+
+		public IResource getLocalResource() {
+			return svnResource;
+		}
+
 		// used by getContentsAction
 		public void setContent(byte[] contents) {
-			if (contents == null) contents = new byte[0];
+			if (contents == null)
+				contents = new byte[0];
 			final InputStream is = new ByteArrayInputStream(contents);
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException  {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException {
 					try {
-						IFile file = (IFile)getResource();
+						IFile file = (IFile) getResource();
 						if (is != null) {
 							if (!file.exists()) {
 								file.create(is, false, monitor);
@@ -137,194 +141,226 @@ public class SVNLocalCompareInput extends CompareEditorInput implements ISaveabl
 			}
 			fireContentChanged();
 		}
-		
-//        public Object[] getChildren() {
-//            if (fChildren == null) {
-//                fChildren= new ArrayList();
-//                
-//                if (svnResource instanceof ISVNLocalFolder) {
-//                    try {
-//                        IResource[] members = (ISVNLocalResource[])((ISVNLocalFolder)svnResource).members(null, ISVNFolder.ALL_EXISTING_UNIGNORED_MEMBERS);
-//                        for (int i= 0; i < members.length; i++) {
-//                            IStructureComparator child= createChild(members[i]);
-//                            if (child != null)
-//                                fChildren.add(child);
-//                        }
-//                    } catch (CoreException ex) {
-//                        // NeedWork
-//                    }
-//                }
-//            }
-//            return fChildren.toArray();
-//        }
-        
-		/* (non-Javadoc)
-		 * @see org.eclipse.compare.ResourceNode#createChild(org.eclipse.core.resources.IResource)
+
+		// public Object[] getChildren() {
+		// if (fChildren == null) {
+		// fChildren= new ArrayList();
+		//                
+		// if (svnResource instanceof ISVNLocalFolder) {
+		// try {
+		// IResource[] members =
+		// (ISVNLocalResource[])((ISVNLocalFolder)svnResource).members(null,
+		// ISVNFolder.ALL_EXISTING_UNIGNORED_MEMBERS);
+		// for (int i= 0; i < members.length; i++) {
+		// IStructureComparator child= createChild(members[i]);
+		// if (child != null)
+		// fChildren.add(child);
+		// }
+		// } catch (CoreException ex) {
+		// // NeedWork
+		// }
+		// }
+		// }
+		// return fChildren.toArray();
+		// }
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.compare.ResourceNode#createChild(org.eclipse.core.resources
+		 * .IResource)
 		 */
 		protected IStructureComparator createChild(IResource child) {
 			return new SVNLocalResourceNode(child);
 		}
-		
+
 		public ITypedElement replace(ITypedElement child, ITypedElement other) {
 			return null;
 		}
 	}
-	
+
 	/**
-	 * @throws SVNException
-	 * creates a SVNLocalCompareInput, allows setting whether the current local resource is read only or not.
+	 * @throws IVCException
+	 *             creates a SVNLocalCompareInput, allows setting whether the
+	 *             current local resource is read only or not.
 	 */
-	public SVNLocalCompareInput(IResource resource,  boolean readOnly) throws Exception {
+	public SVNLocalCompareInput(IResource resource, boolean readOnly) throws Exception {
 		super(new CompareConfiguration());
-        //this.remoteRevision = revision;
-        this.readOnly = readOnly;
-        this.resource = resource;
+		// this.remoteRevision = revision;
+		this.readOnly = readOnly;
+		this.resource = resource;
 		// SVNRevision can be any valid revision : BASE, HEAD, number ...
-		//todo check
-        this.remoteResource = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path("d:\\Temp\\test.txt"));
-        
-        // remoteResouce can be null if there is no corresponding remote resource
-        // (for example no base because resource has just been added)
+		// todo check
+		this.remoteResource = ResourcesPlugin.getWorkspace().getRoot().getFile(
+				new Path("d:\\Temp\\test.txt"));
+
+		// remoteResouce can be null if there is no corresponding remote
+		// resource
+		// (for example no base because resource has just been added)
 	}
 
 	/**
-	 * Constructor which allows 
-	 * @throws SVNException
-	 * creates a SVNLocalCompareInput, defaultin to read/write.  
+	 * Constructor which allows
+	 * 
+	 * @throws IVCException
+	 *             creates a SVNLocalCompareInput, defaultin to read/write.
 	 */
 	public SVNLocalCompareInput(IResource resource) throws Exception {
 		this(resource, false);
 	}
 
 	/**
-	 * @throws SVNException
-	 * creates a SVNCompareRevisionsInput  
+	 * @throws IVCException
+	 *             creates a SVNCompareRevisionsInput
 	 */
 	public SVNLocalCompareInput(IResource resource, IResource remoteResource) throws Exception {
 		super(new CompareConfiguration());
 		this.resource = resource;
 		this.remoteResource = remoteResource;
-        //this.remoteRevision = remoteResource.getRevision();
+		// this.remoteRevision = remoteResource.getRevision();
 	}
-	
-	
+
 	/**
 	 * initialize the labels : the title, the lft label and the right one
 	 */
 	private void initLabels() {
 		CompareConfiguration cc = getCompareConfiguration();
-		String resourceName = resource.getName();	
+		String resourceName = resource.getName();
 		setTitle("Bossy"); //$NON-NLS-1$
-		cc.setLeftEditable(! readOnly);
+		cc.setLeftEditable(!readOnly);
 		cc.setRightEditable(false);
-		
+
 		String leftLabel = "hole"; //$NON-NLS-1$
 		cc.setLeftLabel(leftLabel);
 		String rightLabel = "SVNCompareRevisionsInput.repository"; //$NON-NLS-1$
 		cc.setRightLabel(rightLabel);
 	}
-	
+
 	/**
 	 * Runs the compare operation and returns the compare result.
 	 */
-	protected Object prepareInput(IProgressMonitor monitor){
+	protected Object prepareInput(IProgressMonitor monitor) {
 		initLabels();
-		ITypedElement left = new SVNLocalResourceNode(resource);
-		//ResourceEditionNode right = new ResourceEditionNode(remoteResource);
-		//if(left.getType()==ITypedElement.FOLDER_TYPE){
-		//	right.setLocalResource((SVNLocalResourceNode) left);
-		//}
+		IResource left = resource;
+		// ResourceEditionNode right = new ResourceEditionNode(remoteResource);
+		// if(left.getType()==ITypedElement.FOLDER_TYPE){
+		// right.setLocalResource((SVNLocalResourceNode) left);
+		// }
 
-		IResource right=ResourcesPlugin.getWorkspace().getRoot().getFile(new Path("d:\\Temp\\test.txt"));
+		IResource right = ResourcesPlugin.getWorkspace().getRoot().getFile(
+				new Path("d:\\Temp\\test.txt"));
 		String localCharset = Utilities.getCharset(resource);
-		
-        
-        return new RevisionAwareDifferencer ().findDifferences(false, monitor,null,null,left,right);
+
+		return new Differencer().findDifferences(false, monitor, null, null, left, right);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.ISaveablePart#doSave(org.eclipse.core.runtime.IProgressMonitor)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.ISaveablePart#doSave(org.eclipse.core.runtime.IProgressMonitor
+	 * )
 	 */
 	public void doSave(IProgressMonitor monitor) {
 		try {
 			saveChanges(monitor);
 		} catch (CoreException e) {
-			//Utils.handle(e);
+			// Utils.handle(e);
 			System.out.println("DoSave Exception");
 		}
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.ISaveablePart#doSaveAs()
 	 */
 	public void doSaveAs() {
 		// noop
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.ISaveablePart#isDirty()
 	 */
 	public boolean isDirty() {
 		return isSaveNeeded();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.ISaveablePart#isSaveAsAllowed()
 	 */
 	public boolean isSaveAsAllowed() {
 		return false;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.ISaveablePart#isSaveOnCloseNeeded()
 	 */
 	public boolean isSaveOnCloseNeeded() {
 		return true;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPart#addPropertyListener(org.eclipse.ui.IPropertyListener)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.ui.IWorkbenchPart#addPropertyListener(org.eclipse.ui.
+	 * IPropertyListener)
 	 */
 	public void addPropertyListener(IPropertyListener listener) {
-		
+
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets
+	 * .Composite)
 	 */
 	public void createPartControl(Composite parent) {
 		createContents(parent);
 	}
-	
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IWorkbenchPart#dispose()
 	 */
 	public void dispose() {
 	}
-	
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IWorkbenchPart#getSite()
 	 */
 	public IWorkbenchPartSite getSite() {
 		return null;
 	}
-	
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IWorkbenchPart#getTitleToolTip()
 	 */
 	public String getTitleToolTip() {
 		return null;
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPart#removePropertyListener(org.eclipse.ui.IPropertyListener)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.ui.IWorkbenchPart#removePropertyListener(org.eclipse.ui.
+	 * IPropertyListener)
 	 */
 	public void removePropertyListener(IPropertyListener listener) {
 	}
-    
+
 }

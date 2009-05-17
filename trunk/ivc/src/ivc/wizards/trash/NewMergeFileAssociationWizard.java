@@ -1,4 +1,4 @@
-package ivc.wizards;
+package ivc.wizards.trash;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.wizard.Wizard;

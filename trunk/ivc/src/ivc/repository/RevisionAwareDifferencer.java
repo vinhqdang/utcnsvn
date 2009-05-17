@@ -24,23 +24,23 @@ public final class RevisionAwareDifferencer extends Differencer {
 	/**
 	 * compare two ResourceEditionNode
 	 */
-	protected boolean contentsEqual(Object input1, Object input2) {
-		int compare;
-
-		if (input1 instanceof SVNLocalCompareInput.SVNLocalResourceNode) {
-			compare = compareStatusAndRevisions(input1, input2);
-		} else {
-			compare = compareEditions(input1, input2);
-		}
-		if (compare == NODE_EQUAL) {
-			return true;
-		}
-		if (compare == NODE_NOT_EQUAL) {
-			return false;
-		}
-		// revert to slow content comparison
-		return super.contentsEqual(input1, input2);
-	}
+//	protected boolean contentsEqual(Object input1, Object input2) {
+//		int compare;
+//
+//		if (input1 instanceof SVNLocalCompareInput.SVNLocalResourceNode) {
+//			compare = compareStatusAndRevisions(input1, input2);
+//		} else {
+//			compare = compareEditions(input1, input2);
+//		}
+//		if (compare == NODE_EQUAL) {
+//			return true;
+//		}
+//		if (compare == NODE_NOT_EQUAL) {
+//			return false;
+//		}
+//		// revert to slow content comparison
+//		return super.contentsEqual(input1, input2);
+//	}
 
 	/**
 	 * Called for every leaf or node compare to update progress information.

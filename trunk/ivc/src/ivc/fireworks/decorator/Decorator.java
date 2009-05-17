@@ -1,6 +1,7 @@
 package ivc.fireworks.decorator;
 
-import ivc.plugin.Activator;
+
+import ivc.plugin.IVCPlugin;
 
 import java.util.List;
 import java.util.Vector;
@@ -45,7 +46,7 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 
 		// get the decorator manager(which manages the decorators contributed
 		// via the decorators extension point)
-		IDecoratorManager decoratorManager = Activator.getDefault()
+		IDecoratorManager decoratorManager = IVCPlugin.getDefault()
 				.getWorkbench().getDecoratorManager();
 
 		// if the decorator manager is enabled

@@ -1,4 +1,4 @@
-package ivc.wizards;
+package ivc.wizards.trash;
 
 import java.util.ArrayList;
 import java.util.HashMap;
