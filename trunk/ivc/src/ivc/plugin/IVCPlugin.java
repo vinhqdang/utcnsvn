@@ -7,6 +7,7 @@ import ivc.fireworks.decorator.Decorator;
 import ivc.listeners.ResourceChangedListener;
 import ivc.manager.ProjectsManager;
 import ivc.repository.SVNLocalCompareInput;
+import ivc.util.ConnectionManager;
 
 import org.eclipse.compare.CompareUI;
 import org.eclipse.core.resources.IFolder;
