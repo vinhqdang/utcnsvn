@@ -1,8 +1,11 @@
 package ivc.plugin;
 
+import java.rmi.RMISecurityManager;
+
 import ivc.fireworks.decorator.Decorator;
 import ivc.listeners.ResourceChangedListener;
 import ivc.manager.ProjectsManager;
+import ivc.util.ConnectionManager;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -38,13 +41,15 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		ResourceChangedListener changeListener = new ResourceChangedListener();
 		workspace.addResourceChangeListener(changeListener);
 		Decorator.enableDecoration=true;
-		ProjectsManager.instance().findProjects();
+		ProjectsManager.instance().findProjects();	
+	
 		
+		ConnectionManager.getInstance().initiateConnections();
+	
 	}
 
 	/*

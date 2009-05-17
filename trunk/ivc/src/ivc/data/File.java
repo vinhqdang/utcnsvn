@@ -10,6 +10,9 @@ public class File {
 	private Long creatorID;
 	private Date creationTime;
 	private Long projectID;
+	
+	private StringBuffer content;
+	private TransformationHistory history; 
 		
 	public File() {
 		super();
@@ -59,6 +62,34 @@ public class File {
 	 */
 	public void setFileID(UUID fileID) {
 		this.fileID = fileID;
+	}
+
+	/**
+	 * @return the content
+	 */
+	public StringBuffer getContent() {
+		return content;
+	}
+
+	/**
+	 * @param content the content to set
+	 */
+	public void setContent(StringBuffer content) {
+		this.content = content;
+	}
+
+	/**
+	 * @return the history
+	 */
+	public TransformationHistory getHistory() {
+		return history;
+	}
+
+	/**
+	 * @param history the history to set
+	 */
+	public void setHistory(TransformationHistory history) {
+		this.history = history;
 	}
 	
 	

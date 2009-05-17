@@ -1,6 +1,5 @@
 package ivc.data.exception;
 
-import ivc.config.HTMLLogger;
 
 public class ServerException extends Exception {
 
@@ -22,7 +21,7 @@ public class ServerException extends Exception {
 		for (StackTraceElement stackTraceElement : els) {
 			stackStraceStr += "\n"+stackTraceElement.toString();
 		}
-		HTMLLogger.error(stackStraceStr);
+//		HTMLLogger.error(stackStraceStr);
 	}
 
 	
