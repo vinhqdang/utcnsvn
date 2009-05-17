@@ -1,11 +1,12 @@
 package ivc.rmi;
 
-import ivc.command.CommandArgs;
 import ivc.data.Result;
 import ivc.data.Transformation;
+import ivc.data.command.CommandArgs;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 public interface ServerIntf extends Remote {
 	
@@ -46,6 +47,27 @@ public interface ServerIntf extends Remote {
 	 * @throws RemoteException
 	 */
 	public Result sendTransformation(Transformation transformation) throws RemoteException;
+	
+	
+	/**
+	 * Connects to a new host
+	 * 
+	 * @param hostName
+	 * @return
+	 * @throws RemoteException
+	 */
+	public Result connectToPeer(String hostAddress) throws RemoteException;
+	
+	/**
+	 * 
+	 * @return List of hostNames this workspace is connected to
+	 * @throws RemoteException
+	 */
+	public List<String> getPeers() throws RemoteException;
+	
+	
+	
+	
 	
 	
 }
