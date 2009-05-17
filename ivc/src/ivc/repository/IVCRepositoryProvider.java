@@ -1,6 +1,6 @@
 package ivc.repository;
 
-import ivc.plugin.Activator;
+import ivc.plugin.IVCPlugin;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
@@ -24,9 +24,8 @@ public class IVCRepositoryProvider extends RepositoryProvider {
 			project.accept(new IResourceVisitor() {
 				public boolean visit(IResource resource) throws CoreException {
 					if ((resource.getType() == IResource.FOLDER)
-							&& (resource.getName().equals(Activator
-									.getDefault().getAdminDirectoryName()))
-							&& (!resource.isTeamPrivateMember())) {
+							&& (resource.getName().equals(IVCPlugin.getDefault()
+									.getAdminDirectoryName())) && (!resource.isTeamPrivateMember())) {
 						resource.setTeamPrivateMember(true);
 						return false;
 					} else {

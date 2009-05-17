@@ -1,4 +1,4 @@
-package ivc.wizards;
+package ivc.wizards.trash;
 
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;

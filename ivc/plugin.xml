@@ -28,32 +28,45 @@
 	<extension
 		point="org.eclipse.team.ui.configurationWizards">
 		<wizard
-			name="IVCSharing"
-			icon="icons/full/wizards/newconnect_wiz.png"	
-			class="ivc.wizards.NewMergeFileAssociationWizard"
-			id="ivc.repository.IVCSharingWizard">
+			name="IVC"
+			icon="share_icon.png"	
+			class="ivc.wizards.sharing.SharingWizard"
+			id="ivc.wizards.sharing.SharingWizard">
 		</wizard>
 	</extension>
-	<extension
-     point="org.eclipse.ui.decorators">
-  <decorator
-        objectClass="org.eclipse.core.resources.IResource"
-        adaptable="true"
-        label="Decor"
-        state="false"
-        class="org.eclipse.team.internal.ccvs.ui.CVSDecorator"
-        id="org.eclipse.team.cvs.ui.decorator">
-     <description>
-       Weird decoraors
-     </description>
-  </decorator>
-</extension>
+	
+	
+	<extension point="org.eclipse.ui.actionSets">
+	    <actionSet
+	            id="ivc.actionSets"
+	            label="TestL"
+	            visible="true">
+	         <action
+	               class="ivc.fireworks.actions.CompareEditorAction"
+	               id="ivc.fireworks.actions.compare"
+	               label="Compare"
+	               menubarPath="visible">
+	         </action>
+	      </actionSet>
+    </extension>
+    
+	<extension point="org.eclipse.ui.decorators">
+			<decorator
+			        objectClass="org.eclipse.core.resources.IResource"
+			        adaptable="true"
+			        label="Decor"
+			        state="false"
+			        class="org.eclipse.team.internal.ccvs.ui.CVSDecorator"
+			        id="org.eclipse.team.cvs.ui.decorator">
+			     <description>
+			       Weird decoraors
+			     </description>
+			</decorator>
+	</extension>
+	
 	
 
 
-
-	<extension	point="org.eclipse.team.ui.configurationWizards">
-	</extension>
 
 	<extension point="org.eclipse.ui.decorators"> 
 		<decorator 
