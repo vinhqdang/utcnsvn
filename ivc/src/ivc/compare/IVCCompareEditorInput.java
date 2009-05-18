@@ -26,7 +26,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISaveablesSource;
 import org.eclipse.ui.Saveable;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class IVCCompareEditorInput extends CompareEditorInput {
 	ResourceEditionNode left;
@@ -122,7 +121,6 @@ class ResourceElement implements ITypedElement, IEncodedStreamContentAccessor, I
 	public void setContent(byte[] newContent) {
 		
 			
-	throw new NotImplementedException();			
 	}
 
 	@Override

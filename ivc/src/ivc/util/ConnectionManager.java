@@ -7,6 +7,7 @@ import ivc.data.exception.ServerException;
 import ivc.rmi.ServerImpl;
 import ivc.rmi.ServerIntf;
 
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
@@ -24,7 +25,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class ConnectionManager {
+public class ConnectionManager implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private static ConnectionManager manager;
 
@@ -77,7 +83,10 @@ public class ConnectionManager {
 		try {
 			ServerImpl server = new ServerImpl();			
 			  // create registry
-	        LocateRegistry.createRegistry(1099);  
+	        LocateRegistry.createRegistry(1099);
+//	        
+//	        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+	        System.setSecurityManager(new IVCSecurityManager());
 			try {				
 				
 				 Naming.rebind("rmi://" +  getHostAddress() + ":"+ 1099 + "/" + "server_ivc", server);

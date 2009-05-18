@@ -36,7 +36,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.team.core.TeamException;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * A class for comparing ISVNRemoteResource objects
@@ -234,7 +233,6 @@ public class ResourceEditionNode implements ITypedElement, IStreamContentAccesso
 
 	@Override
 	public void setContent(byte[] arg0) {
-		throw new NotImplementedException();
 
 	}
 }
