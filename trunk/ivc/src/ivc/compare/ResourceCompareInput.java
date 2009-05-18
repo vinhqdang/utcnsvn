@@ -481,7 +481,6 @@ public abstract class ResourceCompareInput extends CompareEditorInput {
 //				listeners[i].contentChanged(this);
 //			}
 //		}
-//
 //	}
 //
 //	protected class ResourceCompareViewer extends DiffTreeViewer {

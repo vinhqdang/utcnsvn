@@ -1,29 +1,19 @@
 package ivc.plugin;
 
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-
 import ivc.fireworks.decorator.Decorator;
 import ivc.listeners.ResourceChangedListener;
 import ivc.manager.ProjectsManager;
-import ivc.repository.SVNLocalCompareInput;
-import ivc.util.ConnectionManager;
 
-import org.eclipse.compare.CompareUI;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.internal.UIPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -64,7 +54,7 @@ public class IVCPlugin extends AbstractUIPlugin {
 		ProjectsManager.instance().findProjects();	
 	
 		
-		ConnectionManager.getInstance().initiateConnections();
+//		ConnectionManager.getInstance().initiateConnections();
 	
 	}
 
