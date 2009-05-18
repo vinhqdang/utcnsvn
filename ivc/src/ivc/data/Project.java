@@ -4,25 +4,30 @@ import java.util.Date;
 
 public class Project {
 
-	private Long id;
 	private String name;
+	private String path;
 	private Date createdOn;
 	
 	public Project (){
 		super();
 	}
 	
-	public Project(Long id, String name) {		
-		this.id = id;
+	public Project( String name) {		
 		this.name = name;
 	}
 
-	public Long getId() {
-		return id;
+	/**
+	 * @return the path
+	 */
+	public String getPath() {
+		return path;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	/**
+	 * @param path the path to set
+	 */
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	public String getName() {
