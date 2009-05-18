@@ -1,5 +1,7 @@
 package ivc.plugin;
 
+import ivc.data.command.CommandArgs;
+import ivc.data.command.ShareProjectCommand;
 import ivc.fireworks.decorator.Decorator;
 import ivc.listeners.ResourceChangedListener;
 import ivc.manager.ProjectsManager;
@@ -53,8 +55,15 @@ public class IVCPlugin extends AbstractUIPlugin {
 		Decorator.enableDecoration=true;
 		ProjectsManager.instance().findProjects();	
 	
+		//test share project command
+		CommandArgs args = new CommandArgs();
+		args.putArgument("projectName", "Test");
+		args.putArgument("projectPath", "\\Test");
+		ShareProjectCommand comm = new ShareProjectCommand();
+		comm.execute(args);
 		
-//		ConnectionManager.getInstance().initiateConnections();
+	//	ConnectionManager.getInstance().initiateConnections();
+	
 	
 	}
 

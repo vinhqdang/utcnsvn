@@ -3,6 +3,7 @@
  */
 package ivc.data.command;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.List;
@@ -16,8 +17,12 @@ import ivc.util.ConnectionManager;
  * @author danielan
  *
  */
-public class ConnectToPeerCommand implements CommandIntf {
+public class ConnectToPeerCommand implements CommandIntf ,Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String hostAddress;
 	
 	
@@ -65,7 +70,7 @@ public class ConnectToPeerCommand implements CommandIntf {
 //			HTMLLogger.error("Unable to connect to peer host :" + hostAddress);
 			e.logError();
 		}
-		return  new Result(true,"Connections established",null);
+		return  new Result(true, "Connections established" ,null);
 	}
 
 }

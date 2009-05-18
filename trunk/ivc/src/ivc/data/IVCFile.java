@@ -3,7 +3,7 @@ package ivc.data;
 import java.util.Date;
 import java.util.UUID;
 
-public class File {
+public class IVCFile {
 	
 	private UUID fileID;
 	private String path;
@@ -14,7 +14,7 @@ public class File {
 	private StringBuffer content;
 	private TransformationHistory history; 
 		
-	public File() {
+	public IVCFile() {
 		super();
 	}
 
