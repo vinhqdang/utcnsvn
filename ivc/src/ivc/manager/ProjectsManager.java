@@ -20,14 +20,22 @@ public class ProjectsManager {
 		projects = new Vector<IProject>();
 	}
 
+	public boolean projectInRepository(IProject project) {
+		return projects.contains(project);
+	}
+	
+//	public boolean existsProjectWithName(String name){
+//		for (IProj iterable_element : iterable) {
+//			
+//		}
+//	}
+
 	public static ProjectsManager instance() {
 		if (instance == null) {
 			instance = new ProjectsManager();
 		}
 		return instance;
 	}
-	
-	
 
 	public void findProjects() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
