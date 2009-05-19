@@ -33,7 +33,7 @@ public class ShareProjectCommand implements CommandIntf {
 	private BaseVersion bv;
 
 	/*
-	 * (non-Javadoc)
+	 * (non-Javadoc)  
 	 * 
 	 * @see ivc.command.CommandIntf#execute(ivc.command.CommandArgs)
 	 */
@@ -64,7 +64,7 @@ public class ShareProjectCommand implements CommandIntf {
 		// TODO Auto-generated catch block
 		// e.printStackTrace();
 		// }
-
+  
 		return new Result(true,"Success",null);
 	}
 
