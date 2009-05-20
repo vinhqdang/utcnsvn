@@ -81,10 +81,15 @@ public class IVCPlugin extends AbstractUIPlugin {
 		}
 		ServerIntf server = (ServerIntf) Naming.lookup("rmi://192.168.1.2"
 				 + ":" + 1099 + "/" + "server_ivc");
-		server.exposeClientIntf(hostAddress, new ClientImpl());
+		try{
+		ClientIntf c = new ClientImpl();
+		server.exposeClientIntf(hostAddress,c);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 		ClientIntf client = (ClientIntf) Naming.lookup("rmi://192.168.1.2"
 				+ ":" + 1099 + "/" + "client_ivc");
-		client.test("CLIENT");
+		//client.test("CLIENT","");
 		
 		
 	

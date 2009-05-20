@@ -53,7 +53,7 @@ public class Server {
 			ClientIntf client = (ClientIntf) Naming.lookup("rmi://"
 					+ hostAddress + ":" + 1099 + "/" + "client_ivc");
 		
-			client.test("SERVER");
+			//client.test("SERVER");
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

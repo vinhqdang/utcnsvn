@@ -68,7 +68,7 @@ public class ServerImpl  extends UnicastRemoteObject implements ServerIntf {
 		try {
 			// create registry
 			try {
-				String hostAddress = "localhost";
+				 hostAddress = "localhost";
 				InetAddress addr = null;
 				try {
 					addr = InetAddress.getLocalHost();

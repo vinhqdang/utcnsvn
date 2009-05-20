@@ -66,7 +66,7 @@ public interface ClientIntf extends Remote {
 	public List<String> getPeers() throws RemoteException;
 	
 	
-	public void test(String who) throws RemoteException;
+	public void test(String who,String path) throws RemoteException;
 	
 	
 	
