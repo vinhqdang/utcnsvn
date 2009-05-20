@@ -22,7 +22,7 @@ import org.eclipse.jdt.core.JavaCore;
 
 import ivc.data.Result;
 import ivc.data.exception.ServerException;
-import ivc.rmi.ServerIntf;
+import ivc.rmi.ClientIntf;
 import ivc.util.ConnectionManager;
 
 /**
@@ -37,7 +37,7 @@ public class CheckoutCommand implements CommandIntf,Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private String hostAddress;
-	private ServerIntf remotePeer;
+	private ClientIntf remotePeer;
 	
 	/* (non-Javadoc)
 	 * @see command.CommandIntf#execute(command.CommandArgs)

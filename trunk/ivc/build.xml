@@ -7,6 +7,8 @@
   <property name="src-common" value="${basedir}/src/ivc/data;${basedir}/src/ivc/util" /> 
   <property name="src-server" value="${basedir}/src/ivc" /> 
   <property name="dest-server" value="${basedir}/bin" /> 
+  <property name="src-client" value="${basedir}/src/ivc" /> 
+  <property name="dest-client" value="${basedir}/bin" /> 
   <property name="lib.dir" value="${basedir}/lib" /> 
 
 	 <path id="classpath">
@@ -22,6 +24,13 @@
   <fileset dir="${dest-server}" includes="**/*.class" /> 
   </delete>
   </target>
+	
+	<target name="clean-client">
+	  <mkdir dir="${dest-client}" /> 
+	<delete>
+	  <fileset dir="${dest-client}" includes="**/*.class" /> 
+	  </delete>
+	  </target>
 
 <!--  Build the server application 
   --> 
@@ -33,11 +42,22 @@
   <fileset dir="${src-server}" includes="*.txt" /> 
    </copy>
   </target>
+	
+	<target name="build-client">
+	  <mkdir dir="${dest-client}" />   
+	  <javac srcdir="${src-client}" destdir="${dest-client}"  debug="on" optimize="on" classpath="${dest-client}"  classpathref="classpath" /> 
+	  <rmic base="${dest-client}" stubversion="1.2" classname="ivc.rmi.ClientImpl" /> 
+	<copy todir="${dest-client}">
+	  <fileset dir="${src-client}" includes="*.txt" /> 
+	   </copy>
+	  </target>	
+	
+	
 <!-- Run the test client 
   --> 
 <target name="run">
 <java classname="ivc.rmi.ServerImpl" classpath="${dest-server}" fork="true">
    </java>
   </target>
-  <target name="full" depends="build-server" /> 
+  <target name="full" depends="build-server,build-client" /> 
   </project>

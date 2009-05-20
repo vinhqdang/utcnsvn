@@ -1,122 +1,86 @@
+/**
+ * 
+ */
 package ivc.rmi;
 
-import ivc.data.Result;
-import ivc.data.Transformation;
-import ivc.data.command.CommandArgs;
-import ivc.data.command.ConnectToPeerCommand;
-import ivc.util.ConnectionManager;
+import ivc.data.exception.ServerException;
 
+import java.rmi.AlreadyBoundException;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
 
-public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
+/**
+ * @author danielan
+ *
+ */
+public class ServerImpl  extends UnicastRemoteObject implements ServerIntf {
 
 	/**
-	 * default serial version
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	public ServerImpl() throws RemoteException {
+	
+	/**
+	 * @throws RemoteException
+	 */
+	protected ServerImpl() throws RemoteException {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
+	/* (non-Javadoc)
+	 * @see ivc.rmi.ServerIntf#connectPeerToPeer(java.lang.String, java.lang.String)
+	 */
 	@Override
-	public Result checkout(CommandArgs args) throws RemoteException {
-		
-		/*
-		 * 
-		// will hold a list of File objects for each 
-		// document from the repository
-		List<File> project = new ArrayList<File>();
-    	
-    	// will hold the list of all operations committed for a given document   
-    	Vector operations = new Vector();
-    	
-    	// for each client of the repository
-    	for(int i=0; i<this.clientsList.size(); i++) {
-        	IClient client = (IClient)this.clientsList.get(i);
-        	try {
-        	
-        		if (client.getSite() == clientSite) {
-                // we found the client performing the checkout
-        			
-            		// get all the documents from the repository
-        			Vector documents = this.documentList.getDocuments();
-            		
-            		// for each document from the repository
-            		for(Iterator it=documents.iterator(); it.hasNext();) {
-            			Document doc = (Document)it.next();
-            			
-            			// if the document has not been deleted
-            			if (!doc.isDeleted()) {
-            				
-            				// get the document name
-            				String documentName = doc.getDocumentName();
-                			
-                			// get the document text
-                			String documentText = doc.getDocumentText();
-                			
-                			// get all committed operations for this document 
-    						operations = this.getOperations(documentName, 0, version);
-    						
-    						if (operations != null) {
-    							// create a new ReducedDocumentModel object that will enclose all the necessary 
-    							// information regarding the document(document name, text, operations committed
-    							// up to current version) 
-    							ReducedDocumentModel dm = new ReducedDocumentModel(documentName,documentText,operations);
-    		            		if (dm == null) System.out.println("null dm");
-    							project.add(dm);
-    						}
-            			}
-            		}
-            		
-            		// send the client the list of all the documents from the repository
-            		client.checkoutProject(project,this.projectName);
-        		}		
-			} catch (Exception e) { e.printStackTrace(); }
-        }
-		
-		*/
-		return null;
-	}
-
-	@Override
-	public Result commit(CommandArgs args) throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Result update(CommandArgs args) throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Result sendTransformation(Transformation transformation)
+	public boolean connectPeerToPeer(String host1, String host2)
 			throws RemoteException {
 		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 
-	/*
-	 * @see ivc.rmi.ServerIntf#connectToPeer(java.lang.String)
+	/* (non-Javadoc)
+	 * @see ivc.rmi.ServerIntf#getBaseVersion()
 	 */
 	@Override
-	public Result connectToPeer(String hostAddress) throws RemoteException {
-		ConnectToPeerCommand command =  new ConnectToPeerCommand();
-		CommandArgs args =  new CommandArgs();
-		args.putArgument("hostAddress", hostAddress);		
-		return command.execute(args);
+	public void getBaseVersion() throws RemoteException {
+		// TODO Auto-generated method stub
+
 	}
 
-	/*
-	 * @see ivc.rmi.ServerIntf#getPeers()
+	/* (non-Javadoc)
+	 * @see ivc.rmi.ServerIntf#getHeadVersion()
 	 */
 	@Override
-	public List<String> getPeers() throws RemoteException {
-		return ConnectionManager.getInstance().getPeerHosts();
+	public void getHeadVersion() throws RemoteException {
+		// TODO Auto-generated method stub
+
+	}
+
+	/* (non-Javadoc)
+	 * @see ivc.rmi.ServerIntf#exposeClientIntf()
+	 */
+	@Override
+	public void exposeClientIntf(String hostAddress,ClientIntf client) throws RemoteException {
+		// TODO Auto-generated method stub
+		try {
+			// create registry
+			try {
+				Naming.rebind("rmi://" + hostAddress + ":" + 1099 + "/"
+						+ "client_ivc", client);
+			} catch (Exception e) {
+				if (e instanceof AlreadyBoundException) {
+					e.printStackTrace();
+				} else {
+					String msg = e.getMessage();
+					e.printStackTrace();
+					throw new ServerException(e.getMessage());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }

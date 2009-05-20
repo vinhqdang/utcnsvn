@@ -5,9 +5,15 @@ import ivc.data.command.ShareProjectCommand;
 import ivc.fireworks.decorator.Decorator;
 import ivc.listeners.ResourceChangedListener;
 import ivc.manager.ProjectsManager;
+import ivc.rmi.ClientImpl;
+import ivc.rmi.ClientIntf;
+import ivc.rmi.ServerIntf;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
+import java.rmi.Naming;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -60,9 +66,27 @@ public class IVCPlugin extends AbstractUIPlugin {
 		args.putArgument("projectName", "Test");
 		args.putArgument("projectPath", "\\Test");
 		ShareProjectCommand comm = new ShareProjectCommand();
-		comm.execute(args);
+		//comm.execute(args);
 		
 	//	ConnectionManager.getInstance().initiateConnections();
+		String hostAddress = "localhost";
+		InetAddress addr = null;
+		try {
+			addr = InetAddress.getLocalHost();
+		} catch (UnknownHostException e1) {
+			e1.printStackTrace();
+		}
+		if (addr != null) {
+			hostAddress = addr.getHostAddress();
+		}
+		ServerIntf server = (ServerIntf) Naming.lookup("rmi://"
+				+ hostAddress + ":" + 1099 + "/" + "server_ivc");
+		server.exposeClientIntf(hostAddress, new ClientImpl());
+		ClientIntf client = (ClientIntf) Naming.lookup("rmi://"
+				+ hostAddress + ":" + 1099 + "/" + "client_ivc");
+		client.test("CLIENT");
+		
+		
 	
 	
 	}
