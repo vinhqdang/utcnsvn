@@ -116,10 +116,12 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 	 * @see ivc.rmi.ClientIntf#test()
 	 */
 	@Override
-	public void test(String who) throws RemoteException {
-		File file = new File("d:\\Temp\\as.ass");
+	public void test(String who,String path) throws RemoteException {
+		File file = new File(path);
 		try {
+			System.out.println("Creating file....");
 			file.createNewFile();
+			System.out.println("Created file");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
