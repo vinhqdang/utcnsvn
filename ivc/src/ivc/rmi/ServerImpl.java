@@ -5,6 +5,8 @@ package ivc.rmi;
 
 import ivc.data.exception.ServerException;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -66,7 +68,17 @@ public class ServerImpl  extends UnicastRemoteObject implements ServerIntf {
 		try {
 			// create registry
 			try {
-				Naming.rebind("rmi://" + hostAddress + ":" + 1099 + "/"
+				String hostAddress = "localhost";
+				InetAddress addr = null;
+				try {
+					addr = InetAddress.getLocalHost();
+				} catch (UnknownHostException e1) {
+					e1.printStackTrace();
+				}
+				if (addr != null) {
+					hostAddress = addr.getHostAddress();
+				}
+				Naming.rebind("rmi://" + addr.getHostAddress() + ":" + 1099 + "/"
 						+ "client_ivc", client);
 			} catch (Exception e) {
 				if (e instanceof AlreadyBoundException) {

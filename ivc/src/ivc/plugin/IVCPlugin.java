@@ -79,11 +79,11 @@ public class IVCPlugin extends AbstractUIPlugin {
 		if (addr != null) {
 			hostAddress = addr.getHostAddress();
 		}
-		ServerIntf server = (ServerIntf) Naming.lookup("rmi://"
-				+ hostAddress + ":" + 1099 + "/" + "server_ivc");
+		ServerIntf server = (ServerIntf) Naming.lookup("rmi://192.168.1.2"
+				 + ":" + 1099 + "/" + "server_ivc");
 		server.exposeClientIntf(hostAddress, new ClientImpl());
-		ClientIntf client = (ClientIntf) Naming.lookup("rmi://"
-				+ hostAddress + ":" + 1099 + "/" + "client_ivc");
+		ClientIntf client = (ClientIntf) Naming.lookup("rmi://192.168.1.2"
+				+ ":" + 1099 + "/" + "client_ivc");
 		client.test("CLIENT");
 		
 		
