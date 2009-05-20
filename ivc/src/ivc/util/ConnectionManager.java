@@ -4,8 +4,8 @@ import ivc.data.Peers;
 import ivc.data.exception.ConfigurationException;
 import ivc.data.exception.Exceptions;
 import ivc.data.exception.ServerException;
-import ivc.rmi.ServerImpl;
-import ivc.rmi.ServerIntf;
+import ivc.rmi.ClientImpl;
+import ivc.rmi.ClientIntf;
 
 import java.io.Serializable;
 import java.net.InetAddress;
@@ -34,7 +34,7 @@ public class ConnectionManager implements Serializable {
 
 	private static ConnectionManager manager;
 
-	private Map<String, ServerIntf> peers;
+	private Map<String, ClientIntf> peers;
 	
 	private static Peers peersHosts;
 
@@ -61,7 +61,7 @@ public class ConnectionManager implements Serializable {
 		Iterator<String> it = peersHosts.getPeers().iterator();
 		while (it.hasNext()) {
 			String peerHost = it.next();
-			ServerIntf peer = null;
+			ClientIntf peer = null;
 			try {
 				peer = connectToInterface(peerHost);
 				if (peer != null) {
@@ -81,12 +81,12 @@ public class ConnectionManager implements Serializable {
 
 	public void exposeInterface() throws ServerException {
 		try {
-			ServerImpl server = new ServerImpl();			
+			ClientImpl server = new ClientImpl();			
 			  // create registry
 	        LocateRegistry.createRegistry(1099);
 //	        
 //	        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-	        System.setSecurityManager(new IVCSecurityManager());
+//	        System.setSecurityManager(new IVCSecurityManager());
 			try {				
 				
 				 Naming.rebind("rmi://" +  getHostAddress() + ":"+ 1099 + "/" + "server_ivc", server);
@@ -105,13 +105,13 @@ public class ConnectionManager implements Serializable {
 		}
 	}
 
-	public ServerIntf connectToInterface(String hostAddress)
+	public ClientIntf connectToInterface(String hostAddress)
 			throws ServerException {
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new RMISecurityManager());
 		}
 		try {
-			ServerIntf server = (ServerIntf) Naming.lookup("rmi://"
+			ClientIntf server = (ClientIntf) Naming.lookup("rmi://"
 					+ hostAddress + ":"+ 1099 + "/" + "server_" + hostAddress);
 			// if connection succedded : add intf to list of peers and write to
 			// config file
@@ -151,7 +151,7 @@ public class ConnectionManager implements Serializable {
 	 * 
 	 * @param host
 	 */
-	public ServerIntf getPeerByAddress(String hostAddress) {
+	public ClientIntf getPeerByAddress(String hostAddress) {
 		return peers.get(hostAddress);
 	}
 
@@ -168,7 +168,7 @@ public class ConnectionManager implements Serializable {
 	public static ConnectionManager getInstance() {
 		if (manager == null) {
 			manager = new ConnectionManager();
-			manager.peers = new HashMap<String, ServerIntf>();
+			manager.peers = new HashMap<String, ClientIntf>();
 			manager.peersHosts =  new Peers();
 		}
 		return manager;

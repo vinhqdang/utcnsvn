@@ -10,7 +10,7 @@ import java.util.List;
 
 import ivc.data.Result;
 import ivc.data.exception.ServerException;
-import ivc.rmi.ServerIntf;
+import ivc.rmi.ClientIntf;
 import ivc.util.ConnectionManager;
 
 /**
@@ -40,7 +40,7 @@ public class ConnectToPeerCommand implements CommandIntf ,Serializable{
 			return new Result(true,"Host "+hostAddress+" already connected",null);
 		}
 		try {
-			ServerIntf remotePeer = connManager.connectToInterface(hostAddress);
+			ClientIntf remotePeer = connManager.connectToInterface(hostAddress);
 			// if connection succedded try to get the others to connect to me
 			if (remotePeer != null) {
 				try {
@@ -51,14 +51,14 @@ public class ConnectToPeerCommand implements CommandIntf ,Serializable{
 						String host = it.next();
 						// if we have a connection to this peer; ask the peer to connect back
 						if (connManager.getPeerHosts().contains(host)){
-							ServerIntf peer = connManager.getPeerByAddress(host);
+							ClientIntf peer = connManager.getPeerByAddress(host);
 							List<String> peerHosts = peer.getPeers();
 							if (! peerHosts.contains(localHostName)){
 								peer.connectToPeer(localHostName);
 							}
 						}
 						// if no
-						ServerIntf newPeer = connManager.connectToInterface(host);
+						ClientIntf newPeer = connManager.connectToInterface(host);
 						newPeer.connectToPeer(host)	;					
 					}					
 				} catch (RemoteException e) {
