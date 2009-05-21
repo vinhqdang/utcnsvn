@@ -8,6 +8,10 @@ public class Exceptions {
 	public static final String INVALID_URL = "URL is invalid";
 	public static final String UNABLE_TO_INITIATE_CONNECTION = "Error initiating server connection";
 	public static final String SERVER_UNBOUND = "Server is not bound";
-
+	
+	// share project command
+	public static final String SERVER_CONNECTION_FAILED = "SERVER_CONNECTION_FAILED";
+	public static final String SERVER_AUTHENTICATION_FAILED ="SERVER_AUTHENTICATION_FAILED";	
+	public static final String SERVER_PATH_INVALID = "SERVER_PATH_INVALID";
  
 }
