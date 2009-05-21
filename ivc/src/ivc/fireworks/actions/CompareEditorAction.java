@@ -1,13 +1,17 @@
 package ivc.fireworks.actions;
 
 import java.io.File;
+import java.rmi.Naming;
 
 import ivc.compare.IVCCompareEditorInput;
 import ivc.repository.SVNLocalCompareInput;
+import ivc.rmi.ClientIntf;
 
 import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.compare.CompareNavigator;
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
+import org.eclipse.compare.internal.CompareContainer;
 import org.eclipse.compare.internal.TextMergeViewerCreator;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -21,15 +25,16 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 public class CompareEditorAction implements IWorkbenchWindowActionDelegate {
 	public void run(IAction action) {
-		
+
 		try {
-			CompareConfiguration config =new CompareConfiguration();
+			CompareConfiguration config = new CompareConfiguration();
 			config.setLeftEditable(true);
 			config.setRightEditable(true);
-			IVCCompareEditorInput input=new IVCCompareEditorInput(config);
+			IVCCompareEditorInput input = new IVCCompareEditorInput(config);
 			CompareUI.openCompareDialog(input);
-			//TextMergeViewerCreator cre=new TextMergeViewerCreator();
-			//cre.createViewer(parent, mp)
+			
+			// TextMergeViewerCreator cre=new TextMergeViewerCreator();
+			// cre.createViewer(parent, mp)
 		} catch (Exception e) {
 
 			System.out.println("Exception comparing");
@@ -39,18 +44,18 @@ public class CompareEditorAction implements IWorkbenchWindowActionDelegate {
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void init(IWorkbenchWindow arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void selectionChanged(IAction arg0, ISelection arg1) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
