@@ -43,24 +43,24 @@ public class Server {
 		//exposeClientInterface(hostAddress);
 		System.out.println("Client OK...");
 		connectToInterface(hostAddress); 
-		try {
-			Thread.sleep(60000);
-		} catch (InterruptedException e1) {
+		//try {
+	//		Thread.sleep(60000);
+		//} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		try {
-			ClientIntf client = (ClientIntf) Naming.lookup("rmi://"
-					+ hostAddress + ":" + 1099 + "/" + "client_ivc");
-		
-			//client.test("SERVER");
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NotBoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			//e1.printStackTrace();
+		//}
+//		try {
+//			ClientIntf client = (ClientIntf) Naming.lookup("rmi://"
+//					+ hostAddress + ":" + 1099 + "/" + "client_ivc");
+//		
+////			client.test("SERVER");
+//		} catch (MalformedURLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (NotBoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 	}
 
