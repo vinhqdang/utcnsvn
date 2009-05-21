@@ -52,5 +52,10 @@ public class IVCRepositoryProvider extends RepositoryProvider {
 		// TODO Auto-generated method stub
 
 	}
+	@Override
+	public boolean canHandleLinkedResources() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 
 }

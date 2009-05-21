@@ -1,6 +1,6 @@
 <?xml version="1.0" ?> 
 
-<project name="ivc" default="full" basedir=".">
+<project name="utcnsvn" default="build-client" basedir=".">
 <!--   The directories 
   --> 
   <property name="root" value="${basedir}/.." /> 
@@ -13,7 +13,7 @@
 
 	 <path id="classpath">
 	        <fileset dir="${lib.dir}" includes="**/*.jar"/>
-	 	    <fileset dir="D:\personal\school\utilitare\eclipse\plugins" includes="**/*.jar"/>
+	 	    <fileset dir="D:\Own\Scoala\Java\eclipse\plugins\" includes="**/*.jar"/>
 	    </path>
 
 <!--   Delete existing server class files 

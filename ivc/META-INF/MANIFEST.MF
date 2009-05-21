@@ -15,5 +15,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.team.cvs.ui
 Bundle-ClassPath: src/
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: org.eclipse.jdt.core
+Import-Package: org.eclipse.jdt.core,
+ org.eclipse.jface.text.source,
+ org.eclipse.ui.texteditor,
+ org.tigris.subversion.subclipse.ui.actions
 Bundle-ActivationPolicy: lazy
