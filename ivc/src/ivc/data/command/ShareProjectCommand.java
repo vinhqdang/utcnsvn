@@ -48,7 +48,7 @@ public class ShareProjectCommand implements CommandIntf {
 		bv.setProjectName(projectName);
 		bv.setProjectPath(projectPath);
 
-		// 1.expose interface
+		// 1.expose interface 
 		// ConnectionManager.getInstance().exposeInterface();
 	
 		// 2.create workspace log files
