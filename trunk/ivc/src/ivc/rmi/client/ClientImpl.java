@@ -1,10 +1,11 @@
-package ivc.rmi;
+package ivc.rmi.client;
 
 import ivc.data.Result;
 import ivc.data.Transformation;
 import ivc.data.command.CommandArgs;
 import ivc.data.command.ConnectToPeerCommand;
 import ivc.util.ConnectionManager;
+import ivc.util.Constants;
 
 import java.io.File;
 import java.io.IOException;
@@ -127,6 +128,21 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 			e.printStackTrace();
 		}
 
+	}
+
+	/* (non-Javadoc)
+	 * @see ivc.rmi.client.ClientIntf#createRLUFile(java.lang.String)
+	 */
+	@Override
+	public void createRLUFile(String host) throws RemoteException {
+		File rlufile = new File("projectPath" + Constants.RemoteUnCommitedLog+"_"+host);
+		try {
+			rlufile.createNewFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }

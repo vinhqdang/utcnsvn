@@ -4,14 +4,17 @@
 package ivc.util;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +26,7 @@ import java.util.List;
 public class FileHandler {
 
 	public static void writeObjectToFile(String filePath, Serializable o) {
-		FileOutputStream fos;
+		FileOutputStream fos = null;
 		try {
 			fos = new FileOutputStream(filePath);
 		} catch (FileNotFoundException e) {
@@ -43,7 +46,7 @@ public class FileHandler {
 		}
 		ObjectOutputStream oos;
 		try {
-			fos = new FileOutputStream(filePath);
+			
 			oos = new ObjectOutputStream(fos);
 			oos.writeObject(o);
 			oos.close();
@@ -97,6 +100,18 @@ public class FileHandler {
 			}
 		}
 		return sb;
+	}
+
+	public static void writeStringBufferToFile(String filePath, StringBuffer buf){
+		BufferedWriter bw;
+		try {
+			bw = new BufferedWriter(new FileWriter(filePath));
+			bw.write(buf.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }

@@ -1,7 +1,10 @@
 package ivc.data;
 
+import java.io.BufferedReader;
+import java.io.Reader;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.StringTokenizer;
 import java.util.UUID;
 
 public class Transformation implements Serializable {
@@ -28,7 +31,7 @@ public class Transformation implements Serializable {
 	
 	private int position;
 	
-	private String text;
+	private char text;
 	
 	/**
 	 *  DELETE / INSERT
@@ -139,14 +142,14 @@ public class Transformation implements Serializable {
 	/**
 	 * @return the text
 	 */
-	public String getText() {
+	public char getText() {
 		return text;
 	}
 
 	/**
 	 * @param text the text to set
 	 */
-	public void setText(String text) {
+	public void setText(char text) {
 		this.text = text;
 	}
 
@@ -163,21 +166,27 @@ public class Transformation implements Serializable {
 	public void setOperationType(int operationType) {
 		this.operationType = operationType;
 	}
-
 	
-	/**
-	 * @return the OPERATION_DELETE
-	 */
-	public static int getOPERATION_DELETE() {
-		return OPERATION_DELETE;
+	public StringBuffer applyTransformation(StringBuffer content){
+		String[] lines = content.toString().split("\n");		
+		if (lines.length > 0 && lines.length > line){
+			StringBuffer lineStr = new StringBuffer(lines[line]);
+			switch (operationType) {
+			case OPERATION_ADD:
+				lineStr.insert(position, text);
+				break;
+			case OPERATION_DELETE:
+				lineStr.deleteCharAt(position);
+				break;
+			default:
+				break;
+			}
+			lines[line] = lineStr.toString();
+		}
+		return new StringBuffer(lines.toString());
 	}
 
-	/**
-	 * @return the OPERATION_ADD
-	 */
-	public static int getOPERATION_ADD() {
-		return OPERATION_ADD;
-	}
+
 
 		
 	
