@@ -96,7 +96,7 @@ public class ConnectionManager implements Serializable {
 		}
 	}
 
-	public void connectToServer(String serverAddress) {
+	public void connectToServer(String serverAddress) throws ServerException  {
 		this.serverAddress = serverAddress;
 		try {
 			server = (ServerIntf) Naming.lookup("rmi://" + serverAddress + ":"
@@ -104,12 +104,15 @@ public class ConnectionManager implements Serializable {
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new ServerException(Exceptions.SERVER_CONNECTION_FAILED);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new ServerException(Exceptions.SERVER_CONNECTION_FAILED);
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new ServerException(Exceptions.SERVER_CONNECTION_FAILED);
 		}
 	}
 

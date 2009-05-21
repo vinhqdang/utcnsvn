@@ -5,6 +5,8 @@ package ivc.data.command;
 
 import ivc.data.BaseVersion;
 import ivc.data.Result;
+import ivc.data.exception.Exceptions;
+import ivc.data.exception.ServerException;
 import ivc.rmi.server.ServerIntf;
 import ivc.util.ConnectionManager;
 import ivc.util.Constants;
@@ -71,11 +73,27 @@ public class ShareProjectCommand implements CommandIntf {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ConnectionManager.getInstance().connectToServer(serverAddress);
+		try {
+			ConnectionManager.getInstance().connectToServer(serverAddress);
+		} catch (ServerException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return new Result(false,Exceptions.SERVER_CONNECTION_FAILED,e1);
+		}
 
-		// continue if connection succedded
 		ServerIntf server = ConnectionManager.getInstance().getServer();
 		if (server != null) {
+			// authenticate user
+			try {
+				boolean authOK = server.authenticateHost(userName, password);
+				if (! authOK){
+					return new Result(false,Exceptions.SERVER_AUTHENTICATION_FAILED,null);
+				}
+			} catch (RemoteException e1) {
+				// TODO Auto-generated catch block
+				return new Result(false,Exceptions.SERVER_AUTHENTICATION_FAILED,e1);
+			}
+			
 			// 2.expose interface
 			ConnectionManager.getInstance().exposeInterface();
 
@@ -88,7 +106,7 @@ public class ShareProjectCommand implements CommandIntf {
 				server.receiveBaseVersion(bv);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return new Result(false,Exceptions.SERVER_PATH_INVALID,e);
 			}
 			
 			// 5.update gui ??
