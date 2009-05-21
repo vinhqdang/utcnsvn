@@ -2,7 +2,8 @@ package ivc.plugin;
 
 import ivc.data.command.CommandArgs;
 import ivc.data.command.ShareProjectCommand;
-import ivc.fireworks.decorator.Decorator;
+import ivc.fireworks.decorators.Decorator;
+
 import ivc.listeners.ResourceChangedListener;
 import ivc.manager.ProjectsManager;
 import ivc.rmi.client.ClientImpl;
