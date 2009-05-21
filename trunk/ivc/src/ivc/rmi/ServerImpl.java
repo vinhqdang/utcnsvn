@@ -80,6 +80,7 @@ public class ServerImpl  extends UnicastRemoteObject implements ServerIntf {
 				}
 				Naming.rebind("rmi://" + addr.getHostAddress() + ":" + 1099 + "/"
 						+ "client_ivc", client);
+			System.out.println("registering client");
 			} catch (Exception e) {
 				if (e instanceof AlreadyBoundException) {
 					e.printStackTrace();
