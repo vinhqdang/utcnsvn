@@ -1,4 +1,4 @@
-package ivc.fireworks.decorator;
+package ivc.fireworks.decorators;
 
 
 import ivc.plugin.IVCPlugin;
@@ -57,7 +57,6 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 			return (Decorator) decoratorManager
 					.getLabelDecorator("ivc.fireworks.decorator.Decorator");
 		}
-
 		return null;
 	}
 
@@ -202,7 +201,7 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 			}
 		}
 
-		return null;
+		return null; 
 	}
 
 	/**
@@ -268,8 +267,7 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 	 */
 	 private Image drawIconImage(Image baseImage, Vector decoratorImageKeys) {
 	 Image image;
-	 OverlayImageIcon overlayIcon = new OverlayImageIcon(baseImage,
-	 demoImage, decoratorImageKeys);
+	 OverlayImageIcon overlayIcon = new OverlayImageIcon(baseImage);
 	 image = overlayIcon.getImage();
 	 return image;
 	 }

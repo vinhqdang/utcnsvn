@@ -1,4 +1,4 @@
-package ivc.fireworks.decorator;
+package ivc.fireworks.decorators;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
