@@ -5,6 +5,7 @@ package ivc.data;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -20,6 +21,7 @@ public class BaseVersion implements Serializable{
 	
 	private String projectName;
 	private String projectPath;
+	LinkedList<String> folders;
 	private Map<String,StringBuffer> files;
 	/**
 	 * @return the projectName
@@ -64,6 +66,22 @@ public class BaseVersion implements Serializable{
 		}
 		files.put(filePath,strB);
 	}
+	
+	public LinkedList<String> getFolders(){
+		return folders;
+	}
+	
+	public void setFolders(LinkedList<String> folders) {
+		this.folders = folders;
+	}
+	
+	public void addFolder(String folderPath){
+		if (folders == null){
+			folders = new LinkedList<String>();			
+		}
+		folders.add(folderPath);
+	}
+	
 	
 
 }

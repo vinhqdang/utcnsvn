@@ -5,11 +5,15 @@ package ivc.data.command;
 
 import ivc.data.BaseVersion;
 import ivc.data.Result;
+import ivc.rmi.server.ServerIntf;
+import ivc.util.ConnectionManager;
+import ivc.util.Constants;
 import ivc.util.FileHandler;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.rmi.RemoteException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -29,63 +33,80 @@ public class ShareProjectCommand implements CommandIntf {
 
 	private String projectName;
 	private String projectPath;
+	private String serverAddress;
 
 	private BaseVersion bv;
 
 	/*
-	 * (non-Javadoc)  
+	 * (non-Javadoc)
 	 * 
 	 * @see ivc.command.CommandIntf#execute(ivc.command.CommandArgs)
 	 */
 	@Override
 	public Result execute(CommandArgs args) {
-		// try {
-		
+
 		// init local properties
 		projectName = (String) args.getArgumentValue("projectName");
 		projectPath = (String) args.getArgumentValue("projectPath");
+		serverAddress = (String) args.getArgumentValue("serverAddress");
 		bv = new BaseVersion();
 		bv.setProjectName(projectName);
 		bv.setProjectPath(projectPath);
 
-		// 1.expose interface 
-		// ConnectionManager.getInstance().exposeInterface();
-	
-		// 2.create workspace log files
-		// save base version for each file??
-		createBaseVersion();
-		//init log files
-		createLogFiles();
-		
-		// 3.update gui ??
-		//TODO update intf on sharing project
-		
-		// } catch (ServerException e) {
-		// TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-  
-		return new Result(true,"Success",null);
+		// 1.save server address to disk and connect to server
+		File svrfile = new File(projectPath + Constants.ServerFile);
+		try {
+			svrfile.createNewFile();
+			FileHandler.writeObjectToFile(svrfile.getAbsolutePath(),serverAddress);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ConnectionManager.getInstance().connectToServer(serverAddress);
+
+		// continue if connection succedded
+		ServerIntf server = ConnectionManager.getInstance().getServer();
+		if (server != null) {
+			// 2.expose interface
+			ConnectionManager.getInstance().exposeInterface();
+
+			// 3. init log files
+			createLogFiles();
+
+			//4.save base version on server repository
+			createBaseVersion();
+			try {
+				server.receiveBaseVersion(bv);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			// 5.update gui ??
+			// TODO update intf on sharing project
+		}
+		return new Result(true, "Success", null);
 	}
 
-	private void createLogFiles(){
+	private void createLogFiles() {
 		try {
-			File llfile = new File(projectPath + "\\.ivc\\.ll");
+			// create document directory
+			File ivcfolder = new File(projectPath + Constants.IvcFolder);
+			ivcfolder.mkdir();
+			// local log file
+			File llfile = new File(projectPath + Constants.LocalLog);
 			llfile.createNewFile();
-			File rclfile = new File(projectPath + "\\.ivc\\.rcl");
+			// remote committed log
+			File rclfile = new File(projectPath + Constants.RemoteCommitedLog);
 			rclfile.createNewFile();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-	}
-	
-	private void createBaseVersion() {
 
-		// create document directory
-		File ivcfolder = new File(projectPath + "\\.ivc");
-		ivcfolder.mkdir();
+	}
+
+	private void createBaseVersion() {
 
 		// get local workspace
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -111,13 +132,10 @@ public class ShareProjectCommand implements CommandIntf {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}		
+	}
 
-		}
-		// write base version to file 
-		FileHandler.writeObjectToFile(projectPath + "\\.ivc\\.bv", bv);
-	}	
-
-	private void handleResource(IResource resource){
+	private void handleResource(IResource resource) {
 		int resourceType = resource.getType();
 		// found file
 		if (resourceType == IResource.FILE) {
@@ -125,7 +143,7 @@ public class ShareProjectCommand implements CommandIntf {
 			try {
 				InputStream content = file.getContents(true);
 				StringBuffer sb = FileHandler.InputStreamToStringBuffer(content);
-				IPath relPath = file.getProjectRelativePath();			
+				IPath relPath = file.getProjectRelativePath();
 				bv.addFile(relPath.toOSString(), sb);
 			} catch (CoreException e) {
 				// TODO Auto-generated catch block
@@ -134,7 +152,8 @@ public class ShareProjectCommand implements CommandIntf {
 		}
 		// found folder... need to go deeper
 		if (resourceType == IResource.FOLDER) {
-			IFolder folder = (IFolder)resource;
+			IFolder folder = (IFolder) resource;
+			bv.addFolder(folder.getProjectRelativePath().toOSString());
 			try {
 				IResource[] subfolders = folder.members();
 				for (int i = 0; i < subfolders.length; i++) {
@@ -147,5 +166,5 @@ public class ShareProjectCommand implements CommandIntf {
 			}
 		}
 	}
-	
+
 }

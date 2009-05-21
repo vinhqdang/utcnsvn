@@ -10,7 +10,7 @@ import java.util.List;
 
 import ivc.data.Result;
 import ivc.data.exception.ServerException;
-import ivc.rmi.ClientIntf;
+import ivc.rmi.client.ClientIntf;
 import ivc.util.ConnectionManager;
 
 /**

@@ -1,10 +1,14 @@
 /**
  * 
  */
-package ivc.rmi;
+package ivc.rmi.server;
 
 import ivc.data.exception.ServerException;
+import ivc.rmi.client.ClientImpl;
+import ivc.rmi.client.ClientIntf;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
@@ -15,6 +19,9 @@ import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 /**
  * @author danielan
@@ -27,33 +34,29 @@ public class Server {
 	 * @throws RemoteException
 	 */
 	public static void main(String[] args) throws RemoteException {
-		String hostAddress = "localhost";
-		InetAddress addr = null;
+		Path path = new Path("d:\\temp\\ivc\\test\\test.txt");
+		
+		File f = new File ("d:\\temp\\ivc\\test\\test.txt");
 		try {
-			addr = InetAddress.getLocalHost();
-		} catch (UnknownHostException e1) {
-			e1.printStackTrace();
-		}
-		if (addr != null) {
-			hostAddress = addr.getHostAddress();
-		}
-		LocateRegistry.createRegistry(1099);
-		exposeServerInterface(hostAddress);
-		System.out.println("Server OK...");
-		//exposeClientInterface(hostAddress);
-		System.out.println("Client OK...");
-		connectToInterface(hostAddress); 
-		//try {
-	//		Thread.sleep(60000);
-		//} catch (InterruptedException e1) {
+			f.mkdirs();
+			f.createNewFile();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			//e1.printStackTrace();
-		//}
+			e.printStackTrace();
+		}
+		
+//		LocateRegistry.createRegistry(1099);
+//		exposeServerInterface(ServerBusiness.getHostAddress());
+//		System.out.println("Server OK...");
+//		//exposeClientInterface(hostAddress);
+//		System.out.println("Client OK...");
+//		connectToInterface(ServerBusiness.getHostAddress()); 
+//		
 //		try {
 //			ClientIntf client = (ClientIntf) Naming.lookup("rmi://"
-//					+ hostAddress + ":" + 1099 + "/" + "client_ivc");
+//					+ ServerBusiness.getHostAddress() + ":" + 1099 + "/" + "client_ivc");
 //		
-////			client.test("SERVER");
+//			//client.test("SERVER");
 //		} catch (MalformedURLException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();

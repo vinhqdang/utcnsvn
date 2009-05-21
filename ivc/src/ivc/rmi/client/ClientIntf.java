@@ -1,4 +1,4 @@
-package ivc.rmi;
+package ivc.rmi.client;
 
 import ivc.data.Result;
 import ivc.data.Transformation;
@@ -68,7 +68,7 @@ public interface ClientIntf extends Remote {
 	
 	public void test(String who,String path) throws RemoteException;
 	
-	
+	public void createRLUFile(String host) throws RemoteException;
 	
 	
 	

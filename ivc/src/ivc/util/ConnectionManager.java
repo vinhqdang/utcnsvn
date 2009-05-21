@@ -4,8 +4,9 @@ import ivc.data.Peers;
 import ivc.data.exception.ConfigurationException;
 import ivc.data.exception.Exceptions;
 import ivc.data.exception.ServerException;
-import ivc.rmi.ClientImpl;
-import ivc.rmi.ClientIntf;
+import ivc.rmi.client.ClientImpl;
+import ivc.rmi.client.ClientIntf;
+import ivc.rmi.server.ServerIntf;
 
 import java.io.Serializable;
 import java.net.InetAddress;
@@ -35,8 +36,12 @@ public class ConnectionManager implements Serializable {
 	private static ConnectionManager manager;
 
 	private Map<String, ClientIntf> peers;
-	
+
 	private static Peers peersHosts;
+
+	private static ServerIntf server;
+
+	private static String serverAddress;
 
 	private ConnectionManager() {
 	}
@@ -47,8 +52,10 @@ public class ConnectionManager implements Serializable {
 	 * @throws ServerException
 	 */
 	public void initiateConnections() throws ServerException {
-		// read list of hosts with whom to communicate from config file
-		// if there is no host specified current instance is the initiator
+		// connect to server
+		String serverAddress = (String) FileHandler
+				.readObjectFromFile(Constants.ServerFile);
+		connectToServer(serverAddress);
 
 		// register server for rmi connection in order to allow other users to
 		// communicate with
@@ -56,81 +63,84 @@ public class ConnectionManager implements Serializable {
 		// to it
 		exposeInterface();
 
-		// get a list of hosts to connect to
-		// results in a list of ServerIntf objects
-		Iterator<String> it = peersHosts.getPeers().iterator();
-		while (it.hasNext()) {
-			String peerHost = it.next();
-			ClientIntf peer = null;
-			try {
-				peer = connectToInterface(peerHost);
-				if (peer != null) {
-					peers.put(peerHost, peer);
-					peersHosts.addPeerHost(peerHost);
-				}
-			} catch (ServerException e) {
-			//	HTMLLogger.error("Unable to connect to peer host :" + peerHost);
-				e.logError();
-			}
-			if (peer != null) {
-				peers.put(peerHost, peer);
-			}
-		}
+		// read list of hosts with whom to communicate from server file and
+		// connect to them
 
-	}
-
-	public void exposeInterface() throws ServerException {
+		List<String> hosts;
 		try {
-			ClientImpl server = new ClientImpl();			
-			  // create registry
-	        LocateRegistry.createRegistry(1099);
-//	        
-//	        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-//	        System.setSecurityManager(new IVCSecurityManager());
-			try {				
-				
-				 Naming.rebind("rmi://" +  getHostAddress() + ":"+ 1099 + "/" + "server_ivc", server);
-			} catch (Exception e) {
-				if (e instanceof AlreadyBoundException) {
-//					HTMLLogger.warn(Exceptions.REGISTRY_ALREADY_BOUNDED, e);
-				} else {
-					String msg = e.getMessage();
-					throw new ServerException(e.getMessage());
+			hosts = server.getClientHosts();
+			if (hosts != null) {
+				Iterator<String> it = hosts.iterator();
+				while (it.hasNext()) {
+					String peerHost = it.next();
+					ClientIntf peer = null;
+					try {
+						peer = connectToInterface(peerHost);
+						if (peer != null) {
+							peers.put(peerHost, peer);
+							peersHosts.addPeerHost(peerHost);
+						}
+					} catch (ServerException e) {
+						// HTMLLogger.error("Unable to connect to peer host :" +
+						// peerHost);
+						e.logError();
+					}
+					if (peer != null) {
+						peers.put(peerHost, peer);
+					}
 				}
 			}
-		} catch (Exception e) {
-//			HTMLLogger.getLogger();
-//			HTMLLogger.error(e.getMessage());
-			throw new ServerException(e.getMessage());
+		} catch (RemoteException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 	}
 
-	public ClientIntf connectToInterface(String hostAddress)
-			throws ServerException {
-		if (System.getSecurityManager() == null) {
-			System.setSecurityManager(new RMISecurityManager());
-		}
+	public void connectToServer(String serverAddress) {
+		this.serverAddress = serverAddress;
 		try {
-			ClientIntf server = (ClientIntf) Naming.lookup("rmi://"
-					+ hostAddress + ":"+ 1099 + "/" + "server_" + hostAddress);
-			// if connection succedded : add intf to list of peers and write to
-			// config file
-			if (server != null) {
-				peers.put(hostAddress, server);
-				peersHosts.addPeerHost(hostAddress);
-			}
-			return server;
+			server = (ServerIntf) Naming.lookup("rmi://" + serverAddress + ":"
+					+ 1099 + "/" + "server_ivc");
 		} catch (MalformedURLException e) {
-//			HTMLLogger.error(Exceptions.INVALID_URL + hostAddress);
-			throw new ServerException(e.getMessage());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (RemoteException e) {
-//			HTMLLogger.error(Exceptions.UNABLE_TO_INITIATE_CONNECTION + " : "
-//					+ hostAddress);
-			throw new ServerException(e.getMessage());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (NotBoundException e) {
-//			HTMLLogger.error(Exceptions.SERVER_UNBOUND + " : " + hostAddress);
-			throw new ServerException(e.getMessage());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+	}
+
+	public void exposeInterface() {
+		try {
+			server.exposeClientIntf(getHostAddress(), new ClientImpl());
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public ClientIntf connectToInterface(String hostAddress) throws ServerException {
+
+		ClientIntf client;
+		try {
+			client = server.getClientIntf(hostAddress);
+			if (client != null) {
+				peers.put(hostAddress, client);
+				peersHosts.addPeerHost(hostAddress);
+				return client;
+			}
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// if connection succedded : add intf to list of peers and write to
+		// config file
+		return null;
+
 	}
 
 	public String getHostAddress() {
@@ -138,7 +148,7 @@ public class ConnectionManager implements Serializable {
 		try {
 			addr = InetAddress.getLocalHost();
 		} catch (UnknownHostException e1) {
-//			HTMLLogger.warn(Exceptions.UNABLE_TO_READ_HOST);
+			// HTMLLogger.warn(Exceptions.UNABLE_TO_READ_HOST);
 		}
 		if (addr != null) {
 			return addr.getHostAddress();
@@ -165,19 +175,21 @@ public class ConnectionManager implements Serializable {
 		return (List<String>) peers.keySet();
 	}
 
+	public ServerIntf getServer() {
+		return server;
+	}
+	
+	public List<ClientIntf> getPeers(){
+		return (List<ClientIntf>)peers.values();
+	}
+
 	public static ConnectionManager getInstance() {
 		if (manager == null) {
 			manager = new ConnectionManager();
 			manager.peers = new HashMap<String, ClientIntf>();
-			manager.peersHosts =  new Peers();
+			manager.peersHosts = new Peers();
 		}
 		return manager;
 	}
 
 }
-
-// Add Project : exposeIntf
-// Watch Project : exposeIntf
-// add host you connected to hosts list in local config
-// initiateConnections
-// call peers intf to add the new host in their remote config

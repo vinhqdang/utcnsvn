@@ -2,12 +2,14 @@ package ivc.plugin;
 
 import ivc.data.command.CommandArgs;
 import ivc.data.command.ShareProjectCommand;
-import ivc.fireworks.decorators.Decorator;
+import ivc.fireworks.decorator.Decorator;
 import ivc.listeners.ResourceChangedListener;
 import ivc.manager.ProjectsManager;
-import ivc.rmi.ClientImpl;
-import ivc.rmi.ClientIntf;
-import ivc.rmi.ServerIntf;
+import ivc.rmi.client.ClientImpl;
+import ivc.rmi.client.ClientIntf;
+import ivc.rmi.server.ServerIntf;
+import ivc.util.ConnectionManager;
+import ivc.util.Constants;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
@@ -57,40 +59,14 @@ public class IVCPlugin extends AbstractUIPlugin {
 		ResourceChangedListener changeListener = new ResourceChangedListener();
 		workspace.addResourceChangeListener(changeListener);
 		Decorator.enableDecoration = true;
-		ProjectsManager.instance().findProjects();
-		Decorator.enableDecoration=true;
-		ProjectsManager.instance().findProjects();	
+		ProjectsManager.instance().findProjects();				
+		
+		// for each project
+		//read if it is ivc type and if so... read server 
+		
+		// foreach server found: initiate connections
+		ConnectionManager.getInstance().initiateConnections();
 	
-		//test share project command
-		CommandArgs args = new CommandArgs();
-		args.putArgument("projectName", "Test");
-		args.putArgument("projectPath", "\\Test");
-		ShareProjectCommand comm = new ShareProjectCommand();
-		//comm.execute(args);
-		
-	//	ConnectionManager.getInstance().initiateConnections();
-		String hostAddress = "localhost";
-		InetAddress addr = null;
-		try {
-			addr = InetAddress.getLocalHost();
-		} catch (UnknownHostException e1) {
-			e1.printStackTrace();
-		}
-		if (addr != null) {
-			hostAddress = addr.getHostAddress();
-		}
-//		ServerIntf server = (ServerIntf) Naming.lookup("rmi://192.168.1.2"
-//				 + ":" + 1099 + "/" + "server_ivc");
-//		try{
-//		ClientIntf c = new ClientImpl();
-//		server.exposeClientIntf(hostAddress,c);
-//		}catch (Exception e){
-//			e.printStackTrace();
-//		}
-//		ClientIntf client = (ClientIntf) Naming.lookup("rmi://192.168.1.2"
-//				+ ":" + 1099 + "/" + "client_ivc");
-		//client.test("CLIENT","");
-		
 		
 	
 	
@@ -105,6 +81,7 @@ public class IVCPlugin extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
+		// disconnect from server
 		super.stop(context);
 	}
 
