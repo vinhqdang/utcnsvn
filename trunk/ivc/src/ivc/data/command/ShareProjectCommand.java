@@ -31,13 +31,20 @@ import org.eclipse.core.runtime.IPath;
  */
 public class ShareProjectCommand implements CommandIntf {
 
-	private String projectName;
+	private IProject project;
+	private String userName;
+	private String password;
 	private String projectPath;
 	private String serverAddress;
 
 	private BaseVersion bv;
 
 	/*
+	 * returns:
+	 * ConnectionFailed
+	 * AuthenticationError
+	 * Path already in use
+	 * Invalid path
 	 * (non-Javadoc)
 	 * 
 	 * @see ivc.command.CommandIntf#execute(ivc.command.CommandArgs)
@@ -46,11 +53,13 @@ public class ShareProjectCommand implements CommandIntf {
 	public Result execute(CommandArgs args) {
 
 		// init local properties
-		projectName = (String) args.getArgumentValue("projectName");
+		project = (IProject) args.getArgumentValue("project");
 		projectPath = (String) args.getArgumentValue("projectPath");
 		serverAddress = (String) args.getArgumentValue("serverAddress");
+		userName = (String) args.getArgumentValue("userName");
+		password = (String) args.getArgumentValue("password");
 		bv = new BaseVersion();
-		bv.setProjectName(projectName);
+		bv.setProjectName(project.getName());
 		bv.setProjectPath(projectPath);
 
 		// 1.save server address to disk and connect to server
@@ -108,15 +117,7 @@ public class ShareProjectCommand implements CommandIntf {
 
 	private void createBaseVersion() {
 
-		// get local workspace
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-
-		// get the project root
-		IWorkspaceRoot root = workspace.getRoot();
-
-		// get a handle to project with name 'projectName'
-		IProject project = root.getProject(projectName);
-
+		
 		// add project to ivc repository
 
 		// build base revision
