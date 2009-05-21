@@ -1,25 +1,11 @@
 package ivc.fireworks.actions;
 
-import java.io.File;
-import java.rmi.Naming;
-
 import ivc.compare.IVCCompareEditorInput;
-import ivc.repository.SVNLocalCompareInput;
-import ivc.rmi.ClientIntf;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.compare.CompareNavigator;
 import org.eclipse.compare.CompareUI;
-import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
-import org.eclipse.compare.internal.CompareContainer;
-import org.eclipse.compare.internal.TextMergeViewerCreator;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.team.ui.synchronize.SyncInfoCompareInput;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
