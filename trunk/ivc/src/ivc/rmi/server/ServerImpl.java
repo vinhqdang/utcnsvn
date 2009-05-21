@@ -164,4 +164,14 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 //		createFileStructure(bv.getFiles());
 	}
 
+	/* (non-Javadoc)
+	 * @see ivc.rmi.server.ServerIntf#authenticateHost(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public boolean authenticateHost(String userName, String password)
+			throws RemoteException {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }

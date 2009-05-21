@@ -34,5 +34,7 @@ public interface ServerIntf extends Remote {
 	
 	public List<String> getClientHosts() throws RemoteException;
 	
+	public boolean authenticateHost(String userName, String password) throws RemoteException;
+	
 }
     
