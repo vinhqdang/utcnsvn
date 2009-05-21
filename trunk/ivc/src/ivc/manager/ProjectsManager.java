@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import ivc.fireworks.decorator.Decorator;
+import ivc.fireworks.decorators.Decorator;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
