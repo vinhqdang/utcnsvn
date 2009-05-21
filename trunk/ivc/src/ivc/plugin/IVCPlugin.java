@@ -2,7 +2,7 @@ package ivc.plugin;
 
 import ivc.data.command.CommandArgs;
 import ivc.data.command.ShareProjectCommand;
-import ivc.fireworks.decorator.Decorator;
+import ivc.fireworks.decorators.Decorator;
 import ivc.listeners.ResourceChangedListener;
 import ivc.manager.ProjectsManager;
 import ivc.rmi.ClientImpl;
@@ -79,16 +79,16 @@ public class IVCPlugin extends AbstractUIPlugin {
 		if (addr != null) {
 			hostAddress = addr.getHostAddress();
 		}
-		ServerIntf server = (ServerIntf) Naming.lookup("rmi://192.168.1.2"
-				 + ":" + 1099 + "/" + "server_ivc");
-		try{
-		ClientIntf c = new ClientImpl();
-		server.exposeClientIntf(hostAddress,c);
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		ClientIntf client = (ClientIntf) Naming.lookup("rmi://192.168.1.2"
-				+ ":" + 1099 + "/" + "client_ivc");
+//		ServerIntf server = (ServerIntf) Naming.lookup("rmi://192.168.1.2"
+//				 + ":" + 1099 + "/" + "server_ivc");
+//		try{
+//		ClientIntf c = new ClientImpl();
+//		server.exposeClientIntf(hostAddress,c);
+//		}catch (Exception e){
+//			e.printStackTrace();
+//		}
+//		ClientIntf client = (ClientIntf) Naming.lookup("rmi://192.168.1.2"
+//				+ ":" + 1099 + "/" + "client_ivc");
 		//client.test("CLIENT","");
 		
 		

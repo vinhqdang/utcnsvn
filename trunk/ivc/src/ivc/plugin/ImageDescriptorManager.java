@@ -4,16 +4,46 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.ImageData;
 
 public class ImageDescriptorManager {
 	public static final String SHARE_WIZARD = "share_icon.png";
-
+	public static final String DCORATOR_SHARED="";
+	public static final String DCORATOR_CHANGED="";
+	public static final String DCORATOR_ADDED="";
+	public static final String DCORATOR_="";
+	
 	public static ImageDescriptor getImageDescriptor(String imageUrl) {
 		URL url;
 		try {
 			url = new URL(IVCPlugin.plugin.baseURL, imageUrl);
 
 			return ImageDescriptor.createFromURL(url);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static org.eclipse.swt.graphics.Image getImage(String imageUrl) {
+		URL url;
+		try {
+			url = new URL(IVCPlugin.plugin.baseURL, imageUrl);
+
+			return ImageDescriptor.createFromURL(url).createImage();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public static ImageData getImageData(String imageUrl) {
+		URL url;
+		try {
+			url = new URL(IVCPlugin.plugin.baseURL, imageUrl);
+
+			return ImageDescriptor.createFromURL(url).createImage().getImageData();
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

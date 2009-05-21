@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import ivc.manager.ProjectsManager;
 import ivc.plugin.IVCPlugin;
+import ivc.repository.IVCRepositoryProvider;
 import ivc.wizards.sharing.pages.SharingWizardPage;
 
 import org.eclipse.core.resources.IProject;
@@ -14,6 +15,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.team.core.RepositoryProvider;
+import org.eclipse.team.core.TeamException;
 import org.eclipse.team.ui.IConfigurationWizard;
 import org.eclipse.ui.IWorkbench;
 
@@ -62,13 +65,21 @@ public class SharingWizard extends Wizard implements IConfigurationWizard {
 
 		}
 
-		return false;
+		try {
+			RepositoryProvider.map(project, IVCRepositoryProvider.ID);
+		} catch (TeamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	private void doFinish(IProgressMonitor monitor) {
 		monitor.beginTask("Verifying project name", 2);
 		if (ProjectsManager.instance().projectInRepository(project)) {
 			result = false;
+			sharingWizardPage.setErrorMessage("A project with the same name exists");
 			return;
 		}
 		monitor.worked(1);

@@ -48,8 +48,8 @@
 	               menubarPath="visible">
 	         </action>
 	      </actionSet>
-    </extension>
     
+    </extension>
 	<extension point="org.eclipse.ui.decorators">
 			<decorator
 			        objectClass="org.eclipse.core.resources.IResource"
@@ -63,24 +63,86 @@
 			     </description>
 			</decorator>
 	</extension>
-	
-	
-
 
 
 	<extension point="org.eclipse.ui.decorators"> 
 		<decorator 
-	    	id="ivc.fireworks.decorator.Decorator" 
+	    	id="ivc.fireworks.decorators.Decorator" 
 	    	label="Decorator Example" 
 	    	state="false" 
-	    	class= "ivc.fireworks.decorator.Decorator" 
+	    	class= "ivc.fireworks.decorators.Decorator" 
 	  		objectClass="org.eclipse.core.resources.IResource" 
 	    	adaptable="true"> 
 		    <description> 
-		      This is an example to illustrate the use of decorators 
+		      Decorator 
 		    </description> 
 		</decorator> 
 	</extension>
+	
+	 
+		<extension
+	       point="org.eclipse.ui.popupMenus">
+	    <objectContribution
+	          id="ivc.contribution.versionedFiles"
+	          objectClass="org.eclipse.core.resources.IResource"
+	          adaptable="true">
+	       
+	       <action
+	             class="ivc.fireworks.actions.CommitAction"             
+	             id="ivc.actions.Commit"
+	             label="Commit"
+	             menubarPath="team.main/group1">
+	       </action>
+	       
+	       <action
+	             class="ivc.fireworks.actions.UpdateAction"             
+	             id="ivc.actions.Update"
+	             label="Update"
+	             menubarPath="team.main/group1">
+	       </action>
+	       
+	    </objectContribution>
+	 </extension>
+	 <extension
+	       point="org.eclipse.team.ui.synchronizeWizards">
+	 </extension>
+  
+	  <extension
+         id="ivc.Marker"
+         name="Markers"
+         point="org.eclipse.core.resources.markers">
+      <persistent
+            value="false">
+      </persistent>
+      <super
+            type="org.eclipse.core.resources.textmarker">
+      </super>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.editors.markerAnnotationSpecification">
+      <specification
+            annotationType="sample.baseMarkerAnnotation"
+            icon="icons/extract.gif">
+      </specification>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors.annotationTypes">
+      <type
+            markerType="ivc.Marker"
+            name="sample.baseMarkerAnnotation"
+            super="org.eclipse.ui.workbench.texteditor.info">
+      </type>
+   </extension>
+   <extension
+         point="org.eclipse.ui.ide.markerImageProviders">
+      <imageprovider
+            icon="icons/key.gif"
+            id="sample.baseMarkerAnnotation"
+            markertype="ivc.Marker">
+      </imageprovider>
+   </extension>
+
 
 
 
