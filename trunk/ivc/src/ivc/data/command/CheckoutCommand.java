@@ -71,7 +71,12 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 	private void initiateConnections() throws ServerException {
 		ConnectionManager connMan = ConnectionManager.getInstance();
 		// connect to server
-		connMan.connectToServer(serverAddress);
+		try {
+			connMan.connectToServer(serverAddress);
+		} catch (ServerException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		// expose interface
 		connMan.exposeInterface();
