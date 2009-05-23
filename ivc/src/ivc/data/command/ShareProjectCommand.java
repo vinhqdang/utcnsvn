@@ -3,6 +3,7 @@ package ivc.data.command;
 import ivc.data.BaseVersion;
 import ivc.data.Result;
 import ivc.data.exception.ServerException;
+import ivc.rmi.server.ServerBusiness;
 import ivc.rmi.server.ServerIntf;
 import ivc.util.ConnectionManager;
 import ivc.util.Constants;
@@ -13,6 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -117,6 +121,8 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 			// remote committed log
 			File rclfile = new File(projectPath + Constants.RemoteCommitedLog);
 			rclfile.createNewFile();
+			File cvFile = new File(projectPath + Constants.CurrentVersionFile);
+			cvFile.createNewFile();		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -146,6 +152,14 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 					IResource resource = resources[i];
 					handleResource(resource);
 				}
+				// save current version for each file
+				HashMap<String,Integer> cv = new HashMap<String,Integer>();
+				List<String> files = (List<String>) bv.getFiles().keySet();
+				for (Iterator<String> iterator = files.iterator(); iterator.hasNext();) {
+					String file =  iterator.next();
+					cv.put(file, 0);
+				}
+				FileHandler.writeObjectToFile(ServerBusiness.PROJECTPATH+Constants.CurrentVersionFile,cv);
 			} catch (CoreException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
