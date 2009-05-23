@@ -12,6 +12,7 @@ import java.io.File;
 public class Constants {
 	
 	public static final String BaseVersionFile = "\\.ivc\\.bv";
+	public static final String CurrentVersionFile = "\\.ivc\\.cv";
 	public static final String Peers ="\\.ivc\\.peers";
 	public static final String IvcFolder = "\\.ivc";
 	public static final String LocalLog = "\\.ivc\\.ll";

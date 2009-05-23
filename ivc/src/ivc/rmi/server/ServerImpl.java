@@ -21,7 +21,10 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author danielan
@@ -121,8 +124,15 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	 */
 	@Override
 	public void receiveBaseVersion(BaseVersion bv) throws RemoteException {
-		initRepository(ServerBusiness.PROJECTPATH);
-		FileHandler.writeObjectToFile(ServerBusiness.PROJECTPATH + Constants.BaseVersionFile,bv);		
+		initRepository(ServerBusiness.PROJECTPATH);		
+		FileHandler.writeObjectToFile(ServerBusiness.PROJECTPATH + Constants.BaseVersionFile,bv);
+		HashMap<String,Integer> cv = new HashMap<String,Integer>();
+		List<String> files = (List<String>) bv.getFiles().keySet();
+		for (Iterator<String> iterator = files.iterator(); iterator.hasNext();) {
+			String file =  iterator.next();
+			cv.put(file, 0);
+		}
+		FileHandler.writeObjectToFile(ServerBusiness.PROJECTPATH+Constants.CurrentVersionFile,cv);
 	}
 
 	/* (non-Javadoc)
@@ -141,6 +151,14 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 		try {
 
 			bvFile.createNewFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		File cvFile = new File(projectPath + Constants.CurrentVersionFile);
+		try {
+
+			cvFile.createNewFile();		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
