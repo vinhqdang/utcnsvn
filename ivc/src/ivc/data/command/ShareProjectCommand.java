@@ -1,11 +1,7 @@
-/**
- * 
- */
 package ivc.data.command;
 
 import ivc.data.BaseVersion;
 import ivc.data.Result;
-import ivc.data.exception.Exceptions;
 import ivc.data.exception.ServerException;
 import ivc.rmi.server.ServerIntf;
 import ivc.util.ConnectionManager;
@@ -15,6 +11,7 @@ import ivc.util.FileHandler;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 
 import org.eclipse.core.resources.IFile;
@@ -26,93 +23,87 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 
-/**
- * @author danielan
- * 
- */
-public class ShareProjectCommand implements CommandIntf {
-
-	private IProject project;
-	private String userName;
-	private String password;
+public class ShareProjectCommand implements IRunnableWithProgress {
+	private String projectName;
 	private String projectPath;
 	private String serverAddress;
-
+	private CommandArgs args;
 	private BaseVersion bv;
+	private Result result;
 
-	/*
-	 * returns:
-	 * ConnectionFailed
-	 * AuthenticationError
-	 * Path already in use
-	 * Invalid path
-	 * (non-Javadoc)
-	 * 
-	 * @see ivc.command.CommandIntf#execute(ivc.command.CommandArgs)
-	 */
+	public ShareProjectCommand(CommandArgs cArgs) {
+		args = cArgs;
+	}
+
 	@Override
-	public Result execute(CommandArgs args) {
+	public void run(IProgressMonitor monitor) throws InvocationTargetException,
+			InterruptedException {
 
 		// init local properties
-		project = (IProject) args.getArgumentValue("project");
+		monitor.beginTask("Init local properties", 5);
+
+		projectName = (String) args.getArgumentValue("projectName");
 		projectPath = (String) args.getArgumentValue("projectPath");
 		serverAddress = (String) args.getArgumentValue("serverAddress");
-		userName = (String) args.getArgumentValue("userName");
-		password = (String) args.getArgumentValue("password");
 		bv = new BaseVersion();
-		bv.setProjectName(project.getName());
+		bv.setProjectName(projectName);
 		bv.setProjectPath(projectPath);
+		monitor.worked(1);
 
+		monitor.setTaskName("Save server address to disk and connect to server");
 		// 1.save server address to disk and connect to server
 		File svrfile = new File(projectPath + Constants.ServerFile);
 		try {
 			svrfile.createNewFile();
-			FileHandler.writeObjectToFile(svrfile.getAbsolutePath(),serverAddress);
+			FileHandler.writeObjectToFile(svrfile.getAbsolutePath(), serverAddress);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			result = new Result(false, e.getMessage(), e);
+			return;
 		}
+
 		try {
 			ConnectionManager.getInstance().connectToServer(serverAddress);
 		} catch (ServerException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-			return new Result(false,Exceptions.SERVER_CONNECTION_FAILED,e1);
 		}
 
+		// continue if connection succedded
 		ServerIntf server = ConnectionManager.getInstance().getServer();
 		if (server != null) {
-			// authenticate user
-			try {
-				boolean authOK = server.authenticateHost(userName, password);
-				if (! authOK){
-					return new Result(false,Exceptions.SERVER_AUTHENTICATION_FAILED,null);
-				}
-			} catch (RemoteException e1) {
-				// TODO Auto-generated catch block
-				return new Result(false,Exceptions.SERVER_AUTHENTICATION_FAILED,e1);
-			}
-			
 			// 2.expose interface
-			ConnectionManager.getInstance().exposeInterface();
+			monitor.worked(1);
 
+			monitor.setTaskName("Exposing interface");
+			ConnectionManager.getInstance().exposeInterface();
+			monitor.worked(1);
+			monitor.setTaskName("Init log files");
 			// 3. init log files
 			createLogFiles();
 
-			//4.save base version on server repository
+			// 4.save base version on server repository
+			monitor.worked(1);
+			monitor.setTaskName("Saving base version on server repository");
 			createBaseVersion();
 			try {
 				server.receiveBaseVersion(bv);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
-				return new Result(false,Exceptions.SERVER_PATH_INVALID,e);
+				e.printStackTrace();
 			}
-			
+
 			// 5.update gui ??
+			monitor.worked(1);
+			monitor.setTaskName("Finished");
+			monitor.done();
 			// TODO update intf on sharing project
 		}
-		return new Result(true, "Success", null);
+		result = new Result(true, "Success", null);
+
 	}
 
 	private void createLogFiles() {
@@ -135,7 +126,15 @@ public class ShareProjectCommand implements CommandIntf {
 
 	private void createBaseVersion() {
 
-		
+		// get local workspace
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+
+		// get the project root
+		IWorkspaceRoot root = workspace.getRoot();
+
+		// get a handle to project with name 'projectName'
+		IProject project = root.getProject(projectName);
+
 		// add project to ivc repository
 
 		// build base revision
@@ -151,7 +150,7 @@ public class ShareProjectCommand implements CommandIntf {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}		
+		}
 	}
 
 	private void handleResource(IResource resource) {
@@ -184,6 +183,10 @@ public class ShareProjectCommand implements CommandIntf {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public Result getResult() {
+		return result;
 	}
 
 }

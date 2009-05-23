@@ -3,6 +3,10 @@ package ivc.wizards.sharing;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
+import ivc.data.Result;
+import ivc.data.command.CommandArgs;
+import ivc.data.command.ShareProjectCommand;
+import ivc.data.command.ShareProjectCommand;
 import ivc.manager.ProjectsManager;
 import ivc.plugin.IVCPlugin;
 import ivc.repository.IVCRepositoryProvider;
@@ -48,48 +52,41 @@ public class SharingWizard extends Wizard implements IConfigurationWizard {
 
 	@Override
 	public boolean performFinish() {
-
-		IRunnableWithProgress op = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor) throws InvocationTargetException {
-				try {
-					doFinish(monitor);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		};
-		try {
-			getContainer().run(true, true, op);
-		} catch (Exception e) {
-			e.printStackTrace();
-
-		}
-
-		try {
-			RepositoryProvider.map(project, IVCRepositoryProvider.ID);
-		} catch (TeamException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (!getPages()[0].isPageComplete())
 			return false;
+		CommandArgs args = new CommandArgs();
+		args.putArgument("serverAddress", sharingWizardPage.getServerUrl());
+		args.putArgument("projectPath", sharingWizardPage.getProjectPath());
+		args.putArgument("project", project);
+		args.putArgument("userName", sharingWizardPage.getUserName());
+		args.putArgument("password", sharingWizardPage.getPassword());
+		ShareProjectCommand command = new ShareProjectCommand(args);
+		try {
+			//fork, cancelable, process
+			this.getContainer().run(false, true, command);
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+			setErrorMessage(e.getMessage());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			setErrorMessage(e.getMessage());
 		}
+
+		if (command.getResult().isSuccess()) {
+			try {
+				RepositoryProvider.map(project, IVCRepositoryProvider.ID);
+			} catch (TeamException e) {
+				e.printStackTrace();
+			}
+			return true;
+		} else {
+			setErrorMessage(command.getResult().getMessage());
+		}
+
 		return true;
 	}
 
-	private void doFinish(IProgressMonitor monitor) {
-		monitor.beginTask("Verifying project name", 2);
-		if (ProjectsManager.instance().projectInRepository(project)) {
-			result = false;
-			sharingWizardPage.setErrorMessage("A project with the same name exists");
-			return;
-		}
-		monitor.worked(1);
-		monitor.setTaskName("Adding project to repository");
-		for (int i = 0; i < 100000; i++) {
-			System.out.print("a");
-		}
-		if (1 == 1)
-			return;
-		monitor.worked(1);
-		result = true;
+	private void setErrorMessage(String error) {
+		sharingWizardPage.setErrorMessage(error);
 	}
 }

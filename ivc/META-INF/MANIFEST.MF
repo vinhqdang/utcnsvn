@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.compare,
  org.eclipse.team.ui,
  org.eclipse.ui.ide,
- org.eclipse.team.cvs.ui
+ org.eclipse.team.cvs.ui,
+ org.eclipse.core.databinding
 Bundle-ClassPath: src/
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.eclipse.jdt.core,
