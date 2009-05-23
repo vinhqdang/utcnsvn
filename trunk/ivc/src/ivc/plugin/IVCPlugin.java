@@ -66,7 +66,7 @@ public class IVCPlugin extends AbstractUIPlugin {
 		//read if it is ivc type and if so... read server 
 		
 		// foreach server found: initiate connections
-		ConnectionManager.getInstance().initiateConnections();
+		//ConnectionManager.getInstance().initiateConnections();
 	
 		
 	

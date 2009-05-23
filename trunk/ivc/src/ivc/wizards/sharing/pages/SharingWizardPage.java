@@ -2,15 +2,19 @@ package ivc.wizards.sharing.pages;
 
 import ivc.plugin.ImageDescriptorManager;
 import ivc.wizards.BaseWizardPage;
+import ivc.wizards.validation.Validator;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 public class SharingWizardPage extends BaseWizardPage {
-	private Text txtProjectName;
+	private Text txtServerURL;
+	private Text txtProjectPath;
+	private Text txtUserName;
+	private Text txtPassword;
+	private Validator validator;
+	public final String ERROR_USER_NULL = "Some fields are not filled";
 
 	public SharingWizardPage() {
 		super("Select repository");
@@ -18,6 +22,29 @@ public class SharingWizardPage extends BaseWizardPage {
 		ImageDescriptor img = ImageDescriptorManager
 				.getImageDescriptor(ImageDescriptorManager.SHARE_WIZARD);
 		setImageDescriptor(img);
+		validator = new Validator() {
+			@Override
+			public void setError(String error) {
+				updateStatus(getValidatorErrorMessage());
+			}
+		};
+
+	}
+
+	public String getServerUrl() {
+		return txtServerURL.getText();
+	}
+
+	public String getProjectPath() {
+		return txtProjectPath.getText();
+	}
+
+	public String getUserName() {
+		return txtUserName.getText();
+	}
+
+	public String getPassword() {
+		return txtPassword.getText();
 	}
 
 	@Override
@@ -25,24 +52,36 @@ public class SharingWizardPage extends BaseWizardPage {
 
 		Composite composite = createComposite(mainControl, 2);
 		setControl(composite);
-		createLabel(composite, "Project Name:");
-		txtProjectName = createTextField(composite);
-		txtProjectName.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent event) {
-				dialogChanged();
-			}
-		});
+
+		createLabel(composite, "Server URL:");
+
+		txtServerURL = createTextField(composite);
+		validator.addControl(txtServerURL, "Invalid URL");
+
+		createLabel(composite, "Project Path:");
+
+		txtProjectPath = createTextField(composite);
+		validator.addControl(txtProjectPath, "Invalid path");
+
+		createLabel(composite, "UserName:");
+
+		txtUserName = createTextField(composite);
+		validator.addControl(txtUserName, "Cannot be null");
+		
+		createLabel(composite, "Password:");
+
+		txtPassword = createTextField(composite);
+		validator.addControl(txtPassword, "Cannot be null");
 	}
 
-	private void dialogChanged() {
-		String status = new TextValidator().isValid(txtProjectName.getText());
-		updateStatus(status);
+	@Override
+	public boolean isPageComplete() {
+		super.isPageComplete();
+		return validator.isValid();
 	}
-
 
 	private void updateStatus(String message) {
 		setErrorMessage(message);
-		setPageComplete(message == null);
+		
 	}
-	
 }

@@ -1,27 +1,5 @@
 package ivc.data.command;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.rmi.RemoteException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.JavaCore;
-
 import ivc.data.BaseVersion;
 import ivc.data.Result;
 import ivc.data.Transformation;
@@ -32,6 +10,13 @@ import ivc.rmi.server.ServerIntf;
 import ivc.util.ConnectionManager;
 import ivc.util.Constants;
 import ivc.util.FileHandler;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author danielan
@@ -57,11 +42,16 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 	public Result execute(CommandArgs args) {
 		// init fields
 		serverAddress = (String) args.getArgumentValue("serverAddress");
-		projectPath = (String)args.getArgumentValue("projectPath");
-		
+		projectPath = (String) args.getArgumentValue("projectPath");
 
 		// 1.establish connections
-		initiateConnections();
+		try {
+			initiateConnections();
+		} catch (ServerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new Result(false,"error",e);
+		}
 
 		// 2. init workspace file
 		initLogFiles();
@@ -71,14 +61,14 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 
 		// 6. create log files on peers
 		createPeersRemoteFiles();
-		
+
 		return new Result(true, "Success", null);
 	}
 
 	/**
 	 * 
 	 */
-	private void initiateConnections(){
+	private void initiateConnections() throws ServerException {
 		ConnectionManager connMan = ConnectionManager.getInstance();
 		// connect to server
 		connMan.connectToServer(serverAddress);
@@ -91,7 +81,7 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 		try {
 			peerHosts = connMan.getServer().getClientHosts();
 			if (peerHosts != null) {
-				for (Iterator<String> iterator = peerHosts.iterator(); iterator	.hasNext();) {
+				for (Iterator<String> iterator = peerHosts.iterator(); iterator.hasNext();) {
 					String peerHost = (String) iterator.next();
 					try {
 						connMan.connectToInterface(peerHost);
@@ -106,7 +96,7 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -122,29 +112,30 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 			File rclfile = new File(projectPath + Constants.RemoteCommitedLog);
 			rclfile.createNewFile();
 			List<String> peerHosts = ConnectionManager.getInstance().getPeerHosts();
-			if (peerHosts != null){
+			if (peerHosts != null) {
 				Iterator<String> it = peerHosts.iterator();
-				while(it.hasNext()){
+				while (it.hasNext()) {
 					String peerHost = it.next();
-					File rlufile = new File(projectPath + Constants.RemoteUnCommitedLog+"_"+peerHost);
+					File rlufile = new File(projectPath + Constants.RemoteUnCommitedLog + "_"
+							+ peerHost);
 					rlufile.createNewFile();
 				}
 			}
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 
 	 */
-	private void createPeersRemoteFiles(){
+	private void createPeersRemoteFiles() {
 		List<ClientIntf> peers = ConnectionManager.getInstance().getPeers();
-		if (peers != null){
+		if (peers != null) {
 			Iterator<ClientIntf> it = peers.iterator();
-			while(it.hasNext()){
+			while (it.hasNext()) {
 				ClientIntf peer = it.next();
 				try {
 					peer.createRLUFile(ConnectionManager.getInstance().getHostAddress());
@@ -155,11 +146,11 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 			}
 		}
 	}
-	
+
 	/**
 	 * 
 	 */
-	private void createProjectFiles(){
+	private void createProjectFiles() {
 		ServerIntf server = ConnectionManager.getInstance().getServer();
 		try {
 			BaseVersion bv = server.getBaseVersion();
@@ -175,17 +166,16 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 			while (it.hasNext()) {
 				String filePath = it.next();
 				StringBuffer baseContent = bv.getFiles().get(filePath);
-				TransformationHistory th = getTransformationHistForFile(thl,filePath);
-				for (Iterator<Transformation> iterator = th.getTransformations().iterator(); iterator.hasNext();) {
+				TransformationHistory th = getTransformationHistForFile(thl, filePath);
+				for (Iterator<Transformation> iterator = th.getTransformations().iterator(); iterator
+						.hasNext();) {
 					Transformation transformation = iterator.next();
-					StringBuffer headContent = transformation
-							.applyTransformation(baseContent);
+					StringBuffer headContent = transformation.applyTransformation(baseContent);
 					// 5. create files
 					try {
 						File f = new File(filePath);
 						f.createNewFile();
-						FileHandler.writeStringBufferToFile(filePath,
-								headContent);
+						FileHandler.writeStringBufferToFile(filePath, headContent);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -198,11 +188,12 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 
 	 */
-	private TransformationHistory getTransformationHistForFile(	List<TransformationHistory> thl, String filePath) {
+	private TransformationHistory getTransformationHistForFile(List<TransformationHistory> thl,
+			String filePath) {
 		if (thl != null) {
 			Iterator<TransformationHistory> it = thl.iterator();
 			while (it.hasNext()) {
