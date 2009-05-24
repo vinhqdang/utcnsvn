@@ -18,6 +18,7 @@ import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.List;
 
+
 /**
  * @author danielan
  * 
@@ -44,7 +45,7 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 		serverAddress = (String) args.getArgumentValue("serverAddress");
 		projectPath = (String) args.getArgumentValue("projectPath");
 
-		// 1.establish connections
+		// 1.establish connections: connect to server; expose intf; connect to other peers
 		try {
 			initiateConnections();
 		} catch (ServerException e) {
@@ -59,7 +60,7 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 		// 3. get base version and transformations
 		createProjectFiles();
 
-		// 6. create log files on peers
+		// 4. create log files on peers
 		createPeersRemoteFiles();
 
 		return new Result(true, "Success", null);

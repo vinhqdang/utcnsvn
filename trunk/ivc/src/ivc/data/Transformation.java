@@ -23,20 +23,20 @@ public class Transformation implements Serializable {
 	
 	private String filePath;
 	
-	private String fileVersion;
+	private Integer fileVersion;
 	
 	private Date date;
 	
-	private int line;
+	private Integer line;
 	
-	private int position;
+	private Integer position;
 	
 	private char text;
 	
 	/**
 	 *  DELETE / INSERT
 	 */
-	private int operationType;
+	private Integer operationType;
 	
 	
 	public Transformation()  {
@@ -86,14 +86,14 @@ public class Transformation implements Serializable {
 	/**
 	 * @return the fileVersion
 	 */
-	public String getFileVersion() {
+	public Integer getFileVersion() {
 		return fileVersion;
 	}
 
 	/**
 	 * @param fileVersion the fileVersion to set
 	 */
-	public void setFileVersion(String fileVersion) {
+	public void setFileVersion(Integer fileVersion) {
 		this.fileVersion = fileVersion;
 	}
 
@@ -114,28 +114,28 @@ public class Transformation implements Serializable {
 	/**
 	 * @return the line
 	 */
-	public int getLine() {
+	public Integer getLine() {
 		return line;
 	}
 
 	/**
 	 * @param line the line to set
 	 */
-	public void setLine(int line) {
+	public void setLine(Integer line) {
 		this.line = line;
 	}
 
 	/**
 	 * @return the position
 	 */
-	public int getPosition() {
+	public Integer getPosition() {
 		return position;
 	}
 
 	/**
 	 * @param position the position to set
 	 */
-	public void setPosition(int position) {
+	public void setPosition(Integer position) {
 		this.position = position;
 	}
 
@@ -163,7 +163,7 @@ public class Transformation implements Serializable {
 	/**
 	 * @param operationType the operationType to set
 	 */
-	public void setOperationType(int operationType) {
+	public void setOperationType(Integer operationType) {
 		this.operationType = operationType;
 	}
 	
@@ -173,7 +173,7 @@ public class Transformation implements Serializable {
 			StringBuffer lineStr = new StringBuffer(lines[line]);
 			switch (operationType) {
 			case OPERATION_ADD:
-				lineStr.insert(position, text);
+				lineStr.insert(position.intValue(), text);
 				break;
 			case OPERATION_DELETE:
 				lineStr.deleteCharAt(position);
