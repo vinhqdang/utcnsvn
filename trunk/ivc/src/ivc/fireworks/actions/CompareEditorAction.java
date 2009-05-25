@@ -19,8 +19,6 @@ public class CompareEditorAction implements IWorkbenchWindowActionDelegate {
 			IVCCompareEditorInput input = new IVCCompareEditorInput(config);
 			CompareUI.openCompareDialog(input);
 			
-			// TextMergeViewerCreator cre=new TextMergeViewerCreator();
-			// cre.createViewer(parent, mp)
 		} catch (Exception e) {
 
 			System.out.println("Exception comparing");

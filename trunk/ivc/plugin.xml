@@ -34,12 +34,27 @@
 			id="ivc.wizards.sharing.SharingWizard">
 		</wizard>
 	</extension>
-	
+	<extension
+	      point = "org.eclipse.ui.newWizards">
+		<category
+		   id = "ivc"
+		   name="IVC">
+		</category>
+	 	<wizard
+		   id = "ivc.wizards.checkout.checkoutWizard"
+	      	   name = "IVC"
+		   class="ivc.wizards.checkout.CheckoutWizard"
+		   
+		   project="true"
+		   icon="share_icon.png">
+	    	   <description>Checkout new cool ivc project</description>
+		</wizard>
+	</extension>
 	
 	<extension point="org.eclipse.ui.actionSets">
 	    <actionSet
 	            id="ivc.actionSets"
-	            label="TestL"
+	            label="cacats"
 	            visible="true">
 	         <action
 	               class="ivc.fireworks.actions.CompareEditorAction"
@@ -47,9 +62,19 @@
 	               label="Compare"
 	               menubarPath="visible">
 	         </action>
-	      </actionSet>
-    
+	         
+	         <action
+	               class="ivc.fireworks.actions.TestAction"
+	               id="ivc.fireworks.actions.test"
+	               label="Test"
+	               menubarPath="visible">
+	         </action>
+	      
+	      </actionSet>    
     </extension>
+    
+    
+    
 	<extension point="org.eclipse.ui.decorators">
 			<decorator
 			        objectClass="org.eclipse.core.resources.IResource"
@@ -84,7 +109,7 @@
 	       point="org.eclipse.ui.popupMenus">
 	    <objectContribution
 	          id="ivc.contribution.versionedFiles"
-	          objectClass="org.eclipse.core.resources.IResource"
+	          objectClass="org.eclipse.core.resources.mapping.ResourceMapping"
 	          adaptable="true">
 	       
 	       <action

@@ -11,7 +11,6 @@
 package ivc.compare;
 
 import ivc.plugin.IVCPlugin;
-import ivc.resource.ISVNResource;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -27,9 +26,8 @@ import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.IDiffContainer;
 import org.eclipse.compare.structuremergeviewer.IDiffElement;
-import org.eclipse.compare.structuremergeviewer.IStructureComparator;
+import org.eclipse.core.internal.dtree.IComparator;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
