@@ -1,6 +1,7 @@
 package ivc.compare;
 
 import ivc.plugin.ImageDescriptorManager;
+import ivc.util.StringUtils;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -13,6 +14,10 @@ import org.eclipse.compare.IContentChangeNotifier;
 import org.eclipse.compare.IEditableContent;
 import org.eclipse.compare.IEncodedStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
+import org.eclipse.compare.contentmergeviewer.TokenComparator;
+import org.eclipse.compare.rangedifferencer.RangeDifference;
+import org.eclipse.compare.rangedifferencer.RangeDifferencer;
+import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -51,10 +56,11 @@ public class IVCCompareEditorInput extends CompareEditorInput {
 				.getFile(new Path("asd\\b.txt"))));
 
 		Differencer diferencer = new Differencer();
-		Object result = diferencer.findDifferences(false, monitor, null, null, left, right);
+		DiffNode result = (DiffNode) diferencer.findDifferences(false, monitor, null, null, left,
+				right);
+		
 		return result;
 	}
-
 }
 
 class ResourceElement implements ITypedElement, IEncodedStreamContentAccessor,
