@@ -87,8 +87,8 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 		try {
 			// create registry
 			Naming.rebind("rmi://" + ServerBusiness.getHostAddress() + ":"
-					+ 1099 + "/" + "client_ivc_" + hostAddress, client);
-			String peerFilePath = Constants.IvcFolder + "\\" + Constants.Peers;
+					+ 1099 + "/" + Constants.BIND_CLIENT+ hostAddress, client);
+			String peerFilePath = Constants.IvcFolder + Constants.Peers;
 			HashMap<String, String> peers = (HashMap<String, String>) FileHandler.readObjectFromFile(peerFilePath);
 			if (peers == null) {
 				peers = new HashMap<String, String>();
@@ -114,7 +114,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 		try {
 			return (ClientIntf) Naming.lookup("rmi://"
 					+ ServerBusiness.getHostAddress() + ":" + 1099 + "/"
-					+ "client_ivc_" + hostAddress);
+					+ Constants.BIND_CLIENT + hostAddress);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
