@@ -48,7 +48,7 @@ public class FileHandler {
 		try {
 			
 			oos = new ObjectOutputStream(fos);
-			oos.writeObject(o);
+			oos.writeObject(o);			
 			oos.close();
 			fos.close();
 		} catch (IOException e) {

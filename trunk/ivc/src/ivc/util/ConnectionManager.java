@@ -46,8 +46,7 @@ public class ConnectionManager implements Serializable {
 	 */
 	public void initiateConnections() throws ServerException {
 		// connect to server
-		String serverAddress = (String) FileHandler
-				.readObjectFromFile(Constants.ServerFile);
+		String serverAddress = (String) FileHandler.readObjectFromFile(Constants.ServerFile);
 		connectToServer(serverAddress);
 
 		// register server for rmi connection in order to allow other users to
@@ -61,7 +60,7 @@ public class ConnectionManager implements Serializable {
 
 		List<String> hosts;
 		try {
-			hosts = server.getClientHosts();
+			hosts = server.getConnectedClientHosts();
 			if (hosts != null) {
 				Iterator<String> it = hosts.iterator();
 				while (it.hasNext()) {

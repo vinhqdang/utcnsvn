@@ -2,6 +2,7 @@ package ivc.data.command;
 
 import ivc.data.BaseVersion;
 import ivc.data.Result;
+import ivc.data.exception.Exceptions;
 import ivc.data.exception.ServerException;
 import ivc.rmi.server.ServerBusiness;
 import ivc.rmi.server.ServerIntf;
@@ -34,6 +35,9 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 	private String projectName;
 	private String projectPath;
 	private String serverAddress;
+	private String userName;
+	private String pass;
+	
 	private CommandArgs args;
 	private BaseVersion bv;
 	private Result result;
@@ -51,6 +55,8 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 
 		projectName = (String) args.getArgumentValue("projectName");
 		projectPath = (String) args.getArgumentValue("projectPath");
+		userName = (String) args.getArgumentValue("userName");
+		pass = (String) args.getArgumentValue("pass");
 		serverAddress = (String) args.getArgumentValue("serverAddress");
 		bv = new BaseVersion();
 		bv.setProjectName(projectName);
@@ -73,12 +79,23 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 			ConnectionManager.getInstance().connectToServer(serverAddress);
 		} catch (ServerException e1) {
 			// TODO Auto-generated catch block
+			result = new Result(false,Exceptions.SERVER_CONNECTION_FAILED,e1);
 			e1.printStackTrace();
 		}
 
 		// continue if connection succedded
 		ServerIntf server = ConnectionManager.getInstance().getServer();
 		if (server != null) {
+			// authenticate
+			try {
+				if(!server.authenticateHost(userName, pass)){
+					result = new Result(false,Exceptions.SERVER_AUTHENTICATION_FAILED,null);
+				}
+			} catch (RemoteException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
 			// 2.expose interface
 			monitor.worked(1);
 
@@ -94,7 +111,7 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 			monitor.setTaskName("Saving base version on server repository");
 			createBaseVersion();
 			try {
-				server.receiveBaseVersion(bv);
+				server.receiveBaseVersion(projectPath,bv);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

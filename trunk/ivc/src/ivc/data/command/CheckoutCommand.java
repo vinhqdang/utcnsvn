@@ -4,6 +4,7 @@ import ivc.data.BaseVersion;
 import ivc.data.Result;
 import ivc.data.Transformation;
 import ivc.data.TransformationHistory;
+import ivc.data.TransformationHistoryList;
 import ivc.data.exception.ServerException;
 import ivc.rmi.client.ClientIntf;
 import ivc.rmi.server.ServerIntf;
@@ -31,8 +32,14 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String serverAddress;
-	private ServerIntf server;
 	private String projectPath;
+	private String user;
+	private String pass;
+	
+	
+	private ServerIntf server;
+	
+	
 
 	/*
 	 * (non-Javadoc)
@@ -44,6 +51,9 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 		// init fields
 		serverAddress = (String) args.getArgumentValue("serverAddress");
 		projectPath = (String) args.getArgumentValue("projectPath");
+		user = (String)args.getArgumentValue("user");
+		pass = (String) args.getArgumentValue("password");
+		
 
 		// 1.establish connections: connect to server; expose intf; connect to other peers
 		try {
@@ -53,14 +63,17 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 			e.printStackTrace();
 			return new Result(false,"error",e);
 		}
+		
+		// 2. create local project 
+		//TODO ALex create proj at checkout
 
-		// 2. init workspace file
-		initLogFiles();
+		// 3. init workspace file
+		createLogFiles();
 
-		// 3. get base version and transformations
+		// 4. get base version and transformations
 		createProjectFiles();
 
-		// 4. create log files on peers
+		// 5. create log files on peers
 		createPeersRemoteFiles();
 
 		return new Result(true, "Success", null);
@@ -85,7 +98,7 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 		// get list of hosts
 		List<String> peerHosts;
 		try {
-			peerHosts = connMan.getServer().getClientHosts();
+			peerHosts = connMan.getServer().getConnectedClientHosts();
 			if (peerHosts != null) {
 				for (Iterator<String> iterator = peerHosts.iterator(); iterator.hasNext();) {
 					String peerHost = (String) iterator.next();
@@ -106,7 +119,7 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 	/**
 	 * 
 	 */
-	private void initLogFiles() {
+	private void createLogFiles() {
 		try {
 			// create document directory
 			File ivcfolder = new File(projectPath + Constants.IvcFolder);
@@ -127,7 +140,9 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 					rlufile.createNewFile();
 				}
 			}
-
+			File cvFile = new File(projectPath + Constants.CurrentVersionFile);
+			cvFile.createNewFile();	
+			ConnectionManager.getInstance().getServer().getVersionNumber(projectPath);			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -159,25 +174,24 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 	private void createProjectFiles() {
 		ServerIntf server = ConnectionManager.getInstance().getServer();
 		try {
-			BaseVersion bv = server.getBaseVersion();
+			BaseVersion bv = server.returnBaseVersion(projectPath);
 			// create folder structure
 			Iterator<String> itfld = bv.getFolders().iterator();
 			while (itfld.hasNext()) {
 				File f = new File(itfld.next());
 				f.mkdirs();
 			}
-			List<TransformationHistory> thl = server.getHeadVersion();
+			TransformationHistoryList thl = server.returnHeadVersion(projectPath);
 			// 4. apply all transformations
 			Iterator<String> it = bv.getFiles().keySet().iterator();
 			while (it.hasNext()) {
 				String filePath = it.next();
 				StringBuffer baseContent = bv.getFiles().get(filePath);
 				TransformationHistory th = getTransformationHistForFile(thl, filePath);
-				for (Iterator<Transformation> iterator = th.getTransformations().iterator(); iterator
-						.hasNext();) {
+				for (Iterator<Transformation> iterator = th.getTransformations().iterator(); iterator.hasNext();) {
 					Transformation transformation = iterator.next();
 					StringBuffer headContent = transformation.applyTransformation(baseContent);
-					// 5. create files
+					// 5. create file structure
 					try {
 						File f = new File(filePath);
 						f.createNewFile();
@@ -198,8 +212,7 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 	/**
 	 * 
 	 */
-	private TransformationHistory getTransformationHistForFile(List<TransformationHistory> thl,
-			String filePath) {
+	private TransformationHistory getTransformationHistForFile(TransformationHistoryList thl,String filePath) {
 		if (thl != null) {
 			Iterator<TransformationHistory> it = thl.iterator();
 			while (it.hasNext()) {
