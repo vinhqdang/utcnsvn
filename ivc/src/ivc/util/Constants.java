@@ -35,6 +35,10 @@ public class Constants {
 	public static final String CONNECTED = "d:\\temp";
 	public static final String DISCONNECTED = "d:\\temp";
 	
+	public static final String BIND_CLIENT = "client_ivc";
+	public static final String BIND_SERVER = "server_ivc";
+	
+	
 	
 	
 }
