@@ -10,8 +10,13 @@ public class Exceptions {
 	public static final String SERVER_UNBOUND = "Server is not bound";
 	
 	// share project command
-	public static final String SERVER_CONNECTION_FAILED = "SERVER_CONNECTION_FAILED";
+	public static final String SERVER_CONNECTION_FAILED = "Connection to server could not be established";
 	public static final String SERVER_AUTHENTICATION_FAILED ="SERVER_AUTHENTICATION_FAILED";	
 	public static final String SERVER_PATH_INVALID = "SERVER_PATH_INVALID";
+	
+	// commit command
+	public static final String FILE_OUT_OF_SYNC = "FILE_OUT_OF_SYNC";
+	public static final String SERVER_UPDATE_HEADVERSION_FAILED = "SERVER_UPDATE_HEADVERSION_FAILED";
+	public static final String COMMIT_NOFILE_CHANGED = "COMMIT_NOFILE_CHANGED";
  
 }

@@ -59,9 +59,6 @@ public class ServerBusiness {
 		}
 	}
 	
-	
-	
-	
 	private static void createFolderStructure(LinkedList<String> folders){
 		Iterator<String> it  = folders.iterator();
 		while (it.hasNext()){

@@ -14,8 +14,15 @@ public class Transformation implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private static final int OPERATION_DELETE = -1;
-	private static final int OPERATION_ADD = 1;
+	public static final int CHARACTER_DELETE = -1;
+	public static final int CHARACTER_ADD = 1;
+	
+	public static final int ADD_FILE = 2;
+	public static final int ADD_FOLDER = 3;
+	
+	public static final int REMOVE_FILE = -2;
+	public static final int REMOVE_FOLDER = -3;
+	
 	
 	private UUID transformationID;
 	
@@ -31,7 +38,9 @@ public class Transformation implements Serializable {
 	
 	private Integer position;
 	
-	private char text;
+	private String text;
+	
+	private Boolean commited;
 	
 	/**
 	 *  DELETE / INSERT
@@ -81,6 +90,22 @@ public class Transformation implements Serializable {
 	 */
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
+	}
+
+	
+	
+	/**
+	 * @return the commited
+	 */
+	public Boolean getCommited() {
+		return commited;
+	}
+
+	/**
+	 * @param commited the commited to set
+	 */
+	public void setCommited(Boolean commited) {
+		this.commited = commited;
 	}
 
 	/**
@@ -142,14 +167,14 @@ public class Transformation implements Serializable {
 	/**
 	 * @return the text
 	 */
-	public char getText() {
+	public String getText() {
 		return text;
 	}
 
 	/**
 	 * @param text the text to set
 	 */
-	public void setText(char text) {
+	public void setText(String text) {
 		this.text = text;
 	}
 
@@ -172,10 +197,10 @@ public class Transformation implements Serializable {
 		if (lines.length > 0 && lines.length > line){
 			StringBuffer lineStr = new StringBuffer(lines[line]);
 			switch (operationType) {
-			case OPERATION_ADD:
+			case CHARACTER_ADD:
 				lineStr.insert(position.intValue(), text);
 				break;
-			case OPERATION_DELETE:
+			case CHARACTER_DELETE:
 				lineStr.deleteCharAt(position);
 				break;
 			default:

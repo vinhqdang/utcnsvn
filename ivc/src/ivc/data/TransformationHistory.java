@@ -19,6 +19,8 @@ public class TransformationHistory implements Serializable {
 	 * 
 	 */
 	private List<Transformation> transformations;
+	
+	
 
 	/**
 	 * @return the filePath
@@ -47,6 +49,12 @@ public class TransformationHistory implements Serializable {
 	public void setTransformations(List<Transformation> transformations) {
 		this.transformations = transformations;
 	}
+	
+	public void addTransformations(List<Transformation> trs){
+		this.transformations.addAll(trs);
+	}
+	
+	
 	
 	
 
