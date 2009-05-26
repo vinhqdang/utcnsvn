@@ -15,12 +15,12 @@ public class NewProjectWizardPage extends BaseWizardPage {
 
 	Text txtProjectName;
 
-	public  NewProjectWizardPage(String pageName) {
+	public NewProjectWizardPage(String pageName) {
 		super(pageName);
 		this.setTitle(pageName);
 		ImageDescriptor img = ImageDescriptorManager
-		.getImageDescriptor(ImageDescriptorManager.SHARE_WIZARD);
-setImageDescriptor(img);
+				.getImageDescriptor(ImageDescriptorManager.SHARE_WIZARD);
+		setImageDescriptor(img);
 	}
 
 	@Override
@@ -43,12 +43,19 @@ setImageDescriptor(img);
 		return true;
 	}
 
+	@Override
+	public boolean canFlipToNextPage() {
+		return false;
+	}
+
+	
+
 	public boolean createProject() {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject project = root.getProject(txtProjectName.getText());
-		
+
 		// project.create(progressMonitor);
-		//project.open(progressMonitor);
+		// project.open(progressMonitor);
 		return false;
 	}
 

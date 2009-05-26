@@ -15,16 +15,19 @@ import ivc.util.FileHandler;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 
 /**
  * @author danielan
  * 
  */
-public class CheckoutCommand implements CommandIntf, Serializable {
+public class CheckoutCommand implements IRunnableWithProgress {
 
 	/**
 	 * 
@@ -40,14 +43,16 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 	private ServerIntf server;
 	
 	
+	private CommandArgs args;
+	private Result result;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see command.CommandIntf#execute(command.CommandArgs)
-	 */
+	public CheckoutCommand(CommandArgs args) {
+		this.args = args;
+	}
+
 	@Override
-	public Result execute(CommandArgs args) {
+	public void run(IProgressMonitor arg0) throws InvocationTargetException, InterruptedException {
+		// TODO Auto-generated method stub
 		// init fields
 		serverAddress = (String) args.getArgumentValue("serverAddress");
 		projectPath = (String) args.getArgumentValue("projectPath");
@@ -55,13 +60,15 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 		pass = (String) args.getArgumentValue("password");
 		
 
-		// 1.establish connections: connect to server; expose intf; connect to other peers
+		// 1.establish connections: connect to server; expose intf; connect to
+		// other peers
 		try {
 			initiateConnections();
 		} catch (ServerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return new Result(false,"error",e);
+			result = new Result(false, "error", e);
+			return;
 		}
 		
 		// 2. create local project 
@@ -75,13 +82,9 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 
 		// 5. create log files on peers
 		createPeersRemoteFiles();
-
-		return new Result(true, "Success", null);
+		result = new Result(true, "Success", null);
 	}
 
-	/**
-	 * 
-	 */
 	private void initiateConnections() throws ServerException {
 		ConnectionManager connMan = ConnectionManager.getInstance();
 		// connect to server
@@ -224,6 +227,14 @@ public class CheckoutCommand implements CommandIntf, Serializable {
 			}
 		}
 		return new TransformationHistory();
+	}
+
+	private void setResult(Result result) {
+		this.result = result;
+	}
+
+	private Result getResult() {
+		return result;
 	}
 
 }

@@ -19,17 +19,22 @@ public class CheckoutWizard extends Wizard implements INewWizard, IImportWizard 
 		mainPage = new CheckoutWizardPage("Checkout a new project from IVC repository");
 		addPage(mainPage);
 		projectPage = new NewProjectWizardPage("Create the project");
-		addPage(mainPage);
+		addPage(projectPage);
 	}
 
-//	@Override
-//	public IWizardPage getNextPage(IWizardPage wizardPage) {
-//		if (wizardPage == mainPage) {
-//			return projectPage;
-//		}
-//		return super.getNextPage(wizardPage);
-//
-//	}
+	@Override
+	public boolean canFinish() {
+		return getContainer().getCurrentPage() == projectPage;
+	}
+
+	// @Override
+	// public IWizardPage getNextPage(IWizardPage wizardPage) {
+	// if (wizardPage == mainPage) {
+	// return projectPage;
+	// }
+	// return super.getNextPage(wizardPage);
+	//
+	// }
 
 	@Override
 	public boolean performFinish() {
