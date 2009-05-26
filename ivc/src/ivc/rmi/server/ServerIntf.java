@@ -51,5 +51,8 @@ public interface ServerIntf extends Remote {
 	
 	public boolean authenticateHost(String userName, String password) throws RemoteException;
 	
+	public boolean checkProjectPath(String projectPath) throws RemoteException;
+	 
+	
 }
     

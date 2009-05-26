@@ -292,4 +292,13 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see ivc.rmi.server.ServerIntf#checkProjectPath(java.lang.String)
+	 */
+	@Override
+	public boolean checkProjectPath(String projectPath) throws RemoteException {
+		File file =  new File(projectPath);
+		return file.exists();
+	}
+
 }
