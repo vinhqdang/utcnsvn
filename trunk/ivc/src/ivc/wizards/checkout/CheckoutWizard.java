@@ -1,5 +1,10 @@
 package ivc.wizards.checkout;
 
+import java.lang.reflect.InvocationTargetException;
+
+import ivc.data.command.CheckoutCommand;
+import ivc.data.command.CommandArgs;
+import ivc.data.command.ShareProjectCommand;
 import ivc.wizards.checkout.pages.CheckoutWizardPage;
 import ivc.wizards.checkout.pages.NewProjectWizardPage;
 
@@ -11,8 +16,8 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
 public class CheckoutWizard extends Wizard implements INewWizard, IImportWizard {
-	CheckoutWizardPage mainPage;
-	public NewProjectWizardPage projectPage;
+	private CheckoutWizardPage mainPage;
+	private NewProjectWizardPage projectPage;
 
 	@Override
 	public void addPages() {
@@ -38,8 +43,29 @@ public class CheckoutWizard extends Wizard implements INewWizard, IImportWizard 
 
 	@Override
 	public boolean performFinish() {
+		CommandArgs args = new CommandArgs();
+		args.putArgument("projectName", projectPage.getProjectName());
+		CheckoutCommand command = new CheckoutCommand(args);
+		try {
+			this.getContainer().run(false, true, command);
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
 
-		return false;
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (command.getResult().isSuccess())
+			return true;
+		else {
+			projectPage.setErrorMessage(command.getResult().getMessage());
+			return false;
+		}
+
+	}
+
+	public NewProjectWizardPage getProjectWizardPage() {
+		return projectPage;
 	}
 
 	@Override

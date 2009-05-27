@@ -1,13 +1,4 @@
-/*******************************************************************************
- * Copyright (c) 2003, 2006 Subclipse project and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Subclipse project committers - initial API and implementation
- ******************************************************************************/
+
 package ivc.compare;
 
 import ivc.plugin.IVCPlugin;
@@ -34,41 +25,11 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.team.core.TeamException;
 
-
-/**
- * A class for comparing ISVNRemoteResource objects
- * 
- * <p>
- * 
- * <pre>
- * ResourceEditionNode left = new ResourceEditionNode(editions[0]);
- * ResourceEditionNode right = new ResourceEditionNode(editions[1]);
- * CompareUI.openCompareEditorOnPage(new SVNCompareEditorInput(left, right), getTargetPage());
- * </pre>
- * 
- * </p>
- * 
- */
 public class ResourceEditionNode implements ITypedElement, IStreamContentAccessor,
 		IEncodedStreamContentAccessor, IDiffContainer, IContentChangeNotifier, IEditableContent {
 	public IFile resource;
 	Vector<IContentChangeListener> listenerList = new Vector<IContentChangeListener>();
 	private String charset = null;
-
-	/**
-	 * Creates a new ResourceEditionNode on the given resource edition.
-	 */
-
-	/*
-	 * get the remote resource for this node
-	 */
-
-	/**
-	 * Returns true if both resources names are identical. The content is not
-	 * considered.
-	 * 
-	 * @see IComparator#equals
-	 */
 
 	public ResourceEditionNode(IFile file) {
 		resource = file;
@@ -82,15 +43,6 @@ public class ResourceEditionNode implements ITypedElement, IStreamContentAccesso
 		return super.equals(other);
 	}
 
-	/**
-	 * Enumerate children of this node (if any).
-	 * 
-	 * @see IStructureComparator#getChildren
-	 */
-
-	/**
-	 * @see IStreamContentAccessor#getContents()
-	 */
 	public InputStream getContents() throws CoreException {
 		// if (resource == null || resource.isContainer()) {
 		// return null;
@@ -141,15 +93,9 @@ public class ResourceEditionNode implements ITypedElement, IStreamContentAccesso
 	 * @see org.eclipse.compare.ITypedElement#getType()
 	 */
 	public String getType() {
-
-		String name = resource.getName();
-		name = name.substring(name.lastIndexOf('.') + 1);
 		return TEXT_TYPE;
 	}
 
-	/**
-	 * @see IComparator#equals
-	 */
 	public int hashCode() {
 		return getName().hashCode();
 	}

@@ -51,15 +51,17 @@ public class CheckoutCommand implements IRunnableWithProgress {
 	}
 
 	@Override
-	public void run(IProgressMonitor arg0) throws InvocationTargetException, InterruptedException {
+	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		// TODO Auto-generated method stub
 		// init fields
+		monitor.beginTask("Init local properties", 5);
 		serverAddress = (String) args.getArgumentValue("serverAddress");
 		projectPath = (String) args.getArgumentValue("projectPath");
 		user = (String)args.getArgumentValue("user");
 		pass = (String) args.getArgumentValue("password");
 		
-
+		monitor.worked(1);
+		monitor.setTaskName("Establish connections");
 		// 1.establish connections: connect to server; expose intf; connect to
 		// other peers
 		try {
@@ -71,6 +73,8 @@ public class CheckoutCommand implements IRunnableWithProgress {
 			return;
 		}
 		
+		monitor.worked(1);
+		monitor.setTaskName("Establish connections");
 		// 2. create local project 
 		//TODO ALex create proj at checkout
 
@@ -229,11 +233,8 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		return new TransformationHistory();
 	}
 
-	private void setResult(Result result) {
-		this.result = result;
-	}
 
-	private Result getResult() {
+	public Result getResult() {
 		return result;
 	}
 
