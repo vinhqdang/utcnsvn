@@ -192,7 +192,12 @@ public class Transformation implements Serializable {
 		this.operationType = operationType;
 	}
 	
-	public StringBuffer applyTransformation(StringBuffer content){
+	
+	public void applyStructureTransformation(){
+		
+	}
+	
+	public StringBuffer applyContentTransformation(StringBuffer content){
 		String[] lines = content.toString().split("\n");		
 		if (lines.length > 0 && lines.length > line){
 			StringBuffer lineStr = new StringBuffer(lines[line]);
