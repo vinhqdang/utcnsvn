@@ -47,6 +47,10 @@ public class CommitCommand implements CommandIntf {
 	 * @see command.CommandIntf#execute(data.CommandArgs)
 	 */
 	@Override
+	//TODO: update rul ;)
+	
+	// add version 1; delete version remains
+	
 	public Result execute(CommandArgs args) {
 		// init local fields
 		projectPath = (String) args.getArgumentValue("projectPath");
@@ -71,9 +75,9 @@ public class CommitCommand implements CommandIntf {
 		}
 		updateCurrentVersion();
 		updateRCLFiles();
+		updateRUL();
 		cleanLL();
-
-		return null;
+		return new Result(true,"Success",null);
 	}
 
 	private void getChangedFiles() {
@@ -124,12 +128,17 @@ public class CommitCommand implements CommandIntf {
 				String filePath = th.getFilePath();
 				// update current version number
 				Integer localNo = localVersion.get(filePath);
+				if (localNo == null){
+					localNo = 0;
+				}
 				localNo++;
-				localVersion.put(filePath, localNo);
-
 				Integer serverNo = currentCommitedVersion.get(filePath);
+				if (serverNo == null){
+					serverNo = 0;
+				}
 				serverNo++;
 				currentCommitedVersion.put(filePath, serverNo);
+				localVersion.put(filePath, serverNo);
 			}
 			// update project version
 			Integer localProjNo = localVersion.get(projectPath);
@@ -181,4 +190,7 @@ public class CommitCommand implements CommandIntf {
 		FileHandler.writeObjectToFile(projectPath + Constants.LocalLog, ll);
 	}
 
+	private void updateRUL(){
+		
+	}
 }

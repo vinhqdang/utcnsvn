@@ -39,8 +39,7 @@ public class TransformationHistoryList implements Serializable {
 	 * @param transformations
 	 *            the transformations to set
 	 */
-	public void setTransformationHist(
-			LinkedList<TransformationHistory> transformations) {
+	public void setTransformationHist(LinkedList<TransformationHistory> transformations) {
 		this.transformations = transformations;
 	}
 
@@ -77,15 +76,38 @@ public class TransformationHistoryList implements Serializable {
 	}
 
 	public TransformationHistoryList appendTransformationHistoryList(TransformationHistoryList thl) {
-		if (thl == null || thl.getTransformationHist() == null){
+		if (thl == null || thl.getTransformationHist() == null) {
 			return this;
 		}
 		Iterator<TransformationHistory> it = thl.iterator();
-		while (it.hasNext()){
+		while (it.hasNext()) {
 			TransformationHistory th = it.next();
 			appendTransformationHistory(th);
 		}
 		return this;
 	}
 
+	public TransformationHistoryList removeTransformationHistory(TransformationHistory th) {
+		transformations.remove(th);
+		return this;
+	}
+
+	private TransformationHistory getTransformationHistForFile(String filePath) {
+		Iterator<TransformationHistory> it = this.transformations.iterator();
+		while (it.hasNext()) {
+			TransformationHistory th = it.next();
+			if (th.getFilePath().equalsIgnoreCase(th.getFilePath())) {
+				return th;
+			}
+		}
+		return null;
+	}
+
+	public TransformationHistoryList removeTransformationHistForFile(String filePath){
+		TransformationHistory th = getTransformationHistForFile(filePath);
+		if (th != null){
+			transformations.remove(th);
+		}
+		return this;
+	}
 }

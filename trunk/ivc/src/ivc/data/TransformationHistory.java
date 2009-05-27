@@ -1,6 +1,7 @@
 package ivc.data;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
 public class TransformationHistory implements Serializable {
@@ -18,7 +19,7 @@ public class TransformationHistory implements Serializable {
 	/**
 	 * 
 	 */
-	private List<Transformation> transformations;
+	private LinkedList<Transformation> transformations;
 	
 	
 
@@ -39,18 +40,18 @@ public class TransformationHistory implements Serializable {
 	/**
 	 * @return the transformations
 	 */
-	public List<Transformation> getTransformations() {
+	public LinkedList<Transformation> getTransformations() {
 		return transformations;
 	}
 
 	/**
 	 * @param transformations the transformations to set
 	 */
-	public void setTransformations(List<Transformation> transformations) {
+	public void setTransformations(LinkedList<Transformation> transformations) {
 		this.transformations = transformations;
 	}
 	
-	public void addTransformations(List<Transformation> trs){
+	public void addTransformations(LinkedList<Transformation> trs){
 		this.transformations.addAll(trs);
 	}
 	

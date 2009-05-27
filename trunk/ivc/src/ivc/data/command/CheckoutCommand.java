@@ -193,7 +193,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 				TransformationHistory th = getTransformationHistForFile(thl, filePath);
 				for (Iterator<Transformation> iterator = th.getTransformations().iterator(); iterator.hasNext();) {
 					Transformation transformation = iterator.next();
-					StringBuffer headContent = transformation.applyTransformation(baseContent);
+					StringBuffer headContent = transformation.applyContentTransformation(baseContent);
 					// 5. create file structure
 					try {
 						File f = new File(filePath);
