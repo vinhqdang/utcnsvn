@@ -13,7 +13,11 @@ import ivc.wizards.BaseWizardPage;
 
 public class NewProjectWizardPage extends BaseWizardPage {
 
-	Text txtProjectName;
+	private Text txtProjectName;
+
+	public String getProjectName() {
+		return txtProjectName.getText();
+	}
 
 	public NewProjectWizardPage(String pageName) {
 		super(pageName);
@@ -47,8 +51,6 @@ public class NewProjectWizardPage extends BaseWizardPage {
 	public boolean canFlipToNextPage() {
 		return false;
 	}
-
-	
 
 	public boolean createProject() {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();

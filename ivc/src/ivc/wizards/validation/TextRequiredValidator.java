@@ -22,6 +22,7 @@ public class TextRequiredValidator implements ModifyListener,IValidation {
 			valid = false;
 		} else {
 			valid = true;
+			resetError();
 			controlDecoration.hide();
 		}
 	}
@@ -29,5 +30,8 @@ public class TextRequiredValidator implements ModifyListener,IValidation {
 
 	public boolean isValid() {
 		return valid;
+	}
+	public void resetError(){
+		
 	}
 }

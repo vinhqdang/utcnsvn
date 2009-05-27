@@ -47,7 +47,7 @@ public class ConnectionManager implements Serializable {
 	public void initiateConnections() throws ServerException {
 		// connect to server
 		String serverAddress = (String) FileHandler.readObjectFromFile(Constants.ServerFile);
-		connectToServer(serverAddress);
+		server=connectToServer(serverAddress);
 
 		// register server for rmi connection in order to allow other users to
 		// communicate with
@@ -88,11 +88,10 @@ public class ConnectionManager implements Serializable {
 		}
 	}
 
-	public void connectToServer(String serverAddress) throws ServerException  {
+	public ServerIntf connectToServer(String serverAddress) throws ServerException  {
 		this.serverAddress = serverAddress;
 		try {
-			server = (ServerIntf) Naming.lookup("rmi://" + serverAddress + ":"
-					+ 1099 + "/" + "server_ivc");
+			return  (ServerIntf) Naming.lookup(serverAddress);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

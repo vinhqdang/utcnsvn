@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Text;
 
 public abstract class Validator {
 	private Vector<IValidation> controls;
-	private String error="Some of the required fields are not filled in";
+	private String error = "Some of the required fields are not filled in";
 
 	public void setErrorMessage(String er) {
 		error = er;
@@ -27,7 +27,11 @@ public abstract class Validator {
 
 	public void addControl(Text control, String controlError) {
 		ControlDecoration txt = createControlDecoration(control, controlError);
-		TextRequiredValidator validation = new TextRequiredValidator(txt);
+		TextRequiredValidator validation = new TextRequiredValidator(txt) {
+			public void resetError() {
+				setError("");
+			}
+		};
 		control.addModifyListener(validation);
 		controls.add(validation);
 	}
@@ -39,6 +43,7 @@ public abstract class Validator {
 				return false;
 			}
 		}
+		setError("");
 		return true;
 	}
 
