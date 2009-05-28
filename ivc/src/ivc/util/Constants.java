@@ -14,26 +14,28 @@ public class Constants {
 	/*************** FILES **********************************************/
 	
 	// client files
-	public static final String LocalLog = "\\.ivc\\.ll";
-	public static final String RemoteCommitedLog = "\\.ivc\\.rcl";
-	public static final String RemoteUnCommitedLog = "\\.ivc\\.rul";
-	public static final String ServerFile = "\\.ivc\\.svr";
+	public static final String LocalLog = "\\.ll";
+	public static final String RemoteCommitedLog = "\\.rcl";
+	public static final String RemoteUnCommitedLog = "\\.rul";
+	public static final String ServerFile = "\\.svr";
+	
 	
 	// server files
-	public static final String BaseVersionFile = "\\.ivc\\.bv";
-	public static final String Peers ="\\.ivc\\.peers";
-	public static final String CommitedLog = "\\.ivc\\.cl";
-	public static final String PendingRemoteCommitedLog = "\\.ivc\\.rcl";
+	public static final String BaseVersionFile = "\\.bv";
+	public static final String Peers ="\\.peers";
+	public static final String CommitedLog = "\\.cl";
+	public static final String PendingRemoteCommitedLog = "\\.rcl";
+	public static final String RepositoryFolder = "d:\\temp\\ivc\\projects";
 	
 	// common files 	
-	public static final String CurrentVersionFile = "\\.ivc\\.cv";
+	public static final String CurrentVersionFile = "\\.cv";
 	public static final String IvcFolder = "\\.ivc";
-	public static final String RepositoryFolder = "d:\\temp";
+	
 	
 	
 	/*************** CONNECTION ******************************************/
-	public static final String CONNECTED = "d:\\temp";
-	public static final String DISCONNECTED = "d:\\temp";
+	public static final String CONNECTED = "connected";
+	public static final String DISCONNECTED = "disconnected";
 	
 	public static final String BIND_CLIENT = "client_ivc";
 	public static final String BIND_SERVER = "server_ivc";

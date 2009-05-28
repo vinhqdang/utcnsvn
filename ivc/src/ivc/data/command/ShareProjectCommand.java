@@ -1,14 +1,14 @@
 package ivc.data.command;
 
+import ivc.connection.ConnectionManager;
 import ivc.data.BaseVersion;
-import ivc.data.Result;
 import ivc.data.exception.Exceptions;
-import ivc.data.exception.ServerException;
+import ivc.data.exception.IVCException;
+import ivc.manager.ProjectsManager;
 import ivc.rmi.server.ServerBusiness;
 import ivc.rmi.server.ServerIntf;
-import ivc.util.ConnectionManager;
 import ivc.util.Constants;
-import ivc.util.FileHandler;
+import ivc.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +18,7 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -30,14 +31,16 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.internal.ole.win32.CONTROLINFO;
+import org.eclipse.swt.internal.ole.win32.COSERVERINFO;
 
 public class ShareProjectCommand implements IRunnableWithProgress {
-	private String projectName;
+	private IProject project;
 	private String projectPath;
 	private String serverAddress;
 	private String userName;
 	private String pass;
-	
+
 	private CommandArgs args;
 	private BaseVersion bv;
 	private Result result;
@@ -47,81 +50,73 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 	}
 
 	@Override
-	public void run(IProgressMonitor monitor) throws InvocationTargetException,
-			InterruptedException {
+	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
 		// init local properties
 		monitor.beginTask("Init local properties", 5);
 
-		projectName = (String) args.getArgumentValue("projectName");
+		project = (IProject) args.getArgumentValue("project");
 		projectPath = (String) args.getArgumentValue("projectPath");
 		userName = (String) args.getArgumentValue("userName");
 		pass = (String) args.getArgumentValue("pass");
 		serverAddress = (String) args.getArgumentValue("serverAddress");
+
 		bv = new BaseVersion();
-		bv.setProjectName(projectName);
-		bv.setProjectPath(projectPath);
+		bv.setProjectName(project.getName());
 		monitor.worked(1);
 
 		monitor.setTaskName("Save server address to disk and connect to server");
-		// 1.save server address to disk and connect to server
-		File svrfile = new File(projectPath + Constants.ServerFile);
-		try {
-			svrfile.createNewFile();
-			FileHandler.writeObjectToFile(svrfile.getAbsolutePath(), serverAddress);
-		} catch (IOException e) {
-			e.printStackTrace();
-			result = new Result(false, e.getMessage(), e);
-			return;
-		}
+		// 1. connect to server
 
 		try {
-			ConnectionManager.getInstance().connectToServer(serverAddress);
-		} catch (ServerException e1) {
-			// TODO Auto-generated catch block
-			result = new Result(false,Exceptions.SERVER_CONNECTION_FAILED,e1);
-			e1.printStackTrace();
-		}
+			ServerIntf server = ConnectionManager.getInstance().connectToServer(serverAddress);
 
-		// continue if connection succedded
-		ServerIntf server = ConnectionManager.getInstance().getServer();
-		if (server != null) {
-			// authenticate
-			try {
-				if(!server.authenticateHost(userName, pass)){
-					result = new Result(false,Exceptions.SERVER_AUTHENTICATION_FAILED,null);
+			// continue if connection succedded
+			if (server != null) {
+				// authenticate
+				try {
+					if (!server.authenticateHost(userName, pass)) {
+						result = new Result(false, Exceptions.SERVER_AUTHENTICATION_FAILED, null);
+					}
+				} catch (RemoteException e1) {
+					result = new Result(false, Exceptions.SERVER_AUTHENTICATION_FAILED, e1);
+					e1.printStackTrace();
 				}
-			} catch (RemoteException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+
+				// 2.expose interface
+				monitor.worked(1);
+
+				monitor.setTaskName("Exposing interface");
+				ConnectionManager.getInstance().exposeInterface();
+				monitor.worked(1);
+				monitor.setTaskName("Init log files");
+				// 3. init log files
+				createLogFiles();
+
+				// 4.save base version on server repository
+				monitor.worked(1);
+				monitor.setTaskName("Saving base version on server repository");
+				createBaseVersion();
+				try {
+					server.receiveBaseVersion(projectPath, bv);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				// 5.update gui
+				// TODO update intf on sharing project
+				ProjectsManager.instance().tryAddProject(project);
+
+				monitor.worked(1);
+				monitor.setTaskName("Finished");
+				monitor.done();
+				
 			}
-			
-			// 2.expose interface
-			monitor.worked(1);
-
-			monitor.setTaskName("Exposing interface");
-			ConnectionManager.getInstance().exposeInterface();
-			monitor.worked(1);
-			monitor.setTaskName("Init log files");
-			// 3. init log files
-			createLogFiles();
-
-			// 4.save base version on server repository
-			monitor.worked(1);
-			monitor.setTaskName("Saving base version on server repository");
-			createBaseVersion();
-			try {
-				server.receiveBaseVersion(projectPath,bv);
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			// 5.update gui ??
-			monitor.worked(1);
-			monitor.setTaskName("Finished");
-			monitor.done();
-			// TODO update intf on sharing project
+		} catch (IVCException e1) {
+			// TODO Auto-generated catch block
+			result = new Result(false, Exceptions.SERVER_CONNECTION_FAILED, e1);
+			e1.printStackTrace();
 		}
 		result = new Result(true, "Success", null);
 
@@ -129,17 +124,22 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 
 	private void createLogFiles() {
 		try {
+			String localProjPath = project.getLocation().toOSString();
 			// create document directory
-			File ivcfolder = new File(projectPath + Constants.IvcFolder);
+			File ivcfolder = new File(localProjPath + Constants.IvcFolder);
 			ivcfolder.mkdir();
+			// svr host file
+			File svrfile = new File(localProjPath + Constants.IvcFolder + Constants.ServerFile);
+			svrfile.createNewFile();
+			FileUtils.writeObjectToFile(svrfile.getAbsolutePath(), serverAddress + "\\" + projectPath);
 			// local log file
-			File llfile = new File(projectPath + Constants.LocalLog);
+			File llfile = new File(localProjPath + Constants.IvcFolder + Constants.LocalLog);
 			llfile.createNewFile();
 			// remote committed log
-			File rclfile = new File(projectPath + Constants.RemoteCommitedLog);
+			File rclfile = new File(localProjPath + Constants.IvcFolder + Constants.RemoteCommitedLog);
 			rclfile.createNewFile();
-			File cvFile = new File(projectPath + Constants.CurrentVersionFile);
-			cvFile.createNewFile();		
+			File cvFile = new File(localProjPath + Constants.IvcFolder + Constants.CurrentVersionFile);
+			cvFile.createNewFile();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -148,18 +148,6 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 	}
 
 	private void createBaseVersion() {
-
-		// get local workspace
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-
-		// get the project root
-		IWorkspaceRoot root = workspace.getRoot();
-
-		// get a handle to project with name 'projectName'
-		IProject project = root.getProject(projectName);
-
-		// add project to ivc repository
-
 		// build base revision
 		if (project.exists()) {
 			try {
@@ -170,13 +158,13 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 					handleResource(resource);
 				}
 				// save current version for each file
-				HashMap<String,Integer> cv = new HashMap<String,Integer>();
-				List<String> files = (List<String>) bv.getFiles().keySet();
+				HashMap<String, Integer> cv = new HashMap<String, Integer>();
+				Set<String> files = bv.getFiles().keySet();
 				for (Iterator<String> iterator = files.iterator(); iterator.hasNext();) {
-					String file =  iterator.next();
+					String file = iterator.next();
 					cv.put(file, 0);
 				}
-				FileHandler.writeObjectToFile(ServerBusiness.PROJECTPATH+Constants.CurrentVersionFile,cv);
+				FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.CurrentVersionFile, cv);
 			} catch (CoreException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -191,7 +179,7 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 			IFile file = (IFile) resource;
 			try {
 				InputStream content = file.getContents(true);
-				StringBuffer sb = FileHandler.InputStreamToStringBuffer(content);
+				StringBuffer sb = FileUtils.InputStreamToStringBuffer(content);
 				IPath relPath = file.getProjectRelativePath();
 				bv.addFile(relPath.toOSString(), sb);
 			} catch (CoreException e) {

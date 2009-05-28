@@ -1,5 +1,6 @@
 package ivc.plugin;
 
+import ivc.connection.ConnectionManager;
 import ivc.data.command.CommandArgs;
 import ivc.data.command.ShareProjectCommand;
 import ivc.fireworks.decorators.Decorator;
@@ -9,7 +10,6 @@ import ivc.manager.ProjectsManager;
 import ivc.rmi.client.ClientImpl;
 import ivc.rmi.client.ClientIntf;
 import ivc.rmi.server.ServerIntf;
-import ivc.util.ConnectionManager;
 import ivc.util.Constants;
 
 import java.lang.reflect.InvocationTargetException;

@@ -34,8 +34,7 @@ public class ResourceChangedListener implements IResourceChangeListener {
 
 						// newly created resource is a java file
 						if ((resource instanceof IFile)
-								&& (resource.getFileExtension().compareTo(
-										"java") == 0)) {
+								&& (resource.getFileExtension().compareTo("java") == 0)) {
 							// attach document listener to the newly created
 							// java file
 							// AttachListeners.attachFileListener((IFile)resource);

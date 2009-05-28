@@ -4,6 +4,7 @@
 package ivc.data;
 
 import java.io.Serializable;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;

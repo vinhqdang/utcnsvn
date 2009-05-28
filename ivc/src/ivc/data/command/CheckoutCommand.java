@@ -1,16 +1,16 @@
 package ivc.data.command;
 
+import ivc.connection.ConnectionManager;
 import ivc.data.BaseVersion;
-import ivc.data.Result;
 import ivc.data.Transformation;
 import ivc.data.TransformationHistory;
 import ivc.data.TransformationHistoryList;
-import ivc.data.exception.ServerException;
+import ivc.data.exception.IVCException;
 import ivc.rmi.client.ClientIntf;
 import ivc.rmi.server.ServerIntf;
-import ivc.util.ConnectionManager;
 import ivc.util.Constants;
-import ivc.util.FileHandler;
+import ivc.util.FileUtils;
+import ivc.util.NetworkUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,7 +66,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		// other peers
 		try {
 			initiateConnections();
-		} catch (ServerException e) {
+		} catch (IVCException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			result = new Result(false, "error", e);
@@ -89,12 +89,12 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		result = new Result(true, "Success", null);
 	}
 
-	private void initiateConnections() throws ServerException {
+	private void initiateConnections() throws IVCException {
 		ConnectionManager connMan = ConnectionManager.getInstance();
 		// connect to server
 		try {
 			connMan.connectToServer(serverAddress);
-		} catch (ServerException e1) {
+		} catch (IVCException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
@@ -111,7 +111,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 					String peerHost = (String) iterator.next();
 					try {
 						connMan.connectToInterface(peerHost);
-					} catch (ServerException e) {
+					} catch (IVCException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
@@ -132,10 +132,10 @@ public class CheckoutCommand implements IRunnableWithProgress {
 			File ivcfolder = new File(projectPath + Constants.IvcFolder);
 			ivcfolder.mkdir();
 			// local log file
-			File llfile = new File(projectPath + Constants.LocalLog);
+			File llfile = new File(projectPath +Constants.IvcFolder + Constants.LocalLog);
 			llfile.createNewFile();
 			// remote committed log
-			File rclfile = new File(projectPath + Constants.RemoteCommitedLog);
+			File rclfile = new File(projectPath +Constants.IvcFolder + Constants.RemoteCommitedLog);
 			rclfile.createNewFile();
 			List<String> peerHosts = ConnectionManager.getInstance().getPeerHosts();
 			if (peerHosts != null) {
@@ -147,7 +147,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 					rlufile.createNewFile();
 				}
 			}
-			File cvFile = new File(projectPath + Constants.CurrentVersionFile);
+			File cvFile = new File(projectPath +Constants.IvcFolder + Constants.CurrentVersionFile);
 			cvFile.createNewFile();	
 			ConnectionManager.getInstance().getServer().getVersionNumber(projectPath);			
 		} catch (IOException e) {
@@ -166,7 +166,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 			while (it.hasNext()) {
 				ClientIntf peer = it.next();
 				try {
-					peer.createRLUFile(ConnectionManager.getInstance().getHostAddress());
+					peer.createRLUFile(NetworkUtils.getHostAddress());
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -202,7 +202,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 					try {
 						File f = new File(filePath);
 						f.createNewFile();
-						FileHandler.writeStringBufferToFile(filePath, headContent);
+						FileUtils.writeStringBufferToFile(filePath, headContent);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

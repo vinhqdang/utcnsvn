@@ -1,10 +1,10 @@
 package ivc.rmi.client;
 
-import ivc.data.Result;
 import ivc.data.Transformation;
 import ivc.data.TransformationHistory;
 import ivc.data.TransformationHistoryList;
 import ivc.data.command.CommandArgs;
+import ivc.data.command.Result;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

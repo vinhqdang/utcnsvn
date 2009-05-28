@@ -47,7 +47,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 /**
  * Convenience and utility methods.
  */
-public class Utilities {
+public class CompareUtils {
 	
 	public static IWorkbenchPartSite findSite(Control c) {
 		while (c != null && !c.isDisposed()) {
@@ -141,7 +141,7 @@ public class Utilities {
 			return null;
 		
 		} finally {
-			Utilities.close(in);
+			CompareUtils.close(in);
 			try {
 				bos.close();
 			} catch (IOException x) {
@@ -359,7 +359,7 @@ public class Utilities {
 			encoding= ((IEncodedStreamContentAccessor)sa).getCharset();
 		if (encoding == null)
 			encoding= ResourcesPlugin.getEncoding();
-		return Utilities.readString(is, encoding);
+		return CompareUtils.readString(is, encoding);
 	}
 
 	public static void close(InputStream is) {

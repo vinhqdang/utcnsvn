@@ -3,8 +3,8 @@ package ivc.wizards.sharing;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import ivc.data.Result;
 import ivc.data.command.CommandArgs;
+import ivc.data.command.Result;
 import ivc.data.command.ShareProjectCommand;
 import ivc.data.command.ShareProjectCommand;
 import ivc.manager.ProjectsManager;

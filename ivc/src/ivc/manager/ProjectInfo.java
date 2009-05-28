@@ -21,12 +21,7 @@ public class ProjectInfo {
 
 		try {
 			monitor.beginTask("Creating " + projectName, 2 * 1000);
-
-			description = ResourcesPlugin.getWorkspace()
-					.loadProjectDescription(
-							new Path(directory + File.separatorChar
-									+ ".project")); //$NON-NLS-1$
-
+			description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(directory + File.separatorChar + ".project")); //$NON-NLS-1$
 			description.setName(projectName);
 			project.create(description, new SubProgressMonitor(monitor, 1000));
 			project.open(new SubProgressMonitor(monitor, 1000));

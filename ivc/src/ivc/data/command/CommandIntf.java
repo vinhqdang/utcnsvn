@@ -1,6 +1,5 @@
 package ivc.data.command;
 
-import ivc.data.Result;
 
 public interface CommandIntf {
 	

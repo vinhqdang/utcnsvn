@@ -1,14 +1,14 @@
 package ivc.data.exception;
 
 
-public class ServerException extends Exception {
+public class IVCException extends Exception {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public ServerException(String message) {
+	public IVCException(String message) {
 		super(message);
 	}
 	

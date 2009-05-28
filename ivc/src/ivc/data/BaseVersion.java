@@ -20,7 +20,6 @@ public class BaseVersion implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private String projectName;
-	private String projectPath;
 	LinkedList<String> folders;
 	private Map<String,StringBuffer> files;
 	/**
@@ -34,18 +33,6 @@ public class BaseVersion implements Serializable{
 	 */
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
-	}
-	/**
-	 * @return the projectPath
-	 */
-	public String getProjectPath() {
-		return projectPath;
-	}
-	/**
-	 * @param projectPath the projectPath to set
-	 */
-	public void setProjectPath(String projectPath) {
-		this.projectPath = projectPath;
 	}
 	/**
 	 * @return the files

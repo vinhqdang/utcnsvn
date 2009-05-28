@@ -36,7 +36,7 @@ public interface ServerIntf extends Remote {
 	
 	public void updateVersionNumber(String projectPath, HashMap<String, Integer> versionNumber) throws RemoteException;
 	
-	public void updatePendingRCL(String projectPath,List<String> hosts, TransformationHistoryList thl);
+	public void updatePendingRCL(String projectPath,List<String> hosts, TransformationHistoryList thl)throws RemoteException;
 
 	
 	// client connection methods

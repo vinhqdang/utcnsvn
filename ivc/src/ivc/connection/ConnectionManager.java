@@ -1,11 +1,14 @@
-package ivc.util;
+package ivc.connection;
 
 import ivc.data.Peers;
 import ivc.data.exception.Exceptions;
-import ivc.data.exception.ServerException;
+import ivc.data.exception.IVCException;
 import ivc.rmi.client.ClientImpl;
 import ivc.rmi.client.ClientIntf;
 import ivc.rmi.server.ServerIntf;
+import ivc.util.Constants;
+import ivc.util.FileUtils;
+import ivc.util.NetworkUtils;
 
 import java.io.Serializable;
 import java.net.InetAddress;
@@ -42,12 +45,12 @@ public class ConnectionManager implements Serializable {
 	/**
 	 * Called at startup
 	 * 
-	 * @throws ServerException
+	 * @throws IVCException
 	 */
-	public void initiateConnections() throws ServerException {
+	public void initiateConnections() throws IVCException {
 		// connect to server
-		String serverAddress = (String) FileHandler.readObjectFromFile(Constants.ServerFile);
-		server=connectToServer(serverAddress);
+		String serverAddress = (String) FileUtils.readObjectFromFile(Constants.ServerFile);
+		server = connectToServer(serverAddress);
 
 		// register server for rmi connection in order to allow other users to
 		// communicate with
@@ -72,7 +75,7 @@ public class ConnectionManager implements Serializable {
 							peers.put(peerHost, peer);
 							peersHosts.addPeerHost(peerHost);
 						}
-					} catch (ServerException e) {
+					} catch (IVCException e) {
 						// HTMLLogger.error("Unable to connect to peer host :" +
 						// peerHost);
 						e.logError();
@@ -88,28 +91,29 @@ public class ConnectionManager implements Serializable {
 		}
 	}
 
-	public ServerIntf connectToServer(String serverAddress) throws ServerException  {
+	public ServerIntf connectToServer(String serverAddress) throws IVCException  {
 		this.serverAddress = serverAddress;
 		try {
-			return  (ServerIntf) Naming.lookup(serverAddress);
+			server = (ServerIntf) Naming.lookup(serverAddress);
+			return server;
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new ServerException(Exceptions.SERVER_CONNECTION_FAILED);
+			throw new IVCException(Exceptions.SERVER_CONNECTION_FAILED);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new ServerException(Exceptions.SERVER_CONNECTION_FAILED);
+			throw new IVCException(Exceptions.SERVER_CONNECTION_FAILED);
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new ServerException(Exceptions.SERVER_CONNECTION_FAILED);
+			throw new IVCException(Exceptions.SERVER_CONNECTION_FAILED);
 		}
 	}
 
 	public void exposeInterface() {
 		try {
-			server.exposeClientIntf(getHostAddress(), new ClientImpl());
+			server.exposeClientIntf(NetworkUtils.getHostAddress(), new ClientImpl());
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -117,7 +121,7 @@ public class ConnectionManager implements Serializable {
 
 	}
 
-	public ClientIntf connectToInterface(String hostAddress) throws ServerException {
+	public ClientIntf connectToInterface(String hostAddress) throws IVCException {
 
 		ClientIntf client;
 		try {
@@ -135,19 +139,6 @@ public class ConnectionManager implements Serializable {
 		// config file
 		return null;
 
-	}
-
-	public String getHostAddress() {
-		InetAddress addr = null;
-		try {
-			addr = InetAddress.getLocalHost();
-		} catch (UnknownHostException e1) {
-			// HTMLLogger.warn(Exceptions.UNABLE_TO_READ_HOST);
-		}
-		if (addr != null) {
-			return addr.getHostAddress();
-		}
-		return "localhost";
 	}
 
 	/**

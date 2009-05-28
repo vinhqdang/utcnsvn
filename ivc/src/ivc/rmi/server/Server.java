@@ -3,9 +3,11 @@
  */
 package ivc.rmi.server;
 
-import ivc.data.exception.ServerException;
+import ivc.data.exception.IVCException;
 import ivc.rmi.client.ClientImpl;
 import ivc.rmi.client.ClientIntf;
+import ivc.util.Constants;
+import ivc.util.NetworkUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,57 +36,26 @@ public class Server {
 	 * @throws RemoteException
 	 */
 	public static void main(String[] args) throws RemoteException {
-		Path path = new Path("d:\\temp\\ivc\\test\\test.txt");
-		
-		File f = new File ("d:\\temp\\ivc\\test\\test.txt");
-		try {
-			f.mkdirs();
-			f.createNewFile();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-//		LocateRegistry.createRegistry(1099);
-//		exposeServerInterface(ServerBusiness.getHostAddress());
-//		System.out.println("Server OK...");
-//		//exposeClientInterface(hostAddress);
-//		System.out.println("Client OK...");
-//		connectToInterface(ServerBusiness.getHostAddress()); 
-//		
-//		try {
-//			ClientIntf client = (ClientIntf) Naming.lookup("rmi://"
-//					+ ServerBusiness.getHostAddress() + ":" + 1099 + "/" + "client_ivc");
-//		
-//			//client.test("SERVER");
-//		} catch (MalformedURLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (NotBoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-
+		exposeServerInterface(NetworkUtils.getHostAddress());
+		System.out.println("Server started at "+ NetworkUtils.getHostAddress());
 	}
 
 	private static void exposeServerInterface(String hostAddress) {
-		
 		try {
 			ServerImpl server = new ServerImpl();
 			// create registry
 			// Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
 			// System.setSecurityManager(new IVCSecurityManager());
+			LocateRegistry.createRegistry(1099);
 			try {
-				Naming.rebind("rmi://" + hostAddress + ":" + 1099 + "/"
-						+ "server_ivc", server);
+				Naming.rebind("rmi://" + hostAddress + ":" + 1099 + "/"	+ Constants.BIND_SERVER, server);
 			} catch (Exception e) {
-
 				if (e instanceof AlreadyBoundException) {
 					e.printStackTrace();
 				} else {
 					String msg = e.getMessage();
 					e.printStackTrace();
-					throw new ServerException(e.getMessage());
+					throw new IVCException(e.getMessage());
 				}
 			}
 		} catch (Exception e) {
@@ -92,44 +63,6 @@ public class Server {
 		}
 	}
 
-	private static void exposeClientInterface(String hostAddress) {		
-		try {
-			ClientImpl client = new ClientImpl();
-			// create registry
-			try {
-				Naming.rebind("rmi://" + hostAddress + ":" + 1099 + "/"
-						+ "client_ivc", client);
-			} catch (Exception e) {
-				if (e instanceof AlreadyBoundException) {
-					e.printStackTrace();
-				} else {
-					String msg = e.getMessage();
-					e.printStackTrace();
-					throw new ServerException(e.getMessage());
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static void connectToInterface(String hostAddress) {
-
-		try {
-			ServerIntf server = (ServerIntf) Naming.lookup("rmi://"
-					+ hostAddress + ":" + 1099 + "/" + "server_ivc");
-			// if connection succedded : add intf to list of peers and write to
-			// config file
-			if (server != null) {
-				System.out.println("Connection to Server...OK");
-			}
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		} catch (NotBoundException e) {
-			e.printStackTrace();
-		}
-	}
+	
 	
 }
