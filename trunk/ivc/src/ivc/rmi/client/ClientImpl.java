@@ -1,13 +1,13 @@
 package ivc.rmi.client;
 
-import ivc.data.Result;
+import ivc.connection.ConnectionManager;
 import ivc.data.Transformation;
 import ivc.data.TransformationHistoryList;
 import ivc.data.command.CommandArgs;
 import ivc.data.command.ConnectToPeerCommand;
-import ivc.util.ConnectionManager;
+import ivc.data.command.Result;
 import ivc.util.Constants;
-import ivc.util.FileHandler;
+import ivc.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +38,7 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 	 */
 	@Override
 	public void createRLUFile(String host) throws RemoteException {
-		File rlufile = new File("projectPath" + Constants.RemoteUnCommitedLog+"_"+host);
+		File rlufile = new File("projectPath" +Constants.IvcFolder + Constants.RemoteUnCommitedLog+"_"+host);
 		try {
 			rlufile.createNewFile();
 		} catch (IOException e) {
@@ -54,9 +54,9 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 	@Override
 	public void updateRCL(String projectName, TransformationHistoryList thl)
 			throws RemoteException {
-		TransformationHistoryList oldThl = (TransformationHistoryList) FileHandler.readObjectFromFile(projectName+Constants.RemoteCommitedLog);
+		TransformationHistoryList oldThl = (TransformationHistoryList) FileUtils.readObjectFromFile(projectName+Constants.RemoteCommitedLog);
 		TransformationHistoryList newThl = oldThl.appendTransformationHistoryList(thl);
-		FileHandler.writeObjectToFile(projectName+Constants.RemoteCommitedLog,newThl);
+		FileUtils.writeObjectToFile(projectName+Constants.RemoteCommitedLog,newThl);
 		
 	}
 

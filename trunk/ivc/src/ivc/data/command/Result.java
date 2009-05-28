@@ -1,4 +1,4 @@
-package ivc.data;
+package ivc.data.command;
 
 import java.io.Serializable;
 

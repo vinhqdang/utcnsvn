@@ -19,15 +19,14 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
-import ivc.data.Result;
+import ivc.connection.ConnectionManager;
 import ivc.data.Transformation;
 import ivc.data.TransformationHistory;
 import ivc.data.TransformationHistoryList;
 import ivc.data.exception.Exceptions;
 import ivc.rmi.client.ClientIntf;
-import ivc.util.ConnectionManager;
 import ivc.util.Constants;
-import ivc.util.FileHandler;
+import ivc.util.FileUtils;
 
 /**
  * @author danielan
@@ -82,14 +81,14 @@ public class CommitCommand implements CommandIntf {
 
 	private void getChangedFiles() {
 		// added files, folders; removed files, folders, modified files
-		changedFiles = (TransformationHistoryList) FileHandler.readObjectFromFile(projectPath + Constants.LocalLog);
+		changedFiles = (TransformationHistoryList) FileUtils.readObjectFromFile(projectPath +Constants.IvcFolder + Constants.LocalLog);
 		// TODO: added removed, modified files outside eclipse
 	}
 
 	private boolean checkVersion() {
 		// rcl must be empty and also version on server same as local version of
 		// the file
-		List<TransformationHistory> rcl = (List<TransformationHistory>) FileHandler	.readObjectFromFile(projectPath + Constants.RemoteCommitedLog);
+		List<TransformationHistory> rcl = (List<TransformationHistory>) FileUtils	.readObjectFromFile(projectPath + Constants.IvcFolder +Constants.RemoteCommitedLog);
 		if (rcl != null || !rcl.isEmpty()) {
 			return false;
 		}
@@ -120,7 +119,7 @@ public class CommitCommand implements CommandIntf {
 		try {
 			// update head version on server
 			ConnectionManager.getInstance().getServer().updateHeadVersion(projectPath, changedFiles);
-			HashMap<String, Integer> localVersion = (HashMap<String, Integer>) FileHandler.readObjectFromFile(projectPath+ Constants.CurrentVersionFile);
+			HashMap<String, Integer> localVersion = (HashMap<String, Integer>) FileUtils.readObjectFromFile(projectPath+ Constants.IvcFolder +Constants.CurrentVersionFile);
 			Iterator<TransformationHistory> it = changedFiles.iterator();
 			// increment version numbers
 			while (it.hasNext()) {
@@ -149,7 +148,7 @@ public class CommitCommand implements CommandIntf {
 			currentCommitedVersion.put(projectPath, serverProjNo);
 			
 			// save new changes
-			FileHandler.writeObjectToFile(projectPath+Constants.CurrentVersionFile, localVersion);
+			FileUtils.writeObjectToFile(projectPath+Constants.IvcFolder +Constants.CurrentVersionFile, localVersion);
 			ConnectionManager.getInstance().getServer().updateVersionNumber(projectPath, currentCommitedVersion);
 
 		} catch (RemoteException e) {
@@ -187,7 +186,7 @@ public class CommitCommand implements CommandIntf {
 
 	private void cleanLL() {
 		LinkedList<TransformationHistory> ll = new LinkedList<TransformationHistory>();
-		FileHandler.writeObjectToFile(projectPath + Constants.LocalLog, ll);
+		FileUtils.writeObjectToFile(projectPath +Constants.IvcFolder + Constants.LocalLog, ll);
 	}
 
 	private void updateRUL(){

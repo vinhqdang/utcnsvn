@@ -1,6 +1,6 @@
 package ivc.data.exception;
 
-public class ConfigurationException extends ServerException {
+public class ConfigurationException extends IVCException {
 	
 	
 	/**

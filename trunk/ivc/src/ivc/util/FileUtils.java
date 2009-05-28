@@ -23,7 +23,7 @@ import java.util.List;
  * @author danielan
  * 
  */
-public class FileHandler {
+public class FileUtils {
 
 	public static void writeObjectToFile(String filePath, Serializable o) {
 		FileOutputStream fos = null;

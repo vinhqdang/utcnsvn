@@ -17,13 +17,12 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
-import ivc.data.Result;
+import ivc.connection.ConnectionManager;
 import ivc.data.Transformation;
 import ivc.data.TransformationHistory;
 import ivc.data.TransformationHistoryList;
-import ivc.util.ConnectionManager;
 import ivc.util.Constants;
-import ivc.util.FileHandler;
+import ivc.util.FileUtils;
 
 /**
  * @author danielan
@@ -71,12 +70,12 @@ public class UpdateCommand implements CommandIntf {
 		IProject project = root.getProject(projectPath);
 
 		// read current version
-		HashMap<String, Integer> currentLocalVersion = (HashMap<String, Integer>) FileHandler.readObjectFromFile(projectPath
+		HashMap<String, Integer> currentLocalVersion = (HashMap<String, Integer>) FileUtils.readObjectFromFile(projectPath
 				+ Constants.CurrentVersionFile);
 		try {
 			HashMap<String, Integer> currentCommitedVersion = (HashMap) ConnectionManager.getInstance().getServer().getVersionNumber(projectPath);
 
-			rcl = (TransformationHistoryList) FileHandler.readObjectFromFile(projectPath + Constants.RemoteCommitedLog);
+			rcl = (TransformationHistoryList) FileUtils.readObjectFromFile(projectPath +Constants.IvcFolder + Constants.RemoteCommitedLog);
 			Iterator<TransformationHistory> it = rcl.iterator();
 			while (it.hasNext()) {
 				TransformationHistory th = it.next();
@@ -93,7 +92,7 @@ public class UpdateCommand implements CommandIntf {
 								InputStream contentStream;
 								try {
 									contentStream = file.getContents(true);
-									StringBuffer content = FileHandler.InputStreamToStringBuffer(contentStream);
+									StringBuffer content = FileUtils.InputStreamToStringBuffer(contentStream);
 									tr.applyContentTransformation(content);
 								} catch (CoreException e) {
 									// TODO Auto-generated catch block
@@ -110,7 +109,7 @@ public class UpdateCommand implements CommandIntf {
 					}
 				}
 			}
-			FileHandler.writeObjectToFile(projectPath + Constants.CurrentVersionFile, currentLocalVersion);
+			FileUtils.writeObjectToFile(projectPath + Constants.IvcFolder +Constants.CurrentVersionFile, currentLocalVersion);
 		} catch (RemoteException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

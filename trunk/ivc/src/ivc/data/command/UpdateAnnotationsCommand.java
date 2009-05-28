@@ -5,7 +5,6 @@ package ivc.data.command;
 
 import java.util.List;
 
-import ivc.data.Result;
 import ivc.data.Transformation;
 
 /**
