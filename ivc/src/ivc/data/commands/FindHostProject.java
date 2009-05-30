@@ -1,12 +1,12 @@
-package ivc.data.command;
+package ivc.data.commands;
 
 import ivc.connection.ConnectionManager;
 import ivc.data.exception.IVCException;
-
 import ivc.rmi.server.ServerIntf;
 
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
+import java.rmi.ServerException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -22,7 +22,8 @@ public class FindHostProject implements IRunnableWithProgress {
 	}
 
 	@Override
-	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	public void run(IProgressMonitor monitor) throws InvocationTargetException,
+			InterruptedException {
 		monitor.beginTask("Initiating connection", 2);
 		ServerIntf server;
 		try {

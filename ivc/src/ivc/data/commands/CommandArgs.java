@@ -1,4 +1,4 @@
-package ivc.data.command;
+package ivc.data.commands;
 
 import java.io.Serializable;
 import java.util.HashMap;

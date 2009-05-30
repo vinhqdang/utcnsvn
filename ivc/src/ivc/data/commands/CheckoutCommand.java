@@ -1,4 +1,4 @@
-package ivc.data.command;
+package ivc.data.commands;
 
 import ivc.connection.ConnectionManager;
 import ivc.data.BaseVersion;

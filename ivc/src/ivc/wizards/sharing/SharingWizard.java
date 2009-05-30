@@ -3,10 +3,9 @@ package ivc.wizards.sharing;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import ivc.data.command.CommandArgs;
-import ivc.data.command.Result;
-import ivc.data.command.ShareProjectCommand;
-import ivc.data.command.ShareProjectCommand;
+import ivc.data.commands.CommandArgs;
+import ivc.data.commands.Result;
+import ivc.data.commands.ShareProjectCommand;
 import ivc.manager.ProjectsManager;
 import ivc.plugin.IVCPlugin;
 import ivc.repository.IVCRepositoryProvider;

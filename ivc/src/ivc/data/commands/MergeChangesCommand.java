@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ivc.data.command;
+package ivc.data.commands;
 
 
 /**
