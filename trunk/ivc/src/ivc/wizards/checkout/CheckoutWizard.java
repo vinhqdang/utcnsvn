@@ -43,6 +43,9 @@ public class CheckoutWizard extends Wizard implements INewWizard, IImportWizard 
 
 	@Override
 	public boolean performFinish() {
+		if (!projectPage.testProjectName())
+			return false;
+
 		CommandArgs args = new CommandArgs();
 		args.putArgument("projectName", projectPage.getProjectName());
 		CheckoutCommand command = new CheckoutCommand(args);

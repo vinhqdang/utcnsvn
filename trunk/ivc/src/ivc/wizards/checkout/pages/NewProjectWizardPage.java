@@ -1,15 +1,14 @@
 package ivc.wizards.checkout.pages;
 
+import ivc.plugin.ImageDescriptorManager;
+import ivc.wizards.BaseWizardPage;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-
-import ivc.plugin.ImageDescriptorManager;
-import ivc.wizards.BaseWizardPage;
 
 public class NewProjectWizardPage extends BaseWizardPage {
 
@@ -22,8 +21,7 @@ public class NewProjectWizardPage extends BaseWizardPage {
 	public NewProjectWizardPage(String pageName) {
 		super(pageName);
 		this.setTitle(pageName);
-		ImageDescriptor img = ImageDescriptorManager
-				.getImageDescriptor(ImageDescriptorManager.SHARE_WIZARD);
+		ImageDescriptor img = ImageDescriptorManager.getImageDescriptor(ImageDescriptorManager.SHARE_WIZARD);
 		setImageDescriptor(img);
 	}
 
@@ -36,13 +34,19 @@ public class NewProjectWizardPage extends BaseWizardPage {
 		txtProjectName = createTextField(composite);
 	}
 
-	boolean testProjectName() {
+	public boolean testProjectName() {
+		if (txtProjectName == null) {
+			setErrorMessage("Project name cannot be null");
+			return false;
+		}
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject[] projects = root.getProjects();
 		for (int i = 0; i < projects.length; i++) {
 			if (projects[i].getName().equals(txtProjectName.getText())) {
+				setErrorMessage("A project with the same name already exists");
 				return false;
 			}
+			
 		}
 		return true;
 	}
@@ -51,14 +55,4 @@ public class NewProjectWizardPage extends BaseWizardPage {
 	public boolean canFlipToNextPage() {
 		return false;
 	}
-
-	public boolean createProject() {
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IProject project = root.getProject(txtProjectName.getText());
-
-		// project.create(progressMonitor);
-		// project.open(progressMonitor);
-		return false;
-	}
-
 }

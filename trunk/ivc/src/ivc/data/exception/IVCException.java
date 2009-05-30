@@ -1,6 +1,5 @@
 package ivc.data.exception;
 
-
 public class IVCException extends Exception {
 
 	/**
@@ -11,19 +10,21 @@ public class IVCException extends Exception {
 	public IVCException(String message) {
 		super(message);
 	}
-	
+
 	/**
 	 * implements write error stacktrace to LogFile
 	 */
-	public void logError(){
-		String stackStraceStr="";
+	public void logError() {
+		String stackStraceStr = "";
 		StackTraceElement[] els = getStackTrace();
 		for (StackTraceElement stackTraceElement : els) {
-			stackStraceStr += "\n"+stackTraceElement.toString();
+			stackStraceStr += "\n" + stackTraceElement.toString();
 		}
-//		HTMLLogger.error(stackStraceStr);
+		// HTMLLogger.error(stackStraceStr);
 	}
 
-	
-}
+	public IVCException(Exception e) {
+		super(e);
+	}
 
+}

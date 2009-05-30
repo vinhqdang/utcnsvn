@@ -1,22 +1,15 @@
 package ivc.plugin;
 
+
 import ivc.connection.ConnectionManager;
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.ShareProjectCommand;
 import ivc.fireworks.decorators.Decorator;
-
 import ivc.listeners.ResourceChangedListener;
 import ivc.manager.ProjectsManager;
-import ivc.rmi.client.ClientImpl;
-import ivc.rmi.client.ClientIntf;
-import ivc.rmi.server.ServerIntf;
-import ivc.util.Constants;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.InetAddress;
 import java.net.URL;
-import java.net.UnknownHostException;
-import java.rmi.Naming;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
