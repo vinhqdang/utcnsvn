@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author danielan
@@ -130,16 +131,16 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	 * @see ivc.rmi.server.ServerIntf#receiveBaseVersion(ivc.data.BaseVersion)
 	 */
 	@Override
-	public void receiveBaseVersion(String projectPath, BaseVersion bv) throws RemoteException {
+	public void receiveBaseVersion(String projectPath, BaseVersion bv) throws RemoteException {		
 		initRepository(projectPath);
-		FileUtils.writeObjectToFile(projectPath + Constants.BaseVersionFile, bv);
+		FileUtils.writeObjectToFile(Constants.RepositoryFolder + projectPath + Constants.BaseVersionFile, bv);
 		HashMap<String, Integer> cv = new HashMap<String, Integer>();
-		List<String> files = (List<String>) bv.getFiles().keySet();
+		Set<String> files = (Set<String>) bv.getFiles().keySet();
 		for (Iterator<String> iterator = files.iterator(); iterator.hasNext();) {
 			String file = iterator.next();
 			cv.put(file, 0);
 		}
-		FileUtils.writeObjectToFile(projectPath + Constants.CurrentVersionFile, cv);
+		FileUtils.writeObjectToFile(Constants.RepositoryFolder +projectPath + Constants.CurrentVersionFile, cv);
 	}
 
 	/*
@@ -152,40 +153,33 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 		return (List<String>) ((Map<String, String>) FileUtils.readObjectFromFile(Constants.Peers)).keySet();
 	}
 
-	private void initRepository(String projectPath) throws RemoteException {
-		File ivcfolder = new File(projectPath + Constants.IvcFolder);
-		ivcfolder.mkdir();
-		File bvFile = new File(projectPath + Constants.BaseVersionFile);
+	private void initRepository(String projectPath) throws RemoteException {	
+		if (!checkProjectPath(projectPath)){
+			File projPath = new File(Constants.RepositoryFolder + projectPath);
+			projPath.mkdir();
+		}
+		File bvFile = new File(Constants.RepositoryFolder +projectPath +Constants.BaseVersionFile);
 		try {
-
 			bvFile.createNewFile();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		File cvFile = new File(projectPath + Constants.CurrentVersionFile);
+		File cvFile = new File(Constants.RepositoryFolder + projectPath + Constants.CurrentVersionFile);
 		try {
-
 			cvFile.createNewFile();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		File peersFile = new File(projectPath + Constants.Peers);
-		try {
-			peersFile.createNewFile();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		File rclFile = new File(projectPath + Constants.PendingRemoteCommitedLog);
+		File rclFile = new File(Constants.RepositoryFolder + projectPath +  Constants.PendingRemoteCommitedLog);
 		try {
 			rclFile.createNewFile();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		File transFile = new File(projectPath + Constants.CommitedLog);
+		File transFile = new File(Constants.RepositoryFolder + projectPath + Constants.CommitedLog);
 		try {
 			transFile.createNewFile();
 		} catch (IOException e) {
@@ -297,7 +291,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	 */
 	@Override
 	public boolean checkProjectPath(String projectPath) throws RemoteException {
-		File file = new File(projectPath);
+		File file = new File(Constants.RepositoryFolder + projectPath);
 		return file.exists();
 	}
 
