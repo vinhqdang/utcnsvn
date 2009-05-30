@@ -18,7 +18,7 @@ public class Constants {
 	public static final String RemoteCommitedLog = "\\.rcl";
 	public static final String RemoteUnCommitedLog = "\\.rul";
 	public static final String ServerFile = "\\.svr";
-	
+	public static final String IvcFolder = "\\.ivc";
 	
 	// server files
 	public static final String BaseVersionFile = "\\.bv";
@@ -29,7 +29,7 @@ public class Constants {
 	
 	// common files 	
 	public static final String CurrentVersionFile = "\\.cv";
-	public static final String IvcFolder = "\\.ivc";
+	
 	
 	
 	

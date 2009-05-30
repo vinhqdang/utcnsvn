@@ -49,26 +49,26 @@ public class ProjectsManager {
 	}
 
 	public void tryAddProject(IProject project) {
-		IFolder folder = project.getFolder(Constants.IvcFolder);
-		if (folder.exists() && project.isOpen()) {
-			// it is an active ivc project
-			if (!projects.containsKey(project)) {
-				// read server path
-				String fullserverPath = (String) FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder
-						+ Constants.ServerFile);
-				String serverAddress = fullserverPath.substring(0, fullserverPath.indexOf('\\'));
-				String serverPath = fullserverPath.replace(serverAddress + '\\', "");
-				IVCProject ivcProj = new IVCProject();
-				ivcProj.setProject(project);
-				ivcProj.setName(project.getName());
-				ivcProj.setServerPath(serverPath);
-				ivcProj.setServerAddress(serverAddress);
-				projects.put(project.getName(), ivcProj);
-				List<IResource> list = new ArrayList<IResource>();
-				list.add(project);
-				Decorator.getDecorator().refresh(list);
-			}
-		}
+//		IFolder folder = project.getFolder(Constants.IvcFolder);
+//		if (folder.exists() && project.isOpen()) {
+//			// it is an active ivc project
+//			if (!projects.containsKey(project)) {
+//				// read server path
+//				String fullserverPath = (String) FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder
+//						+ Constants.ServerFile);
+//				String serverAddress = fullserverPath.substring(0, fullserverPath.indexOf('\\'));
+//				String serverPath = fullserverPath.replace(serverAddress + '\\', "");
+//				IVCProject ivcProj = new IVCProject();
+//				ivcProj.setProject(project);
+//				ivcProj.setName(project.getName());
+//				ivcProj.setServerPath(serverPath);
+//				ivcProj.setServerAddress(serverAddress);
+//				projects.put(project.getName(), ivcProj);
+//				List<IResource> list = new ArrayList<IResource>();
+//				list.add(project);
+//				Decorator.getDecorator().refresh(list);
+//			}
+//		}
 	}
 
 	public static ResourceStatus getResourceStatus(IResource resource) {
