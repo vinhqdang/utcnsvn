@@ -6,11 +6,8 @@ import ivc.util.Constants;
 import ivc.util.FileUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
-import javax.tools.Tool;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -20,21 +17,21 @@ import org.eclipse.core.resources.ResourcesPlugin;
 
 public class ProjectsManager {
 	private static ProjectsManager instance;
-	private Vector<IVCProject> projects;
+	private HashMap<String, IVCProject> projects;
 
 	private ProjectsManager() {
-		projects = new Vector<IVCProject>();
+		projects = new HashMap<String, IVCProject>();
 	}
 
 	public boolean projectInRepository(IProject project) {
-		return projects.contains(project);
+		return projects.containsKey(project.getName());
 	}
-	
-//	public boolean existsProjectWithName(String name){
-//		for (IProj iterable_element : iterable) {
-//			
-//		}
-//	}
+
+	// public boolean existsProjectWithName(String name){
+	// for (IProj iterable_element : iterable) {
+	//			
+	// }
+	// }
 
 	public static ProjectsManager instance() {
 		if (instance == null) {
@@ -55,21 +52,27 @@ public class ProjectsManager {
 		IFolder folder = project.getFolder(Constants.IvcFolder);
 		if (folder.exists() && project.isOpen()) {
 			// it is an active ivc project
-			if (!projects.contains(project)) {
+			if (!projects.containsKey(project)) {
 				// read server path
-				String fullserverPath = (String) FileUtils.readObjectFromFile(project.getLocation().toOSString()+ Constants.IvcFolder+Constants.ServerFile);
-				String serverAddress = fullserverPath.substring(0,fullserverPath.indexOf('\\'));
-				String serverPath = fullserverPath.replace(serverAddress+'\\',"");
-				IVCProject ivcProj =  new IVCProject();				
+				String fullserverPath = (String) FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder
+						+ Constants.ServerFile);
+				String serverAddress = fullserverPath.substring(0, fullserverPath.indexOf('\\'));
+				String serverPath = fullserverPath.replace(serverAddress + '\\', "");
+				IVCProject ivcProj = new IVCProject();
 				ivcProj.setProject(project);
 				ivcProj.setName(project.getName());
 				ivcProj.setServerPath(serverPath);
 				ivcProj.setServerAddress(serverAddress);
-				projects.add(ivcProj);
+				projects.put(project.getName(), ivcProj);
 				List<IResource> list = new ArrayList<IResource>();
 				list.add(project);
 				Decorator.getDecorator().refresh(list);
 			}
 		}
+	}
+
+	public static ResourceStatus getResourceStatus(IResource resource) {
+		
+		return null;
 	}
 }

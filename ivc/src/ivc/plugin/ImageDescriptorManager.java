@@ -8,8 +8,8 @@ import org.eclipse.swt.graphics.ImageData;
 
 public class ImageDescriptorManager {
 	public static final String SHARE_WIZARD = "share_icon.png";
-	public static final String DCORATOR_SHARED="";
-	public static final String DCORATOR_CHANGED="";
+	public static final String DCORATOR_SHARED="shared.png";
+	public static final String DCORATOR_CHANGED="modified.png";
 	public static final String DCORATOR_ADDED="";
 	public static final String DCORATOR_="";
 	

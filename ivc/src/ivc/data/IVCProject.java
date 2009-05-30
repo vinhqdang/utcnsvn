@@ -1,27 +1,29 @@
 package ivc.data;
 
+import ivc.manager.ResourceStatus;
+
 import java.io.Serializable;
-import java.util.Date;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 
-public class IVCProject implements Serializable{
+public class IVCProject implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private String name;
 	private IProject project;
 	private String serverAddress;
 	private String serverPath;
-	
-	public IVCProject (){
+
+	public IVCProject() {
 		super();
 	}
-	
-	public IVCProject( String name) {		
+
+	public IVCProject(String name) {
 		this.name = name;
 	}
 
@@ -33,7 +35,8 @@ public class IVCProject implements Serializable{
 	}
 
 	/**
-	 * @param project the project to set
+	 * @param project
+	 *            the project to set
 	 */
 	public void setProject(IProject project) {
 		this.project = project;
@@ -47,7 +50,8 @@ public class IVCProject implements Serializable{
 	}
 
 	/**
-	 * @param serverPath the serverPath to set
+	 * @param serverPath
+	 *            the serverPath to set
 	 */
 	public void setServerPath(String serverPath) {
 		this.serverPath = serverPath;
@@ -69,13 +73,16 @@ public class IVCProject implements Serializable{
 	}
 
 	/**
-	 * @param serverAddress the serverAddress to set
+	 * @param serverAddress
+	 *            the serverAddress to set
 	 */
 	public void setServerAddress(String serverAddress) {
 		this.serverAddress = serverAddress;
 	}
-	
-	
-	
-	
+
+	public ResourceStatus getResourceStatus(IResource resource) {
+		// TODO
+		return null;
+	}
+
 }
