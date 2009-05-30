@@ -72,38 +72,31 @@
 	      
 	      </actionSet>    
     </extension>
-    
-    
-    
-	<extension point="org.eclipse.ui.decorators">
-			<decorator
-			        objectClass="org.eclipse.core.resources.IResource"
-			        adaptable="true"
-			        label="Decor"
-			        state="false"
-			        class="org.eclipse.team.internal.ccvs.ui.CVSDecorator"
-			        id="org.eclipse.team.cvs.ui.decorator">
-			     <description>
-			       Weird decoraors
-			     </description>
-			</decorator>
-	</extension>
 
-
-	<extension point="org.eclipse.ui.decorators"> 
+	<!--<extension point="org.eclipse.ui.decorators"> 
 		<decorator 
 	    	id="ivc.fireworks.decorators.Decorator" 
 	    	label="Decorator Example" 
 	    	state="false" 
-	    	class= "ivc.fireworks.decorators.Decorator" 
-	  		objectClass="org.eclipse.core.resources.IResource" 
+	    	class= "ivc.fireworks.decorators.Decorator"
 	    	adaptable="true"> 
 		    <description> 
-		      Decorator 
+		      IVC Decorator
 		    </description> 
 		</decorator> 
+		
 	</extension>
-	
+	 -->
+	 <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            adaptable="true"
+            class="ivc.fireworks.decorators.Decorator"
+            id="ivc.fireworks.decorators.Decorator"
+            label="General Deco"
+            state="false">
+      </decorator>
+   </extension>
 	 
 		<extension
 	       point="org.eclipse.ui.popupMenus">

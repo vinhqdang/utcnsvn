@@ -1,5 +1,7 @@
 package ivc.listeners;
 
+import java.util.ArrayList;
+
 import ivc.manager.ProjectsManager;
 
 import org.eclipse.core.resources.IFile;
@@ -33,17 +35,15 @@ public class ResourceChangedListener implements IResourceChangeListener {
 						resource = delta.getResource();
 
 						// newly created resource is a java file
-						if ((resource instanceof IFile)
-								&& (resource.getFileExtension().compareTo("java") == 0)) {
+						if ((resource instanceof IFile) && (resource.getFileExtension().compareTo("java") == 0)) {
 							// attach document listener to the newly created
 							// java file
 							// AttachListeners.attachFileListener((IFile)resource);
 							// get the parent resources of the created resource
 							// getFileParents(resource);
 						} else if (resource instanceof IProject) {
-							
-							ProjectsManager.instance().tryAddProject(
-									(IProject) resource);
+
+							ProjectsManager.instance().tryAddProject((IProject) resource);
 						}
 						break;
 
@@ -54,9 +54,7 @@ public class ResourceChangedListener implements IResourceChangeListener {
 						resource = delta.getResource();
 
 						// the removed resource is a java file
-						if (resource instanceof IFile
-								&& (resource.getFileExtension().compareTo(
-										"java") == 0)) {
+						if (resource instanceof IFile && (resource.getFileExtension().compareTo("java") == 0)) {
 							// perform updates of the local data structures in
 							// order to
 							// reflect the deletion of the file
@@ -69,10 +67,12 @@ public class ResourceChangedListener implements IResourceChangeListener {
 					// an existing resource was changed; we don't handle this
 					// case
 					case IResourceDelta.CHANGED:
-						resource=delta.getResource();						
-						if (resource instanceof IFile){
-							IFile file=(IFile)resource;
-							
+						resource = delta.getResource();
+						if (resource instanceof IFile) {
+							IFile file = (IFile) resource;
+							ArrayList<IResource> files = new ArrayList<IResource>();
+							files.add(file);
+							ivc.fireworks.decorators.Decorator.getDecorator().refresh(files);
 						}
 						break;
 					default:
