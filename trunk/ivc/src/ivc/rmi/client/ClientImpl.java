@@ -3,9 +3,9 @@ package ivc.rmi.client;
 import ivc.connection.ConnectionManager;
 import ivc.data.Transformation;
 import ivc.data.TransformationHistoryList;
-import ivc.data.command.CommandArgs;
-import ivc.data.command.ConnectToPeerCommand;
-import ivc.data.command.Result;
+import ivc.data.commands.CommandArgs;
+import ivc.data.commands.ConnectToPeerCommand;
+import ivc.data.commands.Result;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
 
