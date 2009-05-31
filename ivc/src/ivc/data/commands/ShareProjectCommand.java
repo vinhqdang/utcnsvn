@@ -44,6 +44,7 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 	private CommandArgs args;
 	private BaseVersion bv;
 	private Result result;
+	private ConnectionManager connectionManager;
 
 	public ShareProjectCommand(CommandArgs cArgs) {
 		args = cArgs;
@@ -55,11 +56,12 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 		// init local properties
 		monitor.beginTask("Init local properties", 5);
 
-		project = (IProject) args.getArgumentValue("project");
-		projectPath = (String) args.getArgumentValue("projectPath");
-		userName = (String) args.getArgumentValue("userName");
-		pass = (String) args.getArgumentValue("pass");
-		serverAddress = (String) args.getArgumentValue("serverAddress");
+		project = (IProject) args.getArgumentValue(Constants.IPROJECT);
+		projectPath = (String) args.getArgumentValue(Constants.PROJECT_PATH);
+		userName = (String) args.getArgumentValue(Constants.USERNAME);
+		pass = (String) args.getArgumentValue(Constants.PASSWORD);
+		serverAddress = (String) args.getArgumentValue(Constants.SERVER_ADDRESS);
+		connectionManager = ConnectionManager.getInstance(project.getName());
 
 		bv = new BaseVersion();
 		bv.setProjectName(project.getName());
@@ -69,7 +71,7 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 		// 1. connect to server
 
 		try {
-			ServerIntf server = ConnectionManager.getInstance().connectToServer(serverAddress);
+			ServerIntf server = connectionManager.connectToServer(serverAddress);
 
 			// continue if connection succedded
 			if (server != null) {
@@ -87,7 +89,7 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 				monitor.worked(1);
 
 				monitor.setTaskName("Exposing interface");
-				ConnectionManager.getInstance().exposeInterface();
+				connectionManager.exposeInterface(projectPath);
 				monitor.worked(1);
 				monitor.setTaskName("Init log files");
 				// 3. init log files
@@ -190,6 +192,9 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 		// found folder... need to go deeper
 		if (resourceType == IResource.FOLDER) {
 			IFolder folder = (IFolder) resource;
+			if (folder.getName().equalsIgnoreCase("bin")){
+				return;
+			}
 			bv.addFolder(folder.getProjectRelativePath().toOSString());
 			try {
 				IResource[] subfolders = folder.members();

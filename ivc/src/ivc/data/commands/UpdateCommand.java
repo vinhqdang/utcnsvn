@@ -3,6 +3,14 @@
  */
 package ivc.data.commands;
 
+import ivc.connection.ConnectionManager;
+import ivc.data.Transformation;
+import ivc.data.TransformationHistory;
+import ivc.data.TransformationHistoryList;
+import ivc.rmi.server.ServerIntf;
+import ivc.util.Constants;
+import ivc.util.FileUtils;
+
 import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.util.HashMap;
@@ -16,13 +24,6 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-
-import ivc.connection.ConnectionManager;
-import ivc.data.Transformation;
-import ivc.data.TransformationHistory;
-import ivc.data.TransformationHistoryList;
-import ivc.util.Constants;
-import ivc.util.FileUtils;
 
 /**
  * @author danielan
@@ -73,8 +74,8 @@ public class UpdateCommand implements CommandIntf {
 		HashMap<String, Integer> currentLocalVersion = (HashMap<String, Integer>) FileUtils.readObjectFromFile(projectPath
 				+ Constants.CurrentVersionFile);
 		try {
-			HashMap<String, Integer> currentCommitedVersion = (HashMap) ConnectionManager.getInstance().getServer().getVersionNumber(projectPath);
-
+			ServerIntf server = ConnectionManager.getInstance(project.getName()).getServer();
+			HashMap<String, Integer> currentCommitedVersion = (HashMap) server.getVersionNumber(projectPath);
 			rcl = (TransformationHistoryList) FileUtils.readObjectFromFile(projectPath +Constants.IvcFolder + Constants.RemoteCommitedLog);
 			Iterator<TransformationHistory> it = rcl.iterator();
 			while (it.hasNext()) {

@@ -14,6 +14,10 @@ public class Exceptions {
 	public static final String SERVER_AUTHENTICATION_FAILED ="SERVER_AUTHENTICATION_FAILED";	
 	public static final String SERVER_PATH_INVALID = "SERVER_PATH_INVALID";
 	
+	// checkout project command
+	public static final String COULD_NOT_CREATE_PROJECT = "COULD_NOT_CREATE_PROJECT";
+	public static final String SERVER_PROJ_PATH_INVALID = "Specified project location is invalid ";
+	
 	// commit command
 	public static final String FILE_OUT_OF_SYNC = "FILE_OUT_OF_SYNC";
 	public static final String SERVER_UPDATE_HEADVERSION_FAILED = "SERVER_UPDATE_HEADVERSION_FAILED";

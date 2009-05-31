@@ -2,7 +2,7 @@ package ivc.wizards.checkout.pages;
 
 import java.lang.reflect.InvocationTargetException;
 
-import ivc.data.commands.FindHostProject;
+import ivc.data.commands.FindHostProjectCommand;
 import ivc.plugin.ImageDescriptorManager;
 import ivc.wizards.BaseWizardPage;
 import ivc.wizards.checkout.CheckoutWizard;
@@ -19,6 +19,7 @@ public class CheckoutWizardPage extends BaseWizardPage {
 	private Text txtPath;
 	private Validator validator;
 	
+	
 	public CheckoutWizardPage(String pageName) {
 		super(pageName);
 		setTitle(pageName);
@@ -32,6 +33,44 @@ public class CheckoutWizardPage extends BaseWizardPage {
 			}
 		};
 	}
+	
+	
+
+	/**
+	 * @return the txtServerURL
+	 */
+	public Text getTxtServerURL() {
+		return txtServerURL;
+	}
+
+
+
+	/**
+	 * @param txtServerURL the txtServerURL to set
+	 */
+	public void setTxtServerURL(Text txtServerURL) {
+		this.txtServerURL = txtServerURL;
+	}
+
+
+
+	/**
+	 * @return the txtPath
+	 */
+	public Text getTxtPath() {
+		return txtPath;
+	}
+
+
+
+	/**
+	 * @param txtPath the txtPath to set
+	 */
+	public void setTxtPath(Text txtPath) {
+		this.txtPath = txtPath;
+	}
+
+
 
 	@Override
 	public void createControl(Composite mainControl) {
@@ -53,7 +92,7 @@ public class CheckoutWizardPage extends BaseWizardPage {
 		if (!validator.isValid()){
 			return this;
 		}
-		FindHostProject find = new FindHostProject(txtServerURL.getText(), txtPath.getText());
+		FindHostProjectCommand find = new FindHostProjectCommand(txtServerURL.getText(), txtPath.getText());
 		// fork, cancelable, process
 		try {
 			getContainer().run(false, true, find);

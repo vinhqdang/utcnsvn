@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import ivc.data.commands.CheckoutCommand;
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.ShareProjectCommand;
+import ivc.util.Constants;
 import ivc.wizards.checkout.pages.CheckoutWizardPage;
 import ivc.wizards.checkout.pages.NewProjectWizardPage;
 
@@ -32,22 +33,15 @@ public class CheckoutWizard extends Wizard implements INewWizard, IImportWizard 
 		return getContainer().getCurrentPage() == projectPage;
 	}
 
-	// @Override
-	// public IWizardPage getNextPage(IWizardPage wizardPage) {
-	// if (wizardPage == mainPage) {
-	// return projectPage;
-	// }
-	// return super.getNextPage(wizardPage);
-	//
-	// }
-
 	@Override
 	public boolean performFinish() {
 		if (!projectPage.testProjectName())
 			return false;
 
 		CommandArgs args = new CommandArgs();
-		args.putArgument("projectName", projectPage.getProjectName());
+		args.putArgument(Constants.PROJECT_NAME,projectPage.getProjectName());
+		args.putArgument(Constants.SERVER_ADDRESS,mainPage.getTxtServerURL().getText());
+		args.putArgument(Constants.PROJECT_PATH, mainPage.getTxtPath().getText());
 		CheckoutCommand command = new CheckoutCommand(args);
 		try {
 			this.getContainer().run(false, true, command);

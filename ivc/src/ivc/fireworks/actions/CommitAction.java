@@ -1,11 +1,12 @@
 package ivc.fireworks.actions;
 
+import ivc.data.commands.CommandArgs;
+import ivc.data.commands.CommitCommand;
+import ivc.fireworks.markers.MarkersManager;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import ivc.fireworks.markers.MarkersManager;
-
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -33,10 +34,12 @@ public class CommitAction implements IWorkbenchWindowActionDelegate {
 	public void run(IAction arg0) {
 		try {
 			IResource res = ResourcesPlugin.getWorkspace().getRoot().getProjects()[1].members()[2];
-
-			Map map=new HashMap();
+				
 			
-			 
+			
+			Map map=new HashMap();
+			CommitCommand commit = new CommitCommand();
+			commit.execute(new CommandArgs());
 			 
 			MarkersManager.addMarker(res, map, "infoMarker");
 		} catch (CoreException e) {

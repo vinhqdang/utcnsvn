@@ -24,7 +24,7 @@ public interface ClientIntf extends Remote {
 	 */
 	public Result sendTransformation(Transformation transformation) throws RemoteException;
 	
-	public void createRLUFile(String host) throws RemoteException;
+	public void createRLUFile(String projectServerPath,String host) throws RemoteException;
 	
 	public void updateRCL(String projectName,TransformationHistoryList thl )throws RemoteException;
 	
