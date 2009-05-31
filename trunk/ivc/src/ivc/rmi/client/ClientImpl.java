@@ -30,9 +30,9 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 	}
 
 	@Override
-	public Result sendTransformation(Transformation transformation) throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+	public void receiveTransformation(Transformation transformation) throws RemoteException {
+		// TODO 1.receive transaformation
+		
 	}
 
 	/*
@@ -41,7 +41,7 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 	 * @see ivc.rmi.client.ClientIntf#createRLUFile(java.lang.String)
 	 */
 	@Override
-	public void createRLUFile(String projectServerPath, String host) throws RemoteException {
+	public void createRULFile(String projectServerPath, String host) throws RemoteException {
 		String projPath = ProjectsManager.instance().getProjectPath(projectServerPath);
 		if (projPath != null) {
 			File rlufile = new File(projPath + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_" + host.replaceAll(".", "_"));
@@ -65,6 +65,15 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 		TransformationHistoryList newThl = oldThl.appendTransformationHistoryList(thl);
 		FileUtils.writeObjectToFile(projectName + Constants.RemoteCommitedLog, newThl);
 
+	}
+
+	/* (non-Javadoc)
+	 * @see ivc.rmi.client.ClientIntf#handleNewPeerConnected(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void handleNewPeerConnected(String projectName, String hostAddress) throws RemoteException {
+		// TODO 1.handle new peer connected
+		//if don't have rul for them ... create one
 	}
 
 }

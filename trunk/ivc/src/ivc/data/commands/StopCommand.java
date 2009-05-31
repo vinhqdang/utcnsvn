@@ -14,7 +14,7 @@ public class StopCommand implements CommandIntf {
 	 */
 	@Override
 	public Result execute(CommandArgs args) {
-		// TODO Auto-generated method stub
+		// TODO 1.implement stop command
 		// 1. remove host from clients hosts
 		// 2. notify all peers to remove host
 		

@@ -11,6 +11,7 @@ import ivc.util.Constants;
 import ivc.util.FileUtils;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.AlreadyBoundException;
@@ -62,7 +63,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	@Override
 	public TransformationHistoryList returnHeadVersion(String projectPath) throws RemoteException {
 		TransformationHistoryList tranformations = new TransformationHistoryList();
-		Object readObjectFromFile = FileUtils.readObjectFromFile(Constants.RepositoryFolder +projectPath + Constants.CommitedLog);
+		Object readObjectFromFile = FileUtils.readObjectFromFile(Constants.RepositoryFolder + projectPath + Constants.CommitedLog);
 		if (readObjectFromFile != null && readObjectFromFile instanceof TransformationHistoryList) {
 			tranformations = (TransformationHistoryList) readObjectFromFile;
 		}
@@ -75,11 +76,11 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	 * @see ivc.rmi.ServerIntf#exposeClientIntf()
 	 */
 	@Override
-	public void exposeClientIntf(String hostAddress,String projectPath, ClientIntf client) throws RemoteException {
+	public void exposeClientIntf(String hostAddress, String projectPath, ClientIntf client) throws RemoteException {
 		try {
 			// create registry
 			Naming.rebind("rmi://" + ServerBusiness.getHostAddress() + ":" + 1099 + "/" + Constants.BIND_CLIENT + hostAddress, client);
-			String peerFilePath =  Constants.RepositoryFolder + Constants.Peers;
+			String peerFilePath = Constants.RepositoryFolder + Constants.Peers;
 			ArrayList<Peer> peers = null;
 			File f = new File(peerFilePath);
 			if (!f.exists()) {
@@ -92,20 +93,20 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 			}
 			Iterator<Peer> it = peers.iterator();
 			boolean contains = false;
-			while(it.hasNext()){
+			while (it.hasNext()) {
 				Peer peer = it.next();
-				if (peer.getHostAddress().equalsIgnoreCase(hostAddress)){
+				if (peer.getHostAddress().equalsIgnoreCase(hostAddress)) {
 					contains = true;
-					if (!peer.getProjectPaths().contains(projectPath)){
+					if (!peer.getProjectPaths().contains(projectPath)) {
 						peer.getProjectPaths().add(projectPath);
 						peer.setConnectionStatus(Constants.CONNECTED);
 					}
 				}
 			}
-			if(! contains){
+			if (!contains) {
 				List<String> projectPaths = new ArrayList<String>();
 				projectPaths.add(projectPath);
-				peers.add(new Peer(hostAddress,projectPaths, Constants.CONNECTED));
+				peers.add(new Peer(hostAddress, projectPaths, Constants.CONNECTED));
 			}
 			FileUtils.writeObjectToFile(peerFilePath, peers);
 			System.out.println("Peer connected from address:" + hostAddress);
@@ -143,7 +144,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	 * @see ivc.rmi.server.ServerIntf#receiveBaseVersion(ivc.data.BaseVersion)
 	 */
 	@Override
-	public void receiveBaseVersion(String projectPath, BaseVersion bv) throws RemoteException {		
+	public void receiveBaseVersion(String projectPath, BaseVersion bv) throws RemoteException {
 		initRepository(projectPath);
 		FileUtils.writeObjectToFile(Constants.RepositoryFolder + projectPath + Constants.BaseVersionFile, bv);
 		HashMap<String, Integer> cv = new HashMap<String, Integer>();
@@ -152,7 +153,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 			String file = iterator.next();
 			cv.put(file, 1);
 		}
-		FileUtils.writeObjectToFile(Constants.RepositoryFolder +projectPath + Constants.CurrentVersionFile, cv);
+		FileUtils.writeObjectToFile(Constants.RepositoryFolder + projectPath + Constants.CurrentVersionFile, cv);
 	}
 
 	/*
@@ -161,16 +162,27 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	 * @see ivc.rmi.server.ServerIntf#getClientHosts()
 	 */
 	@Override
-	public List<String> getAllClientHosts() throws RemoteException {
-		return (List<String>) ((Map<String, String>) FileUtils.readObjectFromFile(Constants.Peers)).keySet();
+	public List<Peer> getAllClientHosts(String projectPath) throws RemoteException {
+		List<Peer> hosts = new ArrayList<Peer>();
+		List<Peer> allHosts = (List<Peer>) FileUtils.readObjectFromFile(Constants.RepositoryFolder + Constants.Peers);
+		if (allHosts != null) {
+			Iterator<Peer> it = allHosts.iterator();
+			while (it.hasNext()) {
+				Peer peer = it.next();
+				if (peer.getProjectPaths().contains(projectPath)) {
+					hosts.add(peer);
+				}
+			}
+		}
+		return hosts;
 	}
 
-	private void initRepository(String projectPath) throws RemoteException {	
-		if (!checkProjectPath(projectPath)){
+	private void initRepository(String projectPath) throws RemoteException {
+		if (!checkProjectPath(projectPath)) {
 			File projPath = new File(Constants.RepositoryFolder + projectPath);
 			projPath.mkdir();
 		}
-		File bvFile = new File(Constants.RepositoryFolder +projectPath +Constants.BaseVersionFile);
+		File bvFile = new File(Constants.RepositoryFolder + projectPath + Constants.BaseVersionFile);
 		try {
 			bvFile.createNewFile();
 		} catch (IOException e) {
@@ -184,7 +196,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		File rclFile = new File(Constants.RepositoryFolder + projectPath +  Constants.PendingRemoteCommitedLog);
+		File rclFile = new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteCommitedLog);
 		try {
 			rclFile.createNewFile();
 		} catch (IOException e) {
@@ -208,8 +220,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ivc.rmi.server.ServerIntf#authenticateHost(java.lang.String,
-	 * java.lang.String)
+	 * @see ivc.rmi.server.ServerIntf#authenticateHost(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public boolean authenticateHost(String userName, String password) throws RemoteException {
@@ -261,8 +272,8 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 		if (allHosts != null) {
 			Iterator<Peer> it = allHosts.iterator();
 			while (it.hasNext()) {
-				Peer peer = it.next();			
-				if (peer.getConnectionStatus().equalsIgnoreCase(Constants.CONNECTED) && peer.getProjectPaths().contains(projectPath)) {					
+				Peer peer = it.next();
+				if (peer.getConnectionStatus().equalsIgnoreCase(Constants.CONNECTED) && peer.getProjectPaths().contains(projectPath)) {
 					hosts.add(peer);
 				}
 			}
@@ -273,11 +284,10 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ivc.rmi.server.ServerIntf#updatePendingRCL(java.lang.String,
-	 * ivc.data.TransformationHistoryList)
+	 * @see ivc.rmi.server.ServerIntf#updatePendingRCL(java.lang.String, ivc.data.TransformationHistoryList)
 	 */
 	@Override
-	public void updatePendingRCL(String projectPath,List<String> hosts, TransformationHistoryList thl) throws RemoteException {
+	public void updatePendingRCL(String projectPath, List<String> hosts, TransformationHistoryList thl) throws RemoteException {
 		if (hosts == null) {
 			return;
 		}
@@ -290,7 +300,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 				oldThl = new TransformationHistoryList();
 			}
 			oldThl.appendTransformationHistoryList(thl);
-			FileUtils.writeObjectToFile(projectPath + Constants.PendingRemoteCommitedLog + "_" + host, thl);
+			FileUtils.writeObjectToFile(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteCommitedLog + "_" + host, thl);
 		}
 
 	}
@@ -304,6 +314,52 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	public boolean checkProjectPath(String projectPath) throws RemoteException {
 		File file = new File(Constants.RepositoryFolder + projectPath);
 		return file.exists();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ivc.rmi.server.ServerIntf#returnPendingRCL(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public TransformationHistoryList returnPendingRCL(String projectPath, String hostAddress) throws RemoteException {
+		TransformationHistoryList thl = null;
+		File f = new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteCommitedLog + "_" + hostAddress);
+		if (f.exists()) {
+			thl = (TransformationHistoryList) FileUtils.readObjectFromFile(f.getAbsolutePath());
+			f.delete();
+		}
+		return thl;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ivc.rmi.server.ServerIntf#returnPendingRUL(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public Map<String, TransformationHistoryList> returnPendingRUL(String projectPath, String hostAddress) throws RemoteException {
+		Map<String, TransformationHistoryList> thl = null;
+		File f = new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteUncommitedLog + "_" + hostAddress);
+		if (f.exists()) {
+			Object objectFromFile = FileUtils.readObjectFromFile(f.getAbsolutePath());
+			if (objectFromFile != null && objectFromFile instanceof Map) {
+				thl = (Map<String, TransformationHistoryList>) objectFromFile;
+			}
+			f.delete();
+		}
+		return thl;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ivc.rmi.server.ServerIntf#updatePendingRUL(java.lang.String, java.lang.String, java.util.List, ivc.data.TransformationHistoryList)
+	 */
+	@Override
+	public void updatePendingRUL(String projectPath, String sourceHost, List<String> hosts, TransformationHistoryList thl) throws RemoteException {
+		// TODO 1.implement update pending rul
+
 	}
 
 }

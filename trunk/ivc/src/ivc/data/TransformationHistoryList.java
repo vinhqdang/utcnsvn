@@ -3,11 +3,16 @@
  */
 package ivc.data;
 
+import ivc.util.FileUtils;
+
+import java.io.InputStream;
 import java.io.Serializable;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 
 /**
  * @author danielan
@@ -104,11 +109,49 @@ public class TransformationHistoryList implements Serializable {
 		return null;
 	}
 
-	public TransformationHistoryList removeTransformationHistForFile(String filePath){
+	public TransformationHistoryList removeTransformationHistForFile(String filePath) {
 		TransformationHistory th = getTransformationHistForFile(filePath);
-		if (th != null){
+		if (th != null) {
 			transformations.remove(th);
 		}
 		return this;
+	}
+
+	public void applyTransformationHistoryList(IProject project) {
+		Iterator<TransformationHistory> it = iterator();
+		while (it.hasNext()) {
+			TransformationHistory th = it.next();
+			// the most recent transformation
+			Transformation firstTransf = th.getTransformations().getFirst();
+			if (firstTransf.getOperationType() == Transformation.REMOVE_FILE || firstTransf.getOperationType() == Transformation.REMOVE_FOLDER ){
+				firstTransf.applyStructureTransformation();
+				return;
+			}
+			String filePath = th.getFilePath();
+			IFile file = (IFile) project.getFile(filePath);			
+			InputStream is;
+			try {
+				StringBuffer baseContent =  new StringBuffer();
+				if (file.exists()){
+				is = file.getContents();
+				 baseContent = FileUtils.InputStreamToStringBuffer(is);
+				}
+				for (Iterator<Transformation> iterator = th.getTransformations().iterator(); iterator.hasNext();) {
+					Transformation transformation = iterator.next();
+					if (transformation.getOperationType() == Transformation.CHARACTER_ADD
+							|| transformation.getOperationType() == Transformation.CHARACTER_DELETE) {
+						baseContent = transformation.applyContentTransformation(baseContent);
+					} else {
+						transformation.applyStructureTransformation();
+						break;
+					}
+				}
+				FileUtils.writeStringBufferToFile(project.getLocation().toOSString() + "\\" + filePath, baseContent);
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
 	}
 }
