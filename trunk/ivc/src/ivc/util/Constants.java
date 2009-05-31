@@ -51,6 +51,8 @@ public class Constants {
 	public static final String IVCPROJECT = "ivcproject";
 	public static final String FILE_PATHS = "filePaths";
 	public static final String TRANSFORMATION = "transformation";
+	public static final String TRANSFORMATION_HIST_LIST1 = "transformation_hist1";
+	public static final String TRANSFORMATION_HIST_LIST2 = "transformation_hist2";
 	
 	
 	

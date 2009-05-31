@@ -24,17 +24,17 @@ public class Transformation implements Serializable {
 	public static final int REMOVE_FOLDER = -3;
 	
 	
-	private UUID transformationID;
-	
 	private String userID;
 	
 	private String filePath;
 	
+	/*
+	 * Version of file on which this transformation took place 
+	 * Mandatory to be set for each transformation
+	 */
 	private Integer fileVersion;
 	
 	private Date date;
-	
-	private Integer line;
 	
 	private Integer position;
 	
@@ -49,20 +49,9 @@ public class Transformation implements Serializable {
 	
 	
 	public Transformation()  {
-		transformationID = UUID.randomUUID();
+		date = new Date();
 	}
 	
-	public Transformation(UUID transformationID){
-		this.transformationID = transformationID;
-	}
-
-	public UUID getTransformationID() {
-		return transformationID;
-	}
-
-	public void setTransformationID(UUID transformationID) {
-		this.transformationID = transformationID;
-	}
 
 	/**
 	 * @return the userID
@@ -137,20 +126,6 @@ public class Transformation implements Serializable {
 	}
 
 	/**
-	 * @return the line
-	 */
-	public Integer getLine() {
-		return line;
-	}
-
-	/**
-	 * @param line the line to set
-	 */
-	public void setLine(Integer line) {
-		this.line = line;
-	}
-
-	/**
 	 * @return the position
 	 */
 	public Integer getPosition() {
@@ -198,22 +173,24 @@ public class Transformation implements Serializable {
 	}
 	
 	public StringBuffer applyContentTransformation(StringBuffer content){
-		String[] lines = content.toString().split("\n");		
-		if (lines.length > 0 && lines.length > line){
-			StringBuffer lineStr = new StringBuffer(lines[line]);
-			switch (operationType) {
-			case CHARACTER_ADD:
-				lineStr.insert(position.intValue(), text);
-				break;
-			case CHARACTER_DELETE:
-				lineStr.deleteCharAt(position);
-				break;
-			default:
-				break;
-			}
-			lines[line] = lineStr.toString();
-		}
-		return new StringBuffer(lines.toString());
+		//TODO 1. apply transformation
+//		String[] lines = content.toString().split("\n");		
+//		if (lines.length > 0 && lines.length > line){
+//			StringBuffer lineStr = new StringBuffer(lines[line]);
+//			switch (operationType) {
+//			case CHARACTER_ADD:
+//				lineStr.insert(position.intValue(), text);
+//				break;
+//			case CHARACTER_DELETE:
+//				lineStr.deleteCharAt(position);
+//				break;
+//			default:
+//				break;
+//			}
+//			lines[line] = lineStr.toString();
+//		}
+//		return new StringBuffer(lines.toString());
+		return content;
 	}
 
 

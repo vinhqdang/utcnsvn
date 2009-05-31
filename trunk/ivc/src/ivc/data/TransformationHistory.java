@@ -56,7 +56,7 @@ public class TransformationHistory implements Serializable {
 	}
 	
 	public void addTransformation(Transformation tr){
-		transformations.add(tr);
+		transformations.addFirst(tr);
 	}
 	
 	
