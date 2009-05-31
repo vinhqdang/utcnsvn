@@ -4,7 +4,6 @@ import ivc.manager.ProjectsManager;
 import ivc.plugin.IVCPlugin;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -14,8 +13,6 @@ import org.eclipse.core.resources.mapping.ResourceTraversal;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
@@ -27,23 +24,19 @@ public abstract class BaseActionDelegate implements IWorkbenchWindowActionDelega
 	private ISelection selection;
 	private Shell shell;
 
+		
 	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-
+	public void selectionChanged(IAction action, ISelection selection) {
+		this.selection = selection;
+		action.setEnabled(menuItemEnabled());
 	}
-
-	@Override
-	public void init(IWorkbenchWindow action) {
-		// TODO Auto-generated method stub
-
+	
+	public abstract boolean menuItemEnabled();
+	
+	protected boolean resourceInRepository(IResource resource) {
+		return ProjectsManager.instance().isManaged(resource);
 	}
-
-	@Override
-	public void run(IAction arg0) {
-		// TODO Auto-generated method stub
-	}
-
+	
 	public Shell getShell() {
 		if (shell != null) {
 			return shell;
@@ -57,20 +50,13 @@ public abstract class BaseActionDelegate implements IWorkbenchWindowActionDelega
 			return window.getShell();
 		}
 	}
-
-	@Override
-	public void selectionChanged(IAction action, ISelection selection) {
-		this.selection = selection;
-		action.setEnabled(menuItemEnabled());
-	}
-
-	public abstract boolean menuItemEnabled();
 	
-	public Object[] getSelectedAdaptables(ISelection selection, Class<?> c) {
+	protected Object[] getSelectedAdaptables(ISelection selection, Class<?> c) {
 		ArrayList<Object> result = null;
 		if (selection != null && !selection.isEmpty()) {
 			result = new ArrayList<Object>();
-			Iterator<Object> elements = ((IStructuredSelection) selection).iterator();
+			IStructuredSelection structuredSelection=(IStructuredSelection)selection;
+			Iterator<?> elements = structuredSelection.iterator();
 			while (elements.hasNext()) {
 				Object adapter = getAdapter(elements.next(), c);
 				if (c.isInstance(adapter)) {
@@ -84,7 +70,7 @@ public abstract class BaseActionDelegate implements IWorkbenchWindowActionDelega
 		return (Object[]) Array.newInstance(c, 0);
 	}
 
-	public Object getAdapter(Object adaptable, Class<?> c) {
+	protected Object getAdapter(Object adaptable, Class<?> c) {
 		if (c.isInstance(adaptable)) {
 			return adaptable;
 		}
@@ -128,7 +114,8 @@ public abstract class BaseActionDelegate implements IWorkbenchWindowActionDelega
 		return selectedResources;
 	}
 
-	protected boolean resourceInRepository(IResource resource) {
-		return ProjectsManager.instance().isManaged(resource);
+	protected ISelection getSelection(){
+		return selection;
 	}
+	
 }

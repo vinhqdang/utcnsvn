@@ -14,20 +14,20 @@ import ivc.repository.streams.StatusToBytesStream;
  */
 
 public class ResourceStatus {
-	private long lastChangedRevision;
-	
+	private int lastChangedRevision;
+
 	private Date lastChangedDate;
-	private String lastCommitAuthor;
+
 	private Status status;
 
-	public ResourceStatus(long lastChangedRev,Date lastCDate,String lastCommitAtuh,Status status){
-		this.lastChangedDate=lastCDate;
+	public ResourceStatus(int lastChangedRev, Date lastCDate, Status status) {
+		this.lastChangedDate = lastCDate;
 		this.setLastChangedRevision(lastChangedRev);
-		this.lastCommitAuthor=lastCommitAtuh;
-		this.status=status;
+		this.status = status;
 	}
+
 	public ResourceStatus(byte bytes[]) {
-		
+
 		fromBytes(new StatusFromBytesStream(bytes));
 	}
 
@@ -50,13 +50,10 @@ public class ResourceStatus {
 	protected void getBytesInto(StatusToBytesStream dos) {
 		try {
 			// lastChangedRevision
-			dos.writeLong(getLastChangedRevision());
+			dos.writeInt(getLastChangedRevision());
 
 			// lastChangedDate
 			dos.writeLong(lastChangedDate.getTime());
-
-			// lastCommitAuthor
-			dos.writeString(lastCommitAuthor);
 
 			// textStatus
 			// dos.writeInt(textStatus);
@@ -80,40 +77,37 @@ public class ResourceStatus {
 	protected void fromBytes(StatusFromBytesStream dis) {
 		try {
 			// last changed revision
-			setLastChangedRevision(dis.readLong());
+			setLastChangedRevision(dis.readInt());
 
 			// last changed date
 			lastChangedDate = new Date(dis.readLong());
-
-			// last commitAuthor
-			lastCommitAuthor = dis.readString();
 
 			status = Status.values()[dis.readInt()];
 		} catch (IOException e) {
 			return;
 		}
 	}
-	public Status getStatus(){
+
+	public Status getStatus() {
 		return status;
 	}
-	private void setLastChangedRevision(long lastChangedRevision) {
+
+	private void setLastChangedRevision(int lastChangedRevision) {
 		this.lastChangedRevision = lastChangedRevision;
 	}
-	private long getLastChangedRevision() {
+
+	private int getLastChangedRevision() {
 		return lastChangedRevision;
 	}
+
 	public Date getLastChangedDate() {
 		return lastChangedDate;
 	}
+
 	public void setLastChangedDate(Date lastChangedDate) {
 		this.lastChangedDate = lastChangedDate;
 	}
-	public String getLastCommitAuthor() {
-		return lastCommitAuthor;
-	}
-	public void setLastCommitAuthor(String lastCommitAuthor) {
-		this.lastCommitAuthor = lastCommitAuthor;
-	}
+
 	public void setStatus(Status status) {
 		this.status = status;
 	}

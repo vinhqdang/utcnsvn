@@ -1,4 +1,3 @@
-
 package ivc.compare;
 
 import ivc.plugin.IVCPlugin;
@@ -19,17 +18,21 @@ import org.eclipse.compare.structuremergeviewer.IDiffContainer;
 import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.core.internal.dtree.IComparator;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.team.core.TeamException;
 
-public class ResourceEditionNode implements ITypedElement, IStreamContentAccessor,
-		IEncodedStreamContentAccessor, IDiffContainer, IContentChangeNotifier, IEditableContent {
+public class ResourceEditionNode implements ITypedElement, IStreamContentAccessor, IEncodedStreamContentAccessor, IDiffContainer,
+		IContentChangeNotifier, IEditableContent {
 	public IFile resource;
-	Vector<IContentChangeListener> listenerList = new Vector<IContentChangeListener>();
 	private String charset = null;
+
+	public IResource getResource() {
+		return resource;
+	}
 
 	public ResourceEditionNode(IFile file) {
 		resource = file;
@@ -153,13 +156,11 @@ public class ResourceEditionNode implements ITypedElement, IStreamContentAccesso
 	// TODO DE AICI
 	@Override
 	public void addContentChangeListener(IContentChangeListener contentChangeListener) {
-		listenerList.add(contentChangeListener);
 
 	}
 
 	@Override
 	public void removeContentChangeListener(IContentChangeListener contentChangeListener) {
-		listenerList.remove(contentChangeListener);
 
 	}
 

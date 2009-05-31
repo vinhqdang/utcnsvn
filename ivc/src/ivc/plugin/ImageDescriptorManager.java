@@ -12,6 +12,7 @@ public class ImageDescriptorManager {
 	public static final String DCORATOR_CHANGED="modified.png";
 	public static final String DCORATOR_ADDED="added.gif";
 	public static final String DCORATOR_="";
+	public static final String MARKER="shared.png";
 	
 	public static ImageDescriptor getImageDescriptor(String imageUrl) {
 		URL url;

@@ -8,8 +8,7 @@
 		<initializer class="org.tigris.subversion.subclipse.core.PreferenceInitializer"/>
 	</extension>
    	   
-	<extension
-         point="org.eclipse.team.core.ignore">
+	<extension	point="org.eclipse.team.core.ignore">
     	<ignore
             enabled="true"
             pattern=".ivc">
@@ -57,12 +56,7 @@
 	            id="ivc.actionSets"
 	            label="cacats"
 	            visible="true">
-	         <action
-	               class="ivc.fireworks.actions.CompareEditorAction"
-	               id="ivc.fireworks.actions.compare"
-	               label="Compare"
-	               menubarPath="visible">
-	         </action>
+	        
 	         
 	         <action
 	               class="ivc.fireworks.actions.TestAction"
@@ -83,9 +77,20 @@
             label="IVC Decorator"
             state="false">
       </decorator>
-   </extension>
-	 
-		<extension
+ 	</extension>
+	  <extension
+	       point="org.eclipse.ui.popupMenus">
+	    <objectContribution
+	          id="ivc.contribution.versionedFiles"
+	          objectClass="org.eclipse.core.resources.mapping.ResourceMapping"
+	          adaptable="true">
+	  <action
+	               class="ivc.fireworks.actions.CompareEditorAction"
+	               id="ivc.fireworks.actions.compare"
+	               label="Compare"
+	               menubarPath="visible">
+	         </action></objectContribution></extension>
+	<extension
 	       point="org.eclipse.ui.popupMenus">
 	    <objectContribution
 	          id="ivc.contribution.versionedFiles"
@@ -122,73 +127,48 @@
 	    </objectContribution>
 	 </extension>
 	
-	 <extension
-	       point="org.eclipse.team.ui.synchronizeWizards">
-	 </extension>
-  
-	  <extension
+	<extension point="org.eclipse.core.resources.markers"
          id="ivc.Marker"
-         name="Markers"
-         point="org.eclipse.core.resources.markers">
+         name="IVC">
       <persistent
             value="false">
       </persistent>
-      <super
-            type="org.eclipse.core.resources.textmarker">
-      </super>
+      <super type="org.eclipse.core.resources.problemmarker"/>
    </extension>
    
-   <extension
-         point="org.eclipse.ui.editors.markerAnnotationSpecification">
-      <specification
-            annotationType="sample.baseMarkerAnnotation"
-            icon="icons/extract.gif">
-      </specification>
-   </extension>
-   <extension
-         point="org.eclipse.ui.editors.annotationTypes">
-      <type
-            markerType="ivc.Marker"
-            name="sample.baseMarkerAnnotation"
-            super="org.eclipse.ui.workbench.texteditor.info">
+   <extension point="org.eclipse.ui.ide.markerResolution">
+		<markerResolutionGenerator
+			markerType="ivc.Marker"
+			class="ivc.fireworks.markers.MarkerResolutionGenerator">
+		</markerResolutionGenerator>
+	</extension>
+	
+	<extension point="org.eclipse.ui.editors.annotationTypes">
+      <type markerType="ivc.Marker"
+            name="ivc.MarkerAnnotation">
       </type>
-   </extension>
-   <extension
-         point="org.eclipse.ui.ide.markerImageProviders">
-      <imageprovider
-            icon="icons/key.gif"
-            id="sample.baseMarkerAnnotation"
-            markertype="ivc.Marker">
-      </imageprovider>
-   </extension>
+	</extension>
 
-
-
-
-<!--   <extension
-         id="annotation"
-         point="org.eclipse.core.runtime.applications">
-      <application>
-         <run
-               class="utcn.annotation.Main">
-         </run>
-      </application>
-   </extension>
-   <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            name="Perspective"
-            class="utcn.annotation.Perspective"
-            id="Plugin.perspective">
-      </perspective>
-   </extension>
-   <extension
-         point="org.eclipse.ui.views">
-      <view
-            name="View"
-            class="utcn.annotation.View"
-            id="Plugin.view">
-      </view>
-   </extension>-->
-
+	<extension
+         point="org.eclipse.ui.editors.markerAnnotationSpecification">
+		<specification
+            annotationType="ivc.MarkerAnnotation"
+            icon="marker.gif"
+            textPreferenceKey="myAppIndication"
+            textPreferenceValue="true"
+            overviewRulerPreferenceKey="myAppIndicationInOverviewRuler"
+            overviewRulerPreferenceValue="true"
+            verticalRulerPreferenceKey="myAppIndicationInVerticalRuler"
+            verticalRulerPreferenceValue="true"
+            highlightPreferenceKey="myAppHighlighting"
+            highlightPreferenceValue="false"
+            colorPreferenceKey="myAppIndicationColor"
+            colorPreferenceValue="255,0,0"
+            presentationLayer="3"
+            showInNextPrevDropdownToolbarAction="false"
+            includeOnPreferencePage="true"
+             >
+		</specification>
+	</extension>
+	
 </plugin>

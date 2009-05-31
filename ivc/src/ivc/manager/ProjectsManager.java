@@ -8,12 +8,11 @@ import ivc.repository.Status;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -26,7 +25,7 @@ public class ProjectsManager {
 	private HashMap<String, IVCProject> projects;
 	private CacheManager cacheManager;
 
-	ResourceStatus rs = new ResourceStatus(1L, new Date(), "John", Status.Added);
+	ResourceStatus addedStatus = new ResourceStatus(1, new Date(), Status.Added);
 
 	private ProjectsManager() {
 		projects = new HashMap<String, IVCProject>();
@@ -62,11 +61,29 @@ public class ProjectsManager {
 				ivcProj.setServerAddress(serverAddress);
 				projects.put(project.getName(), ivcProj);
 
-				List<IResource> list = new ArrayList<IResource>();
-				list.add(project);
-//				Decorator.getDecorator().refresh(list);
+				// Decorator.getDecorator().refresh(list);
 			}
 		}
+		// IFolder folder = project.getFolder(Constants.IvcFolder);
+		// if (folder.exists() && project.isOpen()) {
+		// // it is an active ivc project
+		// if (!projects.containsKey(project)) {
+		// // read server path
+		// String fullserverPath = (String) FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder
+		// + Constants.ServerFile);
+		// String serverAddress = fullserverPath.substring(0, fullserverPath.indexOf('\\'));
+		// String serverPath = fullserverPath.replace(serverAddress + '\\', "");
+		// IVCProject ivcProj = new IVCProject();
+		// ivcProj.setProject(project);
+		// ivcProj.setName(project.getName());
+		// ivcProj.setServerPath(serverPath);
+		// ivcProj.setServerAddress(serverAddress);
+		// projects.put(project.getName(), ivcProj);
+		// List<IResource> list = new ArrayList<IResource>();
+		// list.add(project);
+		// Decorator.getDecorator().refresh(list);
+		// }
+		// }
 	}
 
 	public IProject getProjectByName(String projectName) {
@@ -107,15 +124,19 @@ public class ProjectsManager {
 	}
 
 	public void addDefaultStatus(IResource resource) {
-		cacheManager.setStatus(resource, rs);
+		cacheManager.setStatus(resource, addedStatus);
 	}
 
 	public HashMap<String, IVCProject> getProjects() {
 		return projects;
 	}
 
-	public Status getResourceStatus(IResource resource) {
+	public Status getStatus(IResource resource) {
 		return cacheManager.getResourceStatus(resource).getStatus();
+	}
+
+	public ResourceStatus getResourceStatus(IResource resource) {
+		return cacheManager.getResourceStatus(resource);
 	}
 
 	public static ProjectsManager instance() {
@@ -124,4 +145,13 @@ public class ProjectsManager {
 		}
 		return instance;
 	}
+
+	// TODO 2 use method
+	public int getFileVersion(IFile file) {
+		IVCProject proj = getIVCProjectByName(file.getProject().getName());
+		if (proj != null)
+			proj.getFileVersion(file.getLocation().toOSString());
+		return 0;
+	}
+
 }
