@@ -55,6 +55,10 @@ public class TransformationHistory implements Serializable {
 		this.transformations.addAll(trs);
 	}
 	
+	public void addTransformation(Transformation tr){
+		transformations.add(tr);
+	}
+	
 	
 	
 	

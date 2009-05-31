@@ -64,7 +64,7 @@ public class ProjectsManager {
 
 				List<IResource> list = new ArrayList<IResource>();
 				list.add(project);
-				Decorator.getDecorator().refresh(list);
+//				Decorator.getDecorator().refresh(list);
 			}
 		}
 	}
@@ -83,13 +83,13 @@ public class ProjectsManager {
 		return null;
 	}
 
-	public String getProjectPath(String projectServerPath) {
+	public IVCProject getIVCProjectByServerPath(String projectServerPath) {
 		Iterator<String> it = projects.keySet().iterator();
 		while (it.hasNext()) {
 			String pName = it.next();
 			IVCProject proj = projects.get(pName);
 			if (proj.getServerPath().equalsIgnoreCase(projectServerPath)) {
-				return proj.getProject().getLocation().toOSString();
+				return proj;
 			}
 		}
 

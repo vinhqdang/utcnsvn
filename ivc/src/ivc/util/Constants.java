@@ -50,6 +50,7 @@ public class Constants {
 	public static final String IPROJECT = "project";
 	public static final String IVCPROJECT = "ivcproject";
 	public static final String FILE_PATHS = "filePaths";
+	public static final String TRANSFORMATION = "transformation";
 	
 	
 	

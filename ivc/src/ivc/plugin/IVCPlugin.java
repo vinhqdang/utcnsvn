@@ -3,6 +3,7 @@ package ivc.plugin;
 
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.StartCommand;
+import ivc.data.commands.StopCommand;
 import ivc.fireworks.decorators.Decorator;
 import ivc.listeners.FileModificationManager;
 import ivc.listeners.ResourceChangedListener;
@@ -14,6 +15,7 @@ import java.net.URL;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -56,10 +58,8 @@ public class IVCPlugin extends AbstractUIPlugin {
 		workspace.addResourceChangeListener(changeListener);
 		workspace.addResourceChangeListener(modifications,IResourceChangeEvent.PRE_BUILD);
 		Decorator.enableDecoration = true;
-		ProjectsManager.instance().findProjects();				
 		
-		// for each project
-		//// call start command for establishing connections with the other peers
+		// call start command for establishing connections with the other peers
 		StartCommand startCommand = new StartCommand();
 		startCommand.execute( new CommandArgs());
 	}
@@ -72,11 +72,14 @@ public class IVCPlugin extends AbstractUIPlugin {
 	 * )
 	 */
 	public void stop(BundleContext context) throws Exception {
+		// disconnect from server and notify hosts 
+		System.out.println("Stooooooooooooooop");
+		StopCommand stopCommand = new StopCommand();
+		stopCommand.execute( new CommandArgs());
 		plugin = null;
-		// disconnect from server
 		super.stop(context);
 	}
-
+	
 	/**
 	 * Returns the shared instance
 	 * 
@@ -85,11 +88,6 @@ public class IVCPlugin extends AbstractUIPlugin {
 	public static IVCPlugin getDefault() {
 		return plugin;
 	}
-
-	public String getAdminDirectoryName() {
-		return ".ivc";
-	}
-
 	
 	public void runWithProgress(Shell parent, boolean cancelable,
 			final IRunnableWithProgress runnable) throws InvocationTargetException,

@@ -22,5 +22,8 @@ public class Exceptions {
 	public static final String FILE_OUT_OF_SYNC = "FILE_OUT_OF_SYNC";
 	public static final String SERVER_UPDATE_HEADVERSION_FAILED = "SERVER_UPDATE_HEADVERSION_FAILED";
 	public static final String COMMIT_NOFILE_CHANGED = "COMMIT_NOFILE_CHANGED";
+	
+	// stop command
+	public static final String COULD_NOT_DISCONNECT_FROM_HOST = "COULD_NOT_DISCONNECT_FROM_HOST";
  
 }

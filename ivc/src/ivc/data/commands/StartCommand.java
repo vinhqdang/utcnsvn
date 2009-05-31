@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -77,8 +78,26 @@ public class StartCommand implements CommandIntf {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		// 3. create missing rul files
+		List<String> hosts = connectionManager.getPeerHosts();
+		if (hosts != null){
+			Iterator<String> it  = hosts.iterator();
+			while(it.hasNext()){
+				String host = it.next();
+				File rulfile = new File(ivcProject.getProject().getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_" + host.replaceAll(".", "_"));
+				if (!rulfile.exists()){
+					try {
+						rulfile.createNewFile();
+						FileUtils.writeObjectToFile(rulfile.getAbsolutePath(), new TransformationHistoryList());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 
-		// 3. append pending rul transformations
+		// 4. append pending rul transformations
 		try {
 			Map<String,TransformationHistoryList> pendingRULs = connectionManager.getServer().returnPendingRUL(ivcProject.getServerPath(), NetworkUtils.getHostAddress());
 			Iterator<String> it = pendingRULs.keySet().iterator();
