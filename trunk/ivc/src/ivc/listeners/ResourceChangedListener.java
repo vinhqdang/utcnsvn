@@ -23,6 +23,8 @@ public class ResourceChangedListener implements IResourceChangeListener {
 	 *            Describes the resource change that occurred
 	 */
 	ArrayList<IResource> toBeRefreshed = new ArrayList<IResource>();
+	ArrayList<IResource> opened = new ArrayList<IResource>();
+
 	public void resourceChanged(IResourceChangeEvent event) {
 
 		try {
@@ -32,25 +34,12 @@ public class ResourceChangedListener implements IResourceChangeListener {
 					IResource resource;
 					switch (delta.getKind()) {
 					// a new resource was created
-					case IResourceDelta.ADDED:
-
-						// get a reference to the newly created resource
+					case IResourceDelta.ADDED: {
 						resource = delta.getResource();
-
-						// newly created resource is a java file
-						if ((resource instanceof IFile) && (resource.getFileExtension().compareTo("java") == 0)) {
-							// attach document listener to the newly created
-							// java file
-							// AttachListeners.attachFileListener((IFile)resource);
-							// get the parent resources of the created resource
-							// getFileParents(resource);
-						} else if (resource instanceof IProject) {
-
-							ProjectsManager.instance().tryAddProject((IProject) resource);
-						}
+						
+					}
 						break;
 
-					// an existing resource was removed
 					case IResourceDelta.REMOVED:
 
 						// get a reference to the newly created resource
@@ -69,13 +58,19 @@ public class ResourceChangedListener implements IResourceChangeListener {
 
 					// an existing resource was changed; we don't handle this
 					// case
+					case IResourceDelta.OPEN: {
+						resource = delta.getResource();
+						if (resource instanceof IFile) {
+							IFile file = (IFile) resource;
+							opened.add(file);
+						}
+					}
 					case IResourceDelta.CHANGED:
 						resource = delta.getResource();
-						 if (resource instanceof IFile) {
-						 IFile file = (IFile) resource;
-						 toBeRefreshed.add(file);
-						 
-						 }
+						if (resource instanceof IFile) {
+							IFile file = (IFile) resource;
+							toBeRefreshed.add(file);
+						}
 						break;
 					default:
 						break;
@@ -83,6 +78,15 @@ public class ResourceChangedListener implements IResourceChangeListener {
 					return true;
 				}
 			});
+			for (IResource resource : opened) {
+				if (ProjectsManager.instance().isManaged(resource)) {
+					if (resource instanceof IFile) {
+						IFile file = (IFile) resource;
+						file.getHistory(null);
+					}
+
+				}
+			}
 			Decorator.getDecorator().refresh(toBeRefreshed);
 		} catch (CoreException ex) {
 		}

@@ -1,12 +1,9 @@
 package ivc.fireworks.markers;
 
-import ivc.plugin.IVCPlugin;
 import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ui.texteditor.MarkerUtilities;
 
 public class MarkersManager {
 

@@ -18,7 +18,6 @@
  ******************************************************************************/
 package ivc.util;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,15 +31,16 @@ import java.util.List;
  */
 public class StringUtils {
 
-	public static String readFromInputStream(InputStream stream){
+	public static synchronized String readFromInputStream(InputStream stream) {
 		StringBuilder build = new StringBuilder();
-		try{
-		BufferedReader buffer = new BufferedReader(new InputStreamReader(stream));
-		String line;
-		while ((line = buffer.readLine()) != null) {
-			build.append(line);
-			build.append("\n");
-		}}catch (IOException e) {
+		try {
+			BufferedReader buffer = new BufferedReader(new InputStreamReader(stream));
+			String line;
+			while ((line = buffer.readLine()) != null) {
+				build.append(line);
+				build.append("\n");
+			}
+		} catch (IOException e) {
 			System.out.println("IOEXception trying reading stream");
 		}
 		return build.toString();
@@ -48,8 +48,7 @@ public class StringUtils {
 	}
 
 	/**
-	 * we can't use String.split as it is a JDK 1.4 method. //TODO Java 1.4 is
-	 * not aproblem anymore. Isn't it ?
+	 * we can't use String.split as it is a JDK 1.4 method. //TODO Java 1.4 is not aproblem anymore. Isn't it ?
 	 * 
 	 * @param str
 	 * @param separator
@@ -102,13 +101,11 @@ public class StringUtils {
 	 * </p>
 	 * 
 	 * <p>
-	 * A <code>null</code> input String returns <code>null</code>. An empty
-	 * string ("") input returns the empty string.
+	 * A <code>null</code> input String returns <code>null</code>. An empty string ("") input returns the empty string.
 	 * </p>
 	 * 
 	 * <p>
-	 * If the stripChars String is <code>null</code>, whitespace is stripped as
-	 * defined by {@link Character#isWhitespace(char)}.
+	 * If the stripChars String is <code>null</code>, whitespace is stripped as defined by {@link Character#isWhitespace(char)}.
 	 * </p>
 	 * 
 	 * <pre>

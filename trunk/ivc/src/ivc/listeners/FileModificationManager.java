@@ -1,12 +1,20 @@
 package ivc.listeners;
 
+import ivc.compare.IVCCompareEditorInput;
+import ivc.compare.StringComparer;
 import ivc.manager.ProjectsManager;
+import ivc.repository.ResourceStatus;
 import ivc.repository.Status;
+import ivc.util.FileUtils;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.compare.CompareUI;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFileState;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -16,8 +24,9 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 
 public class FileModificationManager implements IResourceChangeListener {
+	private ProjectsManager projectsManager = ProjectsManager.instance();
 	private List<IResource> modifiedResources = new ArrayList<IResource>();
-	private int WATCHED_CHANGES = IResourceDelta.CONTENT | IResourceDelta.MOVED_TO;
+	private int WATCHED_CHANGES = IResourceDelta.CONTENT;
 
 	public void resourceChanged(IResourceChangeEvent event) {
 
@@ -35,53 +44,31 @@ public class FileModificationManager implements IResourceChangeListener {
 							}
 						}
 					}
-					switch (delta.getKind()) {
-					// a new resource was created
-					case IResourceDelta.ADDED:
-
-						// get a reference to the newly created resource
-						resource = delta.getResource();
-
-						// newly created resource is a java file
-						if ((resource instanceof IFile) && (resource.getFileExtension().compareTo("java") == 0)) {
-							// attach document listener to the newly created
-							// java file
-							// AttachListeners.attachFileListener((IFile)resource);
-							// get the parent resources of the created resource
-							// getFileParents(resource);
-						} else if (resource instanceof IProject) {
-
-							ProjectsManager.instance().tryAddProject((IProject) resource);
-						}
-						break;
-
-					// an existing resource was removed
-					case IResourceDelta.REMOVED:
-
-						// get a reference to the newly created resource
-						resource = delta.getResource();
-
-						// the removed resource is a java file
-						if (resource instanceof IFile && (resource.getFileExtension().compareTo("java") == 0)) {
-							// perform updates of the local data structures in
-							// order to
-							// reflect the deletion of the file
-							// AttachListeners.detachFileListener((IFile)resource);
-							// get the parent resources of the created resource
-							// getFileParents(resource);
-						}
-						break;
-
-					// an existing resource was changed; we don't handle this
-					// case
-					}
 					return true;
 				}
 			});
+
 			for (IResource resource : modifiedResources) {
-				ProjectsManager.instance().updateStatus(resource, Status.Modified);
+				if (projectsManager.isManaged(resource)) {
+					if (resource instanceof IFile) {
+						IFile file = (IFile) resource;
+						getChanges(file);
+					}
+					projectsManager.updateStatus(resource, Status.Modified);
+				}
 			}
+			modifiedResources.clear();
 		} catch (CoreException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	private void getChanges(IFile file) throws CoreException {
+		IFileState[] states = file.getHistory(null);
+		System.out.println(file);
+		if (states.length > 1) {
+			StringComparer comparer = new StringComparer(states[0].getContents(), file.getContents());
+			comparer.compare();
 		}
 	}
 }

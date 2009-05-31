@@ -84,7 +84,7 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 				if (ProjectsManager.instance().isManaged(resource)) {
 
 					try {
-						Status status = ProjectsManager.instance().getResourceStatus(resource);
+						Status status = ProjectsManager.instance().getStatus(resource);
 						decoratorImageKeys = findDecorationImage(status);
 
 						if (decoratorImageKeys.size() != 0) {
@@ -180,6 +180,8 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 			fireLabelEvent(new LabelProviderChangedEvent(decorator, resourcesToBeUpdated.toArray()));
 		}
 	}
+
+	
 
 	/**
 	 * Fire a Label Change event so that the label decorators are automatically refreshed.

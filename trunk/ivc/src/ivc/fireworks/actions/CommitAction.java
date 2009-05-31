@@ -1,22 +1,12 @@
 package ivc.fireworks.actions;
 
-import ivc.data.commands.CommandArgs;
-import ivc.data.commands.CommitCommand;
 import ivc.fireworks.markers.MarkersManager;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-public class CommitAction implements IWorkbenchWindowActionDelegate {
-	private IResource resource;
+public class CommitAction extends BaseActionDelegate {
 
 	@Override
 	public void dispose() {
@@ -31,27 +21,24 @@ public class CommitAction implements IWorkbenchWindowActionDelegate {
 	}
 
 	@Override
-	public void run(IAction arg0) {
-		try {
-			IResource res = ResourcesPlugin.getWorkspace().getRoot().getProjects()[1].members()[2];
-				
-			
-			
-			Map map=new HashMap();
-			CommitCommand commit = new CommitCommand();
-			commit.execute(new CommandArgs());
-			 
-			MarkersManager.addMarker(res, map, "infoMarker");
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public void run(IAction action) {
+
+		IResource[] resources = getSelectedResources();
+		for (IResource resource : resources) {
+
+			boolean result = MarkersManager.addMarker(resource, null, "infoMarker");
+			action.setChecked(result);
 		}
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
-	public void selectionChanged(IAction arg0, ISelection arg1) {
-		// TODO Auto-generated method stub
+	public boolean menuItemEnabled() {
+		for (IResource resource : getSelectedResources()) {
+			if (!resourceInRepository(resource))
+				return false;
+		}
+		return true;
 	}
 
 }

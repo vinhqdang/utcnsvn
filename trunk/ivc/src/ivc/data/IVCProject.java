@@ -1,8 +1,11 @@
 package ivc.data;
 
 import ivc.repository.Status;
+import ivc.util.Constants;
+import ivc.util.FileUtils;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -81,8 +84,18 @@ public class IVCProject implements Serializable {
 	}
 
 	public Status getResourceStatus(IResource resource) {
-		// TODO 2.Alex ceva cu statusul 
+		// TODO 2.Alex ceva cu statusul
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public int getFileVersion(String filePath) {
+		HashMap<String, Integer> localVersion = (HashMap<String, Integer>) FileUtils.readObjectFromFile(project.getLocation().toOSString()
+				+ Constants.IvcFolder + Constants.CurrentVersionFile);
+		if (localVersion.containsKey(filePath)) {
+			return localVersion.get(filePath);
+		}
+		return 0;
 	}
 
 }

@@ -57,7 +57,6 @@ public class CheckoutCommand implements IRunnableWithProgress {
 
 	@Override
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		// TODO Auto-generated method stub
 		// init fields
 		monitor.beginTask("Init local properties", 5);
 		serverAddress = (String) args.getArgumentValue(Constants.SERVER_ADDRESS);
@@ -72,7 +71,6 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		try {
 			connectionManager.initiateConnections(serverAddress, projectPath);
 		} catch (IVCException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			result = new Result(false, "error", e);
 			return;
@@ -84,7 +82,6 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		try {
 			createProject(monitor);
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			result = new Result(false, Exceptions.COULD_NOT_CREATE_PROJECT, e);
 			return;
@@ -129,7 +126,6 @@ public class CheckoutCommand implements IRunnableWithProgress {
 			HashMap<String, Integer> cv = (HashMap<String, Integer>) connectionManager.getServer().getVersionNumber(projectPath);
 			FileUtils.writeObjectToFile(cvFile.getAbsolutePath(), cv);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -146,7 +142,6 @@ public class CheckoutCommand implements IRunnableWithProgress {
 				try {
 					peer.createRULFile(projectPath, NetworkUtils.getHostAddress());
 				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -177,39 +172,17 @@ public class CheckoutCommand implements IRunnableWithProgress {
 					f.createNewFile();
 					FileUtils.writeStringBufferToFile(f.getAbsolutePath(), baseContent);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-
-			// 4. apply all transformations
-			// Iterator<TransformationHistory> it = thl.iterator();
-			// while (it.hasNext()) {
-			// TransformationHistory th = it.next();
-			// String filePath = th.getFilePath();
-			// StringBuffer baseContent = bv.getFiles().get(filePath);
-			// for (Iterator<Transformation> iterator = th.getTransformations().iterator(); iterator.hasNext();) {
-			// Transformation transformation = iterator.next();
-			// if (transformation.getOperationType() == Transformation.CHARACTER_ADD
-			// || transformation.getOperationType() == Transformation.CHARACTER_DELETE) {
-			// baseContent = transformation.applyContentTransformation(baseContent);
-			// } else {
-			// transformation.applyStructureTransformation();
-			// break;
-			// }
-			// }
-			// FileUtils.writeStringBufferToFile(project.getLocation().toOSString() + "\\" + filePath, baseContent);
-			// }
 			thl.applyTransformationHistoryList(project);
 			// refresh project
 			try {
 				project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 			} catch (CoreException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
