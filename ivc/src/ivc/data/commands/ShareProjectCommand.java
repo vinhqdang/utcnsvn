@@ -79,10 +79,12 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 				try {
 					if (!server.authenticateHost(userName, pass)) {
 						result = new Result(false, Exceptions.SERVER_AUTHENTICATION_FAILED, null);
+						return;
 					}
 				} catch (RemoteException e1) {
 					result = new Result(false, Exceptions.SERVER_AUTHENTICATION_FAILED, e1);
 					e1.printStackTrace();
+					return;
 				}
 
 				// 2.expose interface
@@ -113,14 +115,16 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 				monitor.worked(1);
 				monitor.setTaskName("Finished");
 				monitor.done();
-				
+
 			}
 		} catch (IVCException e1) {
 			// TODO Auto-generated catch block
 			result = new Result(false, Exceptions.SERVER_CONNECTION_FAILED, e1);
 			e1.printStackTrace();
+			return;
 		}
-		result = new Result(true, "Success", null);
+		if (result != null)
+			result = new Result(true, "Success", null);
 
 	}
 
@@ -192,7 +196,7 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 		// found folder... need to go deeper
 		if (resourceType == IResource.FOLDER) {
 			IFolder folder = (IFolder) resource;
-			if (folder.getName().equalsIgnoreCase("bin")){
+			if (folder.getName().equalsIgnoreCase("bin")) {
 				return;
 			}
 			bv.addFolder(folder.getProjectRelativePath().toOSString());

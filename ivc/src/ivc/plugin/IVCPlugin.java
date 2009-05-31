@@ -5,12 +5,16 @@ import ivc.connection.ConnectionManager;
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.ShareProjectCommand;
 import ivc.fireworks.decorators.Decorator;
+import ivc.listeners.FileModificationManager;
 import ivc.listeners.ResourceChangedListener;
 import ivc.manager.ProjectsManager;
+import ivc.repository.CacheManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -51,7 +55,9 @@ public class IVCPlugin extends AbstractUIPlugin {
 		baseURL = context.getBundle().getEntry("/");
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		ResourceChangedListener changeListener = new ResourceChangedListener();
+		FileModificationManager modifications= new FileModificationManager();
 		workspace.addResourceChangeListener(changeListener);
+		workspace.addResourceChangeListener(modifications,IResourceChangeEvent.PRE_BUILD);
 		Decorator.enableDecoration = true;
 		ProjectsManager.instance().findProjects();				
 		
@@ -140,5 +146,6 @@ public class IVCPlugin extends AbstractUIPlugin {
 				parent.dispose();
 		}
 	}
+	
 
 }

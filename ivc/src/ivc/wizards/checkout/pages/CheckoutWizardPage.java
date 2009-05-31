@@ -89,7 +89,7 @@ public class CheckoutWizardPage extends BaseWizardPage {
 
 	@Override
 	public IWizardPage getNextPage() {
-		if (!validator.isValid()){
+		if (!validator.isValidated()){
 			return this;
 		}
 		FindHostProjectCommand find = new FindHostProjectCommand(txtServerURL.getText(), txtPath.getText());

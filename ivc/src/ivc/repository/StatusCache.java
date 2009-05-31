@@ -6,48 +6,95 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
-
 public class StatusCache implements IStatusCache {
+	private StatusSyncAccessor accessor;
+
+	public StatusCache() {
+		accessor = new StatusSyncAccessor();
+
+	}
 
 	@Override
 	public IResource addStatus(IResource resource, ResourceStatus status) {
-		// TODO Auto-generated method stub
-		return null;
+		byte[] statusBytes = status.getBytes();
+
+		try {
+			accessor.setCachedStatusBytes(resource, statusBytes);
+		} catch (IVCException e) {
+			e.printStackTrace();
+		}
+
+		return resource;
 	}
 
 	@Override
 	public ResourceStatus getStatus(IResource resource) {
-		// TODO Auto-generated method stub
+		try {
+			byte[] res = accessor.internalGetCachedStatusBytes(resource);
+			if (res == null)
+				return null;
+			ResourceStatus resourceStatus = new ResourceStatus(res);
+
+			return resourceStatus;
+		} catch (IVCException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
 	@Override
 	public boolean hasCachedStatus(IResource resource) {
-		// TODO Auto-generated method stub
+		try {
+			return !(accessor.internalGetCachedStatusBytes(resource) == null);
+		} catch (IVCException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 
 	@Override
-	public IResource removeStatus(IResource resource) {
-		// TODO Auto-generated method stub
-		return null;
+	public void removeStatus(IResource resource) {
+		try {
+			accessor.setCachedStatusBytes(resource, null);
+		} catch (IVCException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
 
-final class SyncInfoAccessor {
-	protected byte[] internalGetCachedSyncBytes(IResource resource) throws IVCException {
+/**
+ * 
+ * @author alexm
+ * 
+ *         Class used to get and store the status bytes
+ */
+final class StatusSyncAccessor {
+
+	/**
+	 * Gets the status bytes from the cache
+	 * 
+	 * @param resource
+	 * @return
+	 * @throws IVCException
+	 */
+	protected byte[] internalGetCachedStatusBytes(IResource resource) throws IVCException {
 		try {
-			return ResourcesPlugin.getWorkspace().getSynchronizer().getSyncInfo(CacheManager.IVC_STATUS_KEY, resource);
+			byte[] info = ResourcesPlugin.getWorkspace().getSynchronizer().getSyncInfo(CacheManager.IVC_STATUS_KEY, resource);
+			return info;
 		} catch (CoreException e) {
 			throw new IVCException(e);
 		}
 	}
 
-	/*
-	 * Set the sync bytes to the synchronizer.
+	/**
+	 * Sets the status bytes in the cache
+	 * 
+	 * @param resource
+	 * @param syncInfo
+	 * @throws IVCException
 	 */
-	protected void internalSetCachedSyncBytes(IResource resource, byte[] syncInfo) throws IVCException {
+	protected void setCachedStatusBytes(IResource resource, byte[] syncInfo) throws IVCException {
 		try {
 			ResourcesPlugin.getWorkspace().getSynchronizer().setSyncInfo(CacheManager.IVC_STATUS_KEY, resource, syncInfo);
 		} catch (CoreException e) {

@@ -19,13 +19,12 @@ public class SharingWizardPage extends BaseWizardPage {
 	public SharingWizardPage() {
 		super("Select repository");
 		setTitle("Select repository");
-		ImageDescriptor img = ImageDescriptorManager
-				.getImageDescriptor(ImageDescriptorManager.SHARE_WIZARD);
+		ImageDescriptor img = ImageDescriptorManager.getImageDescriptor(ImageDescriptorManager.SHARE_WIZARD);
 		setImageDescriptor(img);
 		validator = new Validator() {
 			@Override
 			public void setError(String error) {
-				updateStatus(getValidatorErrorMessage());
+				updateStatus(error);
 			}
 		};
 
@@ -67,7 +66,7 @@ public class SharingWizardPage extends BaseWizardPage {
 
 		txtUserName = createTextField(composite);
 		validator.addControl(txtUserName, "Cannot be null");
-		
+
 		createLabel(composite, "Password:");
 
 		txtPassword = createTextField(composite);
@@ -77,11 +76,13 @@ public class SharingWizardPage extends BaseWizardPage {
 	@Override
 	public boolean isPageComplete() {
 		super.isPageComplete();
-		return validator.isValid();
+		return validator.isValidated();
 	}
 
 	private void updateStatus(String message) {
+
 		setErrorMessage(message);
-		
+		if (message == null)
+			setMessage("Click finish to continue");
 	}
 }

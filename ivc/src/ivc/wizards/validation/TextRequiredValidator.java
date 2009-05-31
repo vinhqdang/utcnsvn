@@ -5,7 +5,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Text;
 
-public class TextRequiredValidator implements ModifyListener,IValidation {
+public abstract class TextRequiredValidator implements ModifyListener,IValidation {
 
 
 	private ControlDecoration controlDecoration;
@@ -22,16 +22,14 @@ public class TextRequiredValidator implements ModifyListener,IValidation {
 			valid = false;
 		} else {
 			valid = true;
-			resetError();
 			controlDecoration.hide();
 		}
+		resetError();
 	}
 
 
 	public boolean isValid() {
 		return valid;
 	}
-	public void resetError(){
-		
-	}
+	public abstract void resetError();
 }

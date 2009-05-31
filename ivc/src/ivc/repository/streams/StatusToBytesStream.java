@@ -1,19 +1,23 @@
 package ivc.repository.streams;
 
+/**
+ * 
+ * @author alexm
+ * 
+ *         ByteArrayOutputStream for storing status data.
+ */
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public final class StatusToBytesStream extends ByteArrayOutputStream {
-	protected StatusToBytesStream() {
+	public StatusToBytesStream() {
 		// Set the default size which should fit for most cases
 		super(256);
 	}
 
 	/**
-	 * Overrides the standard {@link ByteArrayOutputStream#write(int)}. This is
-	 * one-purpose specialized stream without need for synchronization. The
-	 * method does not check for available capacity, the
-	 * {@link #ensureCapacity(int)} has to be explicitely called prior
+	 * Overrides the standard {@link ByteArrayOutputStream#write(int)}.
 	 */
 	public final void write(int b) {
 		buf[count] = (byte) b;
@@ -21,8 +25,7 @@ public final class StatusToBytesStream extends ByteArrayOutputStream {
 	}
 
 	/**
-	 * Ensure the stream is able to store next n bytes. Grow the array if
-	 * necessary.
+	 * Ensure the stream is able to store next n bytes. Grow the array if necessary.
 	 * 
 	 * @param length
 	 */
@@ -36,9 +39,7 @@ public final class StatusToBytesStream extends ByteArrayOutputStream {
 	}
 
 	/**
-	 * Overrides the standard {@link ByteArrayOutputStream#toByteArray()}. This
-	 * is one-purpose stream so we don't have to return the copy of the buffer,
-	 * so we return the ByteArrays' buffer itself directly.
+	 * Overrides the standard {@link ByteArrayOutputStream#toByteArray()}.
 	 */
 	public final byte[] toByteArray() {
 		return buf;
