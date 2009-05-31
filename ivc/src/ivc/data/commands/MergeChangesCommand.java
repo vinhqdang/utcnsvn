@@ -10,6 +10,7 @@ import ivc.util.Constants;
 import ivc.util.FileUtils;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * @author danielan
@@ -50,14 +51,81 @@ public class MergeChangesCommand implements CommandIntf {
 			args.putArgument(Constants.TRANSFORMATION_HIST_LIST2, newThl2);
 			return new Result(true, "Success", null);
 		}
-		
-		Iterator<TransformationHistory> it = thl1.iterator();
-		while(it.hasNext()){
-			TransformationHistory th1 = it.next();
-		}
-			
 
-		return  new Result(true, "Success", null);
+		// build newTh1
+		Iterator<TransformationHistory> it = thl1.iterator();
+		while (it.hasNext()) {
+			TransformationHistory th1 = it.next();
+			String filePath = th1.getFilePath();
+			if (th1.getTransformations().getFirst().getOperationType() == Transformation.REMOVE_FILE
+					|| th1.getTransformations().getFirst().getOperationType() == Transformation.REMOVE_FOLDER) {
+				newThl1.appendTransformation(th1.getTransformations().getFirst());
+			} else
+			// if both lists have transformations for the same file
+			if (thl2.getTransformationsForFile(filePath) != null) {
+				LinkedList<Transformation> trs1 = thl1.getTransformationsForFile(filePath);
+				LinkedList<Transformation> trs2 = thl2.getTransformationsForFile(filePath);
+				if (trs2.getFirst().getOperationType() == Transformation.REMOVE_FILE
+						|| trs2.getFirst().getOperationType() == Transformation.REMOVE_FOLDER) {
+					newThl2.appendTransformation(trs2.getFirst());
+				} else {
+					// merge lists of content transformations
+					Iterator<Transformation> itt1 = trs1.descendingIterator();
+					while (itt1.hasNext()) {
+						Transformation tr1 = itt1.next();
+						Transformation newTr1 = tr1;
+						Iterator<Transformation> itt2 = trs2.descendingIterator();
+						while (itt2.hasNext()) {
+							Transformation tr2 = itt2.next();
+							newTr1 = mergeTransformations(newTr1, tr2);
+						}
+						newThl1.appendTransformation(newTr1);
+					}
+				}
+			} else {
+				// only thl1 modified the file content
+				newThl1.appendTransformationHistory(th1);
+			}
+		}
+
+		// build newTh2
+		it = thl2.iterator();
+		while (it.hasNext()) {
+			TransformationHistory th2 = it.next();
+			String filePath = th2.getFilePath();
+			if (th2.getTransformations().getFirst().getOperationType() == Transformation.REMOVE_FILE
+					|| th2.getTransformations().getFirst().getOperationType() == Transformation.REMOVE_FOLDER) {
+				newThl2.appendTransformation(th2.getTransformations().getFirst());
+			} else
+			// if both lists have transformations for the same file
+			if (thl1.getTransformationsForFile(filePath) != null) {
+				LinkedList<Transformation> trs1 = thl1.getTransformationsForFile(filePath);
+				LinkedList<Transformation> trs2 = thl2.getTransformationsForFile(filePath);
+				if (trs1.getFirst().getOperationType() == Transformation.REMOVE_FILE
+						|| trs1.getFirst().getOperationType() == Transformation.REMOVE_FOLDER) {
+					newThl1.appendTransformation(trs2.getFirst());
+				} else {
+					// merge lists of content transformations
+					Iterator<Transformation> itt2 = trs2.descendingIterator();
+					while (itt2.hasNext()) {
+						Transformation tr2 = itt2.next();
+						Transformation newTr2 = tr2;
+						Iterator<Transformation> itt1 = trs1.descendingIterator();
+						while (itt1.hasNext()) {
+							Transformation tr1 = itt1.next();
+							newTr2 = mergeTransformations(newTr2, tr1);
+						}
+						newThl2.appendTransformation(newTr2);
+					}
+				}
+			} else {
+				// only thl1 modified the file content
+				newThl2.appendTransformationHistory(th2);
+			}
+		}
+		args.putArgument(Constants.TRANSFORMATION_HIST_LIST1, newThl1);
+		args.putArgument(Constants.TRANSFORMATION_HIST_LIST2, newThl2);
+		return new Result(true, "Success", null);
 	}
 
 	/**
