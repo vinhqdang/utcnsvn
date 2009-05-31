@@ -3,30 +3,20 @@
  */
 package ivc.data.commands;
 
-import java.io.InputStream;
+import ivc.connection.ConnectionManager;
+import ivc.data.TransformationHistory;
+import ivc.data.TransformationHistoryList;
+import ivc.data.exception.Exceptions;
+import ivc.manager.ProjectsManager;
+import ivc.rmi.client.ClientIntf;
+import ivc.util.Constants;
+import ivc.util.FileUtils;
+
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-
-import ivc.connection.ConnectionManager;
-import ivc.data.Transformation;
-import ivc.data.TransformationHistory;
-import ivc.data.TransformationHistoryList;
-import ivc.data.exception.Exceptions;
-import ivc.rmi.client.ClientIntf;
-import ivc.util.Constants;
-import ivc.util.FileUtils;
 
 /**
  * @author danielan
@@ -34,11 +24,13 @@ import ivc.util.FileUtils;
  */
 public class CommitCommand implements CommandIntf {
 
+	private String projectName;
 	private String projectPath;
 	private List<String> filePaths;
 
-	TransformationHistoryList changedFiles;
-	HashMap<String, Integer> currentCommitedVersion;
+	private TransformationHistoryList changedFiles;
+	private HashMap<String, Integer> currentCommitedVersion;
+	private ConnectionManager connectionManager;
 
 	/*
 	 * (non-Javadoc)
@@ -52,10 +44,14 @@ public class CommitCommand implements CommandIntf {
 	
 	public Result execute(CommandArgs args) {
 		// init local fields
-		projectPath = (String) args.getArgumentValue("projectPath");
-		filePaths = (List<String>) args.getArgumentValue("filePaths");
-		// if the user tries to commit the entire project must get the changed
-		// files
+		
+		projectName = (String) args.getArgumentValue(Constants.PROJECT_NAME);
+		projectPath = ProjectsManager.instance().getIVCProjectByName(projectName).getServerPath();
+		filePaths = (List<String>) args.getArgumentValue(Constants.FILE_PATHS);
+		connectionManager = ConnectionManager.getInstance(projectName);
+
+		
+		// if the user tries to commit the entire project must get the changed files
 		if (filePaths == null || filePaths.isEmpty()) {
 			getChangedFiles();
 			if (filePaths == null || filePaths.isEmpty()) {
@@ -68,7 +64,7 @@ public class CommitCommand implements CommandIntf {
 		}
 
 		try {
-			ConnectionManager.getInstance().getServer().updateHeadVersion(projectPath, changedFiles);
+connectionManager.getServer().updateHeadVersion(projectPath, changedFiles);
 		} catch (RemoteException e) {
 			return new Result(false,Exceptions.SERVER_UPDATE_HEADVERSION_FAILED, e);
 		}
@@ -88,12 +84,12 @@ public class CommitCommand implements CommandIntf {
 	private boolean checkVersion() {
 		// rcl must be empty and also version on server same as local version of
 		// the file
-		List<TransformationHistory> rcl = (List<TransformationHistory>) FileUtils	.readObjectFromFile(projectPath + Constants.IvcFolder +Constants.RemoteCommitedLog);
+		List<TransformationHistory> rcl = (List<TransformationHistory>) FileUtils.readObjectFromFile(projectPath + Constants.IvcFolder +Constants.RemoteCommitedLog);
 		if (rcl != null || !rcl.isEmpty()) {
 			return false;
 		}
 		try {
-			currentCommitedVersion = (HashMap)ConnectionManager.getInstance().getServer().getVersionNumber(projectPath);
+			currentCommitedVersion = (HashMap)connectionManager.getServer().getVersionNumber(projectPath);
 			Iterator<TransformationHistory> it = changedFiles.iterator();
 			while (it.hasNext()) {
 				TransformationHistory th = it.next();
@@ -118,7 +114,7 @@ public class CommitCommand implements CommandIntf {
 	private void updateCurrentVersion() {
 		try {
 			// update head version on server
-			ConnectionManager.getInstance().getServer().updateHeadVersion(projectPath, changedFiles);
+			connectionManager.getServer().updateHeadVersion(projectPath, changedFiles);
 			HashMap<String, Integer> localVersion = (HashMap<String, Integer>) FileUtils.readObjectFromFile(projectPath+ Constants.IvcFolder +Constants.CurrentVersionFile);
 			Iterator<TransformationHistory> it = changedFiles.iterator();
 			// increment version numbers
@@ -149,7 +145,7 @@ public class CommitCommand implements CommandIntf {
 			
 			// save new changes
 			FileUtils.writeObjectToFile(projectPath+Constants.IvcFolder +Constants.CurrentVersionFile, localVersion);
-			ConnectionManager.getInstance().getServer().updateVersionNumber(projectPath, currentCommitedVersion);
+			connectionManager.getServer().updateVersionNumber(projectPath, currentCommitedVersion);
 
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -160,7 +156,7 @@ public class CommitCommand implements CommandIntf {
 	}
 
 	private void updateRCLFiles() {
-		List<ClientIntf> peers = ConnectionManager.getInstance().getPeers();
+		List<ClientIntf> peers = connectionManager.getPeers();
 		if (peers == null){
 			return;
 		}
@@ -175,9 +171,9 @@ public class CommitCommand implements CommandIntf {
 		 }
 		 // notify peers that are not on line
 		 try {
-			List<String> disconnected =  ConnectionManager.getInstance().getServer().getAllClientHosts();
-			disconnected.removeAll(ConnectionManager.getInstance().getPeerHosts());
-			ConnectionManager.getInstance().getServer().updatePendingRCL(projectPath, disconnected, changedFiles);
+			List<String> disconnected =  connectionManager.getServer().getAllClientHosts();
+			disconnected.removeAll(connectionManager.getPeerHosts());
+			connectionManager.getServer().updatePendingRCL(projectPath, disconnected, changedFiles);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

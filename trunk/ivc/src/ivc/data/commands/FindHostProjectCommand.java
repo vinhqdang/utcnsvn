@@ -1,6 +1,7 @@
 package ivc.data.commands;
 
 import ivc.connection.ConnectionManager;
+import ivc.data.exception.Exceptions;
 import ivc.data.exception.IVCException;
 import ivc.rmi.server.ServerIntf;
 
@@ -11,12 +12,15 @@ import java.rmi.ServerException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
-public class FindHostProject implements IRunnableWithProgress {
+public class FindHostProjectCommand implements IRunnableWithProgress {
 	String sAddress;
 	String pPath;
 	Result result;
+	
+	private ConnectionManager connectionManager;
 
-	public FindHostProject(String serverAddress, String path) {
+
+	public FindHostProjectCommand(String serverAddress, String path) {
 		sAddress = serverAddress;
 		pPath = path;
 	}
@@ -27,11 +31,16 @@ public class FindHostProject implements IRunnableWithProgress {
 		monitor.beginTask("Initiating connection", 2);
 		ServerIntf server;
 		try {
-			server = ConnectionManager.getInstance().connectToServer(sAddress);
+			server = ConnectionManager.connectToServer(sAddress);
+			
 
 			monitor.worked(1);
 			monitor.setTaskName("Getting project information");
-			server.checkProjectPath(pPath);
+			
+			boolean isOK = server.checkProjectPath(pPath);
+			if (! isOK){
+				result = new Result(false, Exceptions.SERVER_PROJ_PATH_INVALID, null);
+			}
 		} catch (RemoteException e) {
 			result = new Result(false, e.getMessage(), e);
 		} catch (IVCException e) {

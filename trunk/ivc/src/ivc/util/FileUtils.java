@@ -46,9 +46,9 @@ public class FileUtils {
 		}
 		ObjectOutputStream oos;
 		try {
-			
+
 			oos = new ObjectOutputStream(fos);
-			oos.writeObject(o);			
+			oos.writeObject(o);
 			oos.close();
 			fos.close();
 		} catch (IOException e) {
@@ -63,18 +63,25 @@ public class FileUtils {
 		try {
 			fis = new FileInputStream(filePath);
 			try {
-				ObjectInputStream ois = new ObjectInputStream(fis);
-				try {
-					return ois.readObject();
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (fis.available() > 0) {
+					try {
+						ObjectInputStream ois = new ObjectInputStream(fis);
+
+						try {
+							return ois.readObject();
+						} catch (ClassNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -102,16 +109,17 @@ public class FileUtils {
 		return sb;
 	}
 
-	public static void writeStringBufferToFile(String filePath, StringBuffer buf){
+	public static void writeStringBufferToFile(String filePath, StringBuffer buf) {
 		BufferedWriter bw;
 		try {
 			bw = new BufferedWriter(new FileWriter(filePath));
 			bw.write(buf.toString());
+			bw.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 
 }

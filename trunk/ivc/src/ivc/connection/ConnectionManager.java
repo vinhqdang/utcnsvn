@@ -1,22 +1,19 @@
 package ivc.connection;
 
-import ivc.data.Peers;
+import ivc.data.Peer;
 import ivc.data.exception.Exceptions;
 import ivc.data.exception.IVCException;
 import ivc.rmi.client.ClientImpl;
 import ivc.rmi.client.ClientIntf;
 import ivc.rmi.server.ServerIntf;
-import ivc.util.Constants;
-import ivc.util.FileUtils;
 import ivc.util.NetworkUtils;
 
 import java.io.Serializable;
-import java.net.InetAddress;
 import java.net.MalformedURLException;
-import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -29,59 +26,55 @@ public class ConnectionManager implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static ConnectionManager manager;
+	private static Map<String,ConnectionManager> managers;
 
 	private Map<String, ClientIntf> peers;
 
-	private static Peers peersHosts;
+	private static List<String> peersHosts;
 
 	private static ServerIntf server;
 
-	private static String serverAddress;
-
-	private ConnectionManager() {
-	}
+	private ConnectionManager() {}
 
 	/**
 	 * Called at startup
 	 * 
 	 * @throws IVCException
 	 */
-	public void initiateConnections() throws IVCException {
+	public Map<String, ClientIntf> initiateConnections(String serverAddress, String projectPath) throws IVCException {
 		// connect to server
-		String serverAddress = (String) FileUtils.readObjectFromFile(Constants.ServerFile);
 		server = connectToServer(serverAddress);
 
 		// register server for rmi connection in order to allow other users to
 		// communicate with
 		// after the first server exposes its interface the others can connect
 		// to it
-		exposeInterface();
+		exposeInterface(projectPath);
 
 		// read list of hosts with whom to communicate from server file and
 		// connect to them
 
-		List<String> hosts;
+		List<Peer> hosts;
 		try {
-			hosts = server.getConnectedClientHosts();
+			hosts = server.getConnectedClientHosts(projectPath);
 			if (hosts != null) {
-				Iterator<String> it = hosts.iterator();
+				Iterator<Peer> it = hosts.iterator();
 				while (it.hasNext()) {
-					String peerHost = it.next();
+					Peer peerHost = it.next();
 					ClientIntf peer = null;
 					try {
-						peer = connectToInterface(peerHost);
-						if (peer != null) {
-							peers.put(peerHost, peer);
-							peersHosts.addPeerHost(peerHost);
+						if (!peerHost.getHostAddress().equalsIgnoreCase(NetworkUtils.getHostAddress())) {
+							peer = connectToInterface(peerHost.getHostAddress());
+							if (peer != null) {
+								peers.put(peerHost.getHostAddress(), peer);
+								peersHosts.add(peerHost.getHostAddress());
+							}
 						}
 					} catch (IVCException e) {
-						// HTMLLogger.error("Unable to connect to peer host :" +
-						// peerHost);
 						e.logError();
 					}
 					if (peer != null) {
-						peers.put(peerHost, peer);
+						peers.put(peerHost.getHostAddress(), peer);
 					}
 				}
 			}
@@ -89,10 +82,10 @@ public class ConnectionManager implements Serializable {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		return peers;
 	}
 
-	public ServerIntf connectToServer(String serverAddress) throws IVCException  {
-		this.serverAddress = serverAddress;
+	public static ServerIntf connectToServer(String serverAddress) throws IVCException {
 		try {
 			server = (ServerIntf) Naming.lookup(serverAddress);
 			return server;
@@ -111,9 +104,9 @@ public class ConnectionManager implements Serializable {
 		}
 	}
 
-	public void exposeInterface() {
+	public void exposeInterface(String projectPath) {
 		try {
-			server.exposeClientIntf(NetworkUtils.getHostAddress(), new ClientImpl());
+			server.exposeClientIntf(NetworkUtils.getHostAddress(),projectPath,new ClientImpl());
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -128,7 +121,7 @@ public class ConnectionManager implements Serializable {
 			client = server.getClientIntf(hostAddress);
 			if (client != null) {
 				peers.put(hostAddress, client);
-				peersHosts.addPeerHost(hostAddress);
+				peersHosts.add(hostAddress);
 				return client;
 			}
 		} catch (RemoteException e) {
@@ -157,24 +150,28 @@ public class ConnectionManager implements Serializable {
 	 */
 
 	public List<String> getPeerHosts() {
-		return (List<String>) peers.keySet();
+		return new ArrayList<String>(peers.keySet());
 	}
 
+	public List<ClientIntf> getPeers() {
+		return new ArrayList<ClientIntf>(peers.values());
+	}
+	
 	public ServerIntf getServer() {
 		return server;
 	}
-	
-	public List<ClientIntf> getPeers(){
-		return (List<ClientIntf>)peers.values();
-	}
 
-	public static ConnectionManager getInstance() {
-		if (manager == null) {
-			manager = new ConnectionManager();
-			manager.peers = new HashMap<String, ClientIntf>();
-			manager.peersHosts = new Peers();
+	public static ConnectionManager getInstance(String projectName) {
+		if (managers == null) {
+			managers = new HashMap<String,ConnectionManager>();
 		}
-		return manager;
+		if (!managers.keySet().contains(projectName)){
+			ConnectionManager manager = new ConnectionManager();
+			manager.peers = new HashMap<String, ClientIntf>();
+			manager.peersHosts = new ArrayList<String>();
+			managers.put(projectName, manager);
+			}
+		return managers.get(projectName);
 	}
 
 }

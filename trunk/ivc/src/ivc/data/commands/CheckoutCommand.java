@@ -2,9 +2,11 @@ package ivc.data.commands;
 
 import ivc.connection.ConnectionManager;
 import ivc.data.BaseVersion;
+import ivc.data.Peer;
 import ivc.data.Transformation;
 import ivc.data.TransformationHistory;
 import ivc.data.TransformationHistoryList;
+import ivc.data.exception.Exceptions;
 import ivc.data.exception.IVCException;
 import ivc.rmi.client.ClientIntf;
 import ivc.rmi.server.ServerIntf;
@@ -14,12 +16,17 @@ import ivc.util.NetworkUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
@@ -34,17 +41,15 @@ public class CheckoutCommand implements IRunnableWithProgress {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String serverAddress;
-	private String projectPath;
-	private String user;
-	private String pass;
-	
-	
-	private ServerIntf server;
-	
-	
 	private CommandArgs args;
 	private Result result;
+
+	private String serverAddress;
+	private String projectPath;
+	private String projectName;
+
+	private IProject project;
+	private ConnectionManager connectionManager;
 
 	public CheckoutCommand(CommandArgs args) {
 		this.args = args;
@@ -55,72 +60,45 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		// TODO Auto-generated method stub
 		// init fields
 		monitor.beginTask("Init local properties", 5);
-		serverAddress = (String) args.getArgumentValue("serverAddress");
-		projectPath = (String) args.getArgumentValue("projectPath");
-		user = (String)args.getArgumentValue("user");
-		pass = (String) args.getArgumentValue("password");
-		
+		serverAddress = (String) args.getArgumentValue(Constants.SERVER_ADDRESS);
+		projectPath = (String) args.getArgumentValue(Constants.PROJECT_PATH);
+		projectName = (String) args.getArgumentValue(Constants.PROJECT_NAME);
+		connectionManager = ConnectionManager.getInstance(projectName);
+
 		monitor.worked(1);
 		monitor.setTaskName("Establish connections");
 		// 1.establish connections: connect to server; expose intf; connect to
 		// other peers
 		try {
-			initiateConnections();
+			connectionManager.initiateConnections(serverAddress, projectPath);
 		} catch (IVCException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			result = new Result(false, "error", e);
 			return;
 		}
-		
+
 		monitor.worked(1);
 		monitor.setTaskName("Establish connections");
-		// 2. create local project 
-		//TODO ALex create proj at checkout
+		// 2. create IProject
+		try {
+			createProject(monitor);
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			result = new Result(false, Exceptions.COULD_NOT_CREATE_PROJECT, e);
+			return;
+		}
 
-		// 3. init workspace file
+		// 3. get base version and transformations
+		createProjectFiles(monitor);
+
+		// 4. init workspace file
 		createLogFiles();
-
-		// 4. get base version and transformations
-		createProjectFiles();
 
 		// 5. create log files on peers
 		createPeersRemoteFiles();
 		result = new Result(true, "Success", null);
-	}
-
-	private void initiateConnections() throws IVCException {
-		ConnectionManager connMan = ConnectionManager.getInstance();
-		// connect to server
-		try {
-			connMan.connectToServer(serverAddress);
-		} catch (IVCException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		// expose interface
-		connMan.exposeInterface();
-
-		// get list of hosts
-		List<String> peerHosts;
-		try {
-			peerHosts = connMan.getServer().getConnectedClientHosts();
-			if (peerHosts != null) {
-				for (Iterator<String> iterator = peerHosts.iterator(); iterator.hasNext();) {
-					String peerHost = (String) iterator.next();
-					try {
-						connMan.connectToInterface(peerHost);
-					} catch (IVCException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -129,27 +107,27 @@ public class CheckoutCommand implements IRunnableWithProgress {
 	private void createLogFiles() {
 		try {
 			// create document directory
-			File ivcfolder = new File(projectPath + Constants.IvcFolder);
+			File ivcfolder = new File(project.getLocation().toOSString() + Constants.IvcFolder);
 			ivcfolder.mkdir();
 			// local log file
-			File llfile = new File(projectPath +Constants.IvcFolder + Constants.LocalLog);
+			File llfile = new File(project.getLocation().toOSString() + Constants.IvcFolder + Constants.LocalLog);
 			llfile.createNewFile();
 			// remote committed log
-			File rclfile = new File(projectPath +Constants.IvcFolder + Constants.RemoteCommitedLog);
+			File rclfile = new File(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteCommitedLog);
 			rclfile.createNewFile();
-			List<String> peerHosts = ConnectionManager.getInstance().getPeerHosts();
+			List<String> peerHosts = connectionManager.getPeerHosts();
 			if (peerHosts != null) {
 				Iterator<String> it = peerHosts.iterator();
 				while (it.hasNext()) {
 					String peerHost = it.next();
-					File rlufile = new File(projectPath + Constants.RemoteUnCommitedLog + "_"
-							+ peerHost);
+					File rlufile = new File(project.getLocation().toOSString() + Constants.RemoteUnCommitedLog + "_" + peerHost);
 					rlufile.createNewFile();
 				}
 			}
-			File cvFile = new File(projectPath +Constants.IvcFolder + Constants.CurrentVersionFile);
-			cvFile.createNewFile();	
-			ConnectionManager.getInstance().getServer().getVersionNumber(projectPath);			
+			File cvFile = new File(project.getLocation().toOSString() + Constants.IvcFolder + Constants.CurrentVersionFile);
+			cvFile.createNewFile();
+			HashMap<String, Integer> cv = (HashMap<String, Integer>) connectionManager.getServer().getVersionNumber(projectPath);
+			FileUtils.writeObjectToFile(cvFile.getAbsolutePath(), cv);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -160,13 +138,13 @@ public class CheckoutCommand implements IRunnableWithProgress {
 	 * 
 	 */
 	private void createPeersRemoteFiles() {
-		List<ClientIntf> peers = ConnectionManager.getInstance().getPeers();
+		List<ClientIntf> peers = connectionManager.getPeers();
 		if (peers != null) {
 			Iterator<ClientIntf> it = peers.iterator();
 			while (it.hasNext()) {
 				ClientIntf peer = it.next();
 				try {
-					peer.createRLUFile(NetworkUtils.getHostAddress());
+					peer.createRLUFile(projectPath, NetworkUtils.getHostAddress());
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -178,37 +156,56 @@ public class CheckoutCommand implements IRunnableWithProgress {
 	/**
 	 * 
 	 */
-	private void createProjectFiles() {
-		ServerIntf server = ConnectionManager.getInstance().getServer();
+	private void createProjectFiles(IProgressMonitor monitor) {
+		ServerIntf server = connectionManager.getServer();
 		try {
 			BaseVersion bv = server.returnBaseVersion(projectPath);
+			TransformationHistoryList thl = server.returnHeadVersion(projectPath);
 			// create folder structure
 			Iterator<String> itfld = bv.getFolders().iterator();
 			while (itfld.hasNext()) {
-				File f = new File(itfld.next());
+				File f = new File(project.getLocation().toOSString() + "\\" + itfld.next());
 				f.mkdirs();
 			}
-			TransformationHistoryList thl = server.returnHeadVersion(projectPath);
-			// 4. apply all transformations
-			Iterator<String> it = bv.getFiles().keySet().iterator();
-			while (it.hasNext()) {
-				String filePath = it.next();
+			// 5. create file structure
+			Iterator<String> itFiles = bv.getFiles().keySet().iterator();
+			while (itFiles.hasNext()) {
+				String filePath = itFiles.next();
 				StringBuffer baseContent = bv.getFiles().get(filePath);
-				TransformationHistory th = getTransformationHistForFile(thl, filePath);
+				try {
+					File f = new File(project.getLocation().toOSString() + "\\" + filePath);
+					f.createNewFile();
+					FileUtils.writeStringBufferToFile(f.getAbsolutePath(), baseContent);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			// 4. apply all transformations
+			Iterator<TransformationHistory> it = thl.iterator();
+			while (it.hasNext()) {
+				TransformationHistory th = it.next();
+				String filePath = th.getFilePath();
+				StringBuffer baseContent = bv.getFiles().get(filePath);
 				for (Iterator<Transformation> iterator = th.getTransformations().iterator(); iterator.hasNext();) {
 					Transformation transformation = iterator.next();
-					StringBuffer headContent = transformation.applyContentTransformation(baseContent);
-					// 5. create file structure
-					try {
-						File f = new File(filePath);
-						f.createNewFile();
-						FileUtils.writeStringBufferToFile(filePath, headContent);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					if (transformation.getOperationType() == Transformation.CHARACTER_ADD
+							|| transformation.getOperationType() == Transformation.CHARACTER_DELETE) {
+						baseContent = transformation.applyContentTransformation(baseContent);
+					} else {
+						transformation.applyStructureTransformation();
+						break;
 					}
-
 				}
+				FileUtils.writeStringBufferToFile(project.getLocation().toOSString() + "\\" + filePath, baseContent);
+			}
+			// refresh project
+			try {
+				project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -216,23 +213,13 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		}
 	}
 
-	/**
-	 * 
-	 */
-	private TransformationHistory getTransformationHistForFile(TransformationHistoryList thl,String filePath) {
-		if (thl != null) {
-			Iterator<TransformationHistory> it = thl.iterator();
-			while (it.hasNext()) {
-				TransformationHistory th = it.next();
-				if (filePath.equalsIgnoreCase(th.getFilePath())) {
-					return th;
-				}
+	private void createProject(IProgressMonitor progressMonitor) throws CoreException {
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		project = root.getProject(projectName);
+		project.create(progressMonitor);
+		project.open(progressMonitor);
 
-			}
-		}
-		return new TransformationHistory();
 	}
-
 
 	public Result getResult() {
 		return result;

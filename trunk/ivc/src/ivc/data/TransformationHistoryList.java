@@ -32,7 +32,7 @@ public class TransformationHistoryList implements Serializable {
 	/**
 	 * @return the transformations
 	 */
-	public List<TransformationHistory> getTransformationHist() {
+	public LinkedList<TransformationHistory> getTransformationHist() {
 		return transformations;
 	}
 
@@ -48,7 +48,7 @@ public class TransformationHistoryList implements Serializable {
 		return (Iterator<TransformationHistory>) transformations.iterator();
 	}
 
-	public List<Transformation> getTransformationsForFile(String filePath) {
+	public LinkedList<Transformation> getTransformationsForFile(String filePath) {
 		Iterator<TransformationHistory> it = this.transformations.iterator();
 		while (it.hasNext()) {
 			TransformationHistory th = it.next();

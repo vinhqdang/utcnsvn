@@ -40,6 +40,17 @@ public class Constants {
 	public static final String BIND_CLIENT = "client_ivc";
 	public static final String BIND_SERVER = "server_ivc";
 	
+	/*************** COMMANDS *******************************************/
+	public static final String PROJECT_NAME = "projectName";
+	public static final String PROJECT_PATH = "projectPath";
+	public static final String SERVER_ADDRESS = "serverAddress";
+	public static final String USERNAME = "userName";
+	public static final String PASSWORD = "pass";
+	public static final String IPROJECT = "project";
+	public static final String FILE_PATHS = "filePaths";
+	
+	
+	
 	
 	
 	
