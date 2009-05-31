@@ -30,19 +30,7 @@ import java.util.Map;
 public class ServerBusiness {
 	
 
-	public static String getHostAddress() {
-		String hostAddress = "localhost";
-		InetAddress addr = null;
-		try {
-			addr = InetAddress.getLocalHost();
-		} catch (UnknownHostException e1) {
-			e1.printStackTrace();
-		}
-		if (addr != null) {
-			hostAddress = addr.getHostAddress();
-		}
-		return hostAddress;
-	}
+	
 
 	public static void exposeServerInterface(String hostAddress) {
 		try {

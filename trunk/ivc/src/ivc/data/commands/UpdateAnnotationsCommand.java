@@ -20,7 +20,7 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 	 */
 	@Override
 	public Result execute(CommandArgs args) {
-		// TODO Auto-generated method stub
+		// TODO 1. implement update annotations command
 		return null;
 	}
 

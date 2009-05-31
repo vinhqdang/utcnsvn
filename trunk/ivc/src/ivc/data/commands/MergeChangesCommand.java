@@ -17,7 +17,8 @@ public class MergeChangesCommand implements CommandIntf {
 	 */
 	@Override
 	public Result execute(CommandArgs args) {
-		// TODO Auto-generated method stub
+		// TODO 1.implement merge command
+		
 		return null;
 	}
 

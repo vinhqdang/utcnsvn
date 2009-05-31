@@ -26,7 +26,7 @@ public class ConnectionManager implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static Map<String,ConnectionManager> managers;
+	private static Map<String, ConnectionManager> managers;
 
 	private Map<String, ClientIntf> peers;
 
@@ -34,7 +34,8 @@ public class ConnectionManager implements Serializable {
 
 	private static ServerIntf server;
 
-	private ConnectionManager() {}
+	private ConnectionManager() {
+	}
 
 	/**
 	 * Called at startup
@@ -108,16 +109,14 @@ public class ConnectionManager implements Serializable {
 
 	public void exposeInterface(String projectPath) {
 		try {
-			server.exposeClientIntf(NetworkUtils.getHostAddress(),projectPath,new ClientImpl());			
+			server.exposeClientIntf(NetworkUtils.getHostAddress(), projectPath, new ClientImpl());
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	public ClientIntf connectToInterface(String hostAddress) throws IVCException {
-
 		ClientIntf client;
 		try {
 			client = server.getClientIntf(hostAddress);
@@ -133,7 +132,6 @@ public class ConnectionManager implements Serializable {
 		// if connection succedded : add intf to list of peers and write to
 		// config file
 		return null;
-
 	}
 
 	/**
@@ -158,21 +156,35 @@ public class ConnectionManager implements Serializable {
 	public List<ClientIntf> getPeers() {
 		return new ArrayList<ClientIntf>(peers.values());
 	}
-	
+
 	public ServerIntf getServer() {
 		return server;
 	}
 
+	public void disconnectFromServer() {
+		try {
+			server.disconnectHost(NetworkUtils.getHostAddress());
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void disconnectFromHost(String hostAddress) {
+		peersHosts.remove(hostAddress);
+		peers.remove(hostAddress);
+	}
+
 	public static ConnectionManager getInstance(String projectName) {
 		if (managers == null) {
-			managers = new HashMap<String,ConnectionManager>();
+			managers = new HashMap<String, ConnectionManager>();
 		}
-		if (!managers.keySet().contains(projectName)){
+		if (!managers.keySet().contains(projectName)) {
 			ConnectionManager manager = new ConnectionManager();
 			manager.peers = new HashMap<String, ClientIntf>();
 			manager.peersHosts = new ArrayList<String>();
 			managers.put(projectName, manager);
-			}
+		}
 		return managers.get(projectName);
 	}
 

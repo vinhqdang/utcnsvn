@@ -40,7 +40,18 @@ public interface ClientIntf extends Remote {
 	 * @param thl
 	 * @throws RemoteException
 	 */
-	public void updateRCL(String projectName,TransformationHistoryList thl )throws RemoteException;
+	public void updateRCL( String projectServerPath, String sourceHost,TransformationHistoryList thl )throws RemoteException;
+	
+	
+
+	
+	/**
+	 * Called at checkout
+	 * @param projectName
+	 * @param thl
+	 * @throws RemoteException
+	 */
+	public void updateRUL( String projectServerPath,String sourceHost,TransformationHistoryList thl )throws RemoteException;
 	
 	/**
 	 * Called when a peer exposes its interface
@@ -48,6 +59,15 @@ public interface ClientIntf extends Remote {
 	 * @param hostAddress
 	 * @throws RemoteException
 	 */
-	public void handleNewPeerConnected (String projectName, String hostAddress) throws RemoteException;
+	public void handleNewPeerConnected (String projectServerPath, String hostAddress) throws RemoteException;
+	
+
+	/**
+	 * Called when a peer stops execution
+	 * @param projectName
+	 * @param hostAddress
+	 * @throws RemoteException
+	 */
+	public void handleNewPeerDisconnected (String projectServerPath, String hostAddress) throws RemoteException;
 	
 }

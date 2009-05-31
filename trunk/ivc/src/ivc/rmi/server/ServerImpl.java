@@ -9,6 +9,7 @@ import ivc.data.TransformationHistoryList;
 import ivc.rmi.client.ClientIntf;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
+import ivc.util.NetworkUtils;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -79,7 +80,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	public void exposeClientIntf(String hostAddress, String projectPath, ClientIntf client) throws RemoteException {
 		try {
 			// create registry
-			Naming.rebind("rmi://" + ServerBusiness.getHostAddress() + ":" + 1099 + "/" + Constants.BIND_CLIENT + hostAddress, client);
+			Naming.rebind("rmi://" + NetworkUtils.getHostAddress() + ":" + 1099 + "/" + Constants.BIND_CLIENT + hostAddress, client);
 			String peerFilePath = Constants.RepositoryFolder + Constants.Peers;
 			ArrayList<Peer> peers = null;
 			File f = new File(peerFilePath);
@@ -127,7 +128,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	@Override
 	public ClientIntf getClientIntf(String hostAddress) throws RemoteException {
 		try {
-			return (ClientIntf) Naming.lookup("rmi://" + ServerBusiness.getHostAddress() + ":" + 1099 + "/" + Constants.BIND_CLIENT + hostAddress);
+			return (ClientIntf) Naming.lookup("rmi://" +  NetworkUtils.getHostAddress() + ":" + 1099 + "/" + Constants.BIND_CLIENT + hostAddress);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -340,7 +341,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	@Override
 	public Map<String, TransformationHistoryList> returnPendingRUL(String projectPath, String hostAddress) throws RemoteException {
 		Map<String, TransformationHistoryList> thl = null;
-		File f = new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteUncommitedLog + "_" + hostAddress);
+		File f = new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteUncommitedLog +  "_" + hostAddress.replaceAll(".", "_"));
 		if (f.exists()) {
 			Object objectFromFile = FileUtils.readObjectFromFile(f.getAbsolutePath());
 			if (objectFromFile != null && objectFromFile instanceof Map) {
@@ -358,8 +359,66 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	 */
 	@Override
 	public void updatePendingRUL(String projectPath, String sourceHost, List<String> hosts, TransformationHistoryList thl) throws RemoteException {
-		// TODO 1.implement update pending rul
+		if (hosts == null){
+			return;
+		}
+		Iterator<String> it = hosts.iterator();
+		while(it.hasNext()){
+			String hostAddress = it.next();
+			File f = new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteUncommitedLog + "_" + hostAddress.replaceAll(".", "_"));
+			if (!f.exists()){
+				try {
+					f.createNewFile();
+					HashMap<String,TransformationHistoryList> mthl =  new HashMap<String, TransformationHistoryList>();
+					mthl.put(sourceHost, thl);
+					FileUtils.writeObjectToFile(f.getAbsolutePath(), mthl);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}else{
+				Object objFromFile = FileUtils.readObjectFromFile(f.getAbsolutePath());
+				if(objFromFile != null && objFromFile instanceof Map){
+					HashMap<String,TransformationHistoryList> mthl = (HashMap<String,TransformationHistoryList>) objFromFile;
+					TransformationHistoryList currentThl = mthl.get(sourceHost);
+					if (currentThl == null){
+						currentThl = new TransformationHistoryList();
+					}
+					TransformationHistoryList newThl = currentThl.appendTransformationHistoryList(thl);
+					mthl.put(sourceHost, newThl);
+					FileUtils.writeObjectToFile(f.getAbsolutePath(), mthl);
+				}
+			}
+		}
+		
+	}
 
+	/* (non-Javadoc)
+	 * @see ivc.rmi.server.ServerIntf#disconnectHost(java.lang.String)
+	 */
+	@Override
+	public void disconnectHost(String hostAddress) throws RemoteException {
+		// TODO Auto-generated method stub
+		try {
+			Naming.unbind("rmi://" + NetworkUtils.getHostAddress() + ":" + 1099 + "/" + Constants.BIND_CLIENT + hostAddress);			
+			List<Peer> allHosts = (List<Peer>) FileUtils.readObjectFromFile(Constants.RepositoryFolder + Constants.Peers);
+			if (allHosts != null) {
+				Iterator<Peer> it = allHosts.iterator();
+				while (it.hasNext()) {
+					Peer peer = it.next();
+					if (peer.getHostAddress().equalsIgnoreCase(hostAddress) && peer.getConnectionStatus().equalsIgnoreCase(Constants.CONNECTED)) {
+						peer.setConnectionStatus(Constants.DISCONNECTED);
+					}
+				}
+			}
+			
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

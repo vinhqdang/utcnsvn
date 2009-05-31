@@ -92,6 +92,18 @@ public class TransformationHistoryList implements Serializable {
 		}
 		return this;
 	}
+	
+	public TransformationHistoryList appendTransformation(Transformation transf) {
+		String filePath = transf.getFilePath();
+		Iterator<TransformationHistory> it = iterator();
+		while(it.hasNext()){
+			TransformationHistory th = it.next();
+			if (th.getFilePath().equalsIgnoreCase(filePath)){
+				th.addTransformation(transf);
+			}
+		}
+	return this;
+	}
 
 	public TransformationHistoryList removeTransformationHistory(TransformationHistory th) {
 		transformations.remove(th);
@@ -114,6 +126,11 @@ public class TransformationHistoryList implements Serializable {
 		if (th != null) {
 			transformations.remove(th);
 		}
+		return this;
+	}
+	
+	public TransformationHistoryList removeTransformationHistList(TransformationHistoryList thl) {
+			transformations.removeAll(thl.getTransformationHist());
 		return this;
 	}
 
