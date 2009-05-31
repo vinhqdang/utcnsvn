@@ -1,20 +1,17 @@
 package ivc.plugin;
 
 
-import ivc.connection.ConnectionManager;
 import ivc.data.commands.CommandArgs;
-import ivc.data.commands.ShareProjectCommand;
+import ivc.data.commands.StartCommand;
 import ivc.fireworks.decorators.Decorator;
 import ivc.listeners.FileModificationManager;
 import ivc.listeners.ResourceChangedListener;
 import ivc.manager.ProjectsManager;
-import ivc.repository.CacheManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -62,16 +59,11 @@ public class IVCPlugin extends AbstractUIPlugin {
 		ProjectsManager.instance().findProjects();				
 		
 		// for each project
-		//read if it is ivc type and if so... read server 
-		
-		// foreach server found: initiate connections
-		//ConnectionManager.getInstance().initiateConnections();
-	
-		
-	
-	
+		//// call start command for establishing connections with the other peers
+		StartCommand startCommand = new StartCommand();
+		startCommand.execute( new CommandArgs());
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 

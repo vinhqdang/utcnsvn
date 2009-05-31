@@ -22,12 +22,32 @@ public interface ClientIntf extends Remote {
 	 * @return
 	 * @throws RemoteException
 	 */
-	public Result sendTransformation(Transformation transformation) throws RemoteException;
+	public void receiveTransformation(Transformation transformation) throws RemoteException;
 	
-	public void createRLUFile(String projectServerPath,String host) throws RemoteException;
 	
+	/**
+	 * Called whenever a new peer performs a checkout 
+	 * @param projectServerPath
+	 * @param host
+	 * @throws RemoteException
+	 */
+	public void createRULFile(String projectServerPath,String host) throws RemoteException;
+	
+	
+	/**
+	 * Called at checkout
+	 * @param projectName
+	 * @param thl
+	 * @throws RemoteException
+	 */
 	public void updateRCL(String projectName,TransformationHistoryList thl )throws RemoteException;
 	
-	
+	/**
+	 * Called when a peer exposes its interface
+	 * @param projectName
+	 * @param hostAddress
+	 * @throws RemoteException
+	 */
+	public void handleNewPeerConnected (String projectName, String hostAddress) throws RemoteException;
 	
 }

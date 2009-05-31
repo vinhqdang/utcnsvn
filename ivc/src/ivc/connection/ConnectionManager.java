@@ -68,6 +68,8 @@ public class ConnectionManager implements Serializable {
 							if (peer != null) {
 								peers.put(peerHost.getHostAddress(), peer);
 								peersHosts.add(peerHost.getHostAddress());
+								// notify the other peer that i'm awake now and it can communicate with me
+								peer.handleNewPeerConnected(projectPath, NetworkUtils.getHostAddress());
 							}
 						}
 					} catch (IVCException e) {
@@ -106,7 +108,7 @@ public class ConnectionManager implements Serializable {
 
 	public void exposeInterface(String projectPath) {
 		try {
-			server.exposeClientIntf(NetworkUtils.getHostAddress(),projectPath,new ClientImpl());
+			server.exposeClientIntf(NetworkUtils.getHostAddress(),projectPath,new ClientImpl());			
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -24,7 +24,8 @@ public class Constants {
 	public static final String BaseVersionFile = "\\.bv";
 	public static final String Peers ="\\.peers";
 	public static final String CommitedLog = "\\.cl";
-	public static final String PendingRemoteCommitedLog = "\\.rcl";
+	public static final String PendingRemoteCommitedLog = "\\.prcl";
+	public static final String PendingRemoteUncommitedLog = "\\.prul";
 	public static final String RepositoryFolder = "d:\\temp\\ivc\\projects";
 	
 	// common files 	
@@ -47,6 +48,7 @@ public class Constants {
 	public static final String USERNAME = "userName";
 	public static final String PASSWORD = "pass";
 	public static final String IPROJECT = "project";
+	public static final String IVCPROJECT = "ivcproject";
 	public static final String FILE_PATHS = "filePaths";
 	
 	

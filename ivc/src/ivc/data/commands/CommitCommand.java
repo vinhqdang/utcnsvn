@@ -4,6 +4,7 @@
 package ivc.data.commands;
 
 import ivc.connection.ConnectionManager;
+import ivc.data.Peer;
 import ivc.data.TransformationHistory;
 import ivc.data.TransformationHistoryList;
 import ivc.data.exception.Exceptions;
@@ -13,6 +14,7 @@ import ivc.util.Constants;
 import ivc.util.FileUtils;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -38,7 +40,7 @@ public class CommitCommand implements CommandIntf {
 	 * @see command.CommandIntf#execute(data.CommandArgs)
 	 */
 	@Override
-	//TODO: update rul ;)
+	//TODO: 1.update rul ;)
 	
 	// add version 1; delete version remains
 	
@@ -78,7 +80,7 @@ connectionManager.getServer().updateHeadVersion(projectPath, changedFiles);
 	private void getChangedFiles() {
 		// added files, folders; removed files, folders, modified files
 		changedFiles = (TransformationHistoryList) FileUtils.readObjectFromFile(projectPath +Constants.IvcFolder + Constants.LocalLog);
-		// TODO: added removed, modified files outside eclipse
+		// TODO: 1.added removed, modified files outside eclipse
 	}
 
 	private boolean checkVersion() {
@@ -171,8 +173,15 @@ connectionManager.getServer().updateHeadVersion(projectPath, changedFiles);
 		 }
 		 // notify peers that are not on line
 		 try {
-			List<String> disconnected =  connectionManager.getServer().getAllClientHosts();
-			disconnected.removeAll(connectionManager.getPeerHosts());
+			List<Peer> all =  connectionManager.getServer().getAllClientHosts(projectPath);
+			List<String> disconnected =  new ArrayList<String>();
+			Iterator<Peer> itp = all.iterator();
+			while(itp.hasNext()){
+				Peer peer = itp.next();
+				if(!connectionManager.getPeerHosts().contains(peer.getHostAddress())){
+					disconnected.add(peer.getHostAddress());
+				}
+			}
 			connectionManager.getServer().updatePendingRCL(projectPath, disconnected, changedFiles);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block

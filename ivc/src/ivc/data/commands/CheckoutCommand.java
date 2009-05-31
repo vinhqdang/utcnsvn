@@ -144,7 +144,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 			while (it.hasNext()) {
 				ClientIntf peer = it.next();
 				try {
-					peer.createRLUFile(projectPath, NetworkUtils.getHostAddress());
+					peer.createRULFile(projectPath, NetworkUtils.getHostAddress());
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -183,23 +183,24 @@ public class CheckoutCommand implements IRunnableWithProgress {
 			}
 
 			// 4. apply all transformations
-			Iterator<TransformationHistory> it = thl.iterator();
-			while (it.hasNext()) {
-				TransformationHistory th = it.next();
-				String filePath = th.getFilePath();
-				StringBuffer baseContent = bv.getFiles().get(filePath);
-				for (Iterator<Transformation> iterator = th.getTransformations().iterator(); iterator.hasNext();) {
-					Transformation transformation = iterator.next();
-					if (transformation.getOperationType() == Transformation.CHARACTER_ADD
-							|| transformation.getOperationType() == Transformation.CHARACTER_DELETE) {
-						baseContent = transformation.applyContentTransformation(baseContent);
-					} else {
-						transformation.applyStructureTransformation();
-						break;
-					}
-				}
-				FileUtils.writeStringBufferToFile(project.getLocation().toOSString() + "\\" + filePath, baseContent);
-			}
+			// Iterator<TransformationHistory> it = thl.iterator();
+			// while (it.hasNext()) {
+			// TransformationHistory th = it.next();
+			// String filePath = th.getFilePath();
+			// StringBuffer baseContent = bv.getFiles().get(filePath);
+			// for (Iterator<Transformation> iterator = th.getTransformations().iterator(); iterator.hasNext();) {
+			// Transformation transformation = iterator.next();
+			// if (transformation.getOperationType() == Transformation.CHARACTER_ADD
+			// || transformation.getOperationType() == Transformation.CHARACTER_DELETE) {
+			// baseContent = transformation.applyContentTransformation(baseContent);
+			// } else {
+			// transformation.applyStructureTransformation();
+			// break;
+			// }
+			// }
+			// FileUtils.writeStringBufferToFile(project.getLocation().toOSString() + "\\" + filePath, baseContent);
+			// }
+			thl.applyTransformationHistoryList(project);
 			// refresh project
 			try {
 				project.refreshLocal(IResource.DEPTH_INFINITE, monitor);

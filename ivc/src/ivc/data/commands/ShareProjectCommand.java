@@ -109,7 +109,7 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 				}
 
 				// 5.update gui
-				// TODO update intf on sharing project
+				// TODO 2.update intf on sharing project
 				ProjectsManager.instance().tryAddProject(project);
 
 				monitor.worked(1);

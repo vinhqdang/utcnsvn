@@ -81,7 +81,7 @@ public class IVCProject implements Serializable {
 	}
 
 	public Status getResourceStatus(IResource resource) {
-		// TODO
+		// TODO 2.Alex ceva cu statusul 
 		return null;
 	}
 
