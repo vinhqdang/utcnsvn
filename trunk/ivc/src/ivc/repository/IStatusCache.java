@@ -34,5 +34,5 @@ public interface IStatusCache {
 	 * @param resource
 	 * @return
 	 */
-	IResource removeStatus(IResource resource);
+	void removeStatus(IResource resource);
 }

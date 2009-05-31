@@ -3,10 +3,12 @@ package ivc.repository;
 import ivc.plugin.IVCPlugin;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.QualifiedName;
 
-public class CacheManager {
+public class CacheManager implements IResourceChangeListener {
 	private IStatusCache statusCache;
 	public static final QualifiedName IVC_STATUS_KEY = new QualifiedName(IVCPlugin.PLUGIN_ID, "IVC_STATUS_KEY");
 
@@ -21,5 +23,23 @@ public class CacheManager {
 
 	public boolean hasCachedStatus(IResource resource) {
 		return statusCache.hasCachedStatus(resource);
+	}
+
+	public ResourceStatus getResourceStatus(IResource resource) {
+		return statusCache.getStatus(resource);
+	}
+
+	public boolean isManaged(IResource resource) {
+		return statusCache.getStatus(resource) != null;
+	}
+
+	public void setStatus(IResource resource, ResourceStatus status) {
+		statusCache.addStatus(resource, status);
+	}
+
+	@Override
+	public void resourceChanged(IResourceChangeEvent arg0) {
+		// TODO Auto-generated method stub
+
 	}
 }

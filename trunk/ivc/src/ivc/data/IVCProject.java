@@ -1,6 +1,6 @@
 package ivc.data;
 
-import ivc.manager.ResourceStatus;
+import ivc.repository.Status;
 
 import java.io.Serializable;
 
@@ -80,7 +80,7 @@ public class IVCProject implements Serializable {
 		this.serverAddress = serverAddress;
 	}
 
-	public ResourceStatus getResourceStatus(IResource resource) {
+	public Status getResourceStatus(IResource resource) {
 		// TODO
 		return null;
 	}

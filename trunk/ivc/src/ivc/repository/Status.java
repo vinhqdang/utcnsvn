@@ -1,6 +1,6 @@
-package ivc.manager;
+package ivc.repository;
 
-public enum ResourceStatus {
+public enum Status {
 	Unversioned, 
 	Commited, 
 	Modified, 

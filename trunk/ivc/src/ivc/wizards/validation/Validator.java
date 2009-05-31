@@ -29,21 +29,21 @@ public abstract class Validator {
 		ControlDecoration txt = createControlDecoration(control, controlError);
 		TextRequiredValidator validation = new TextRequiredValidator(txt) {
 			public void resetError() {
-				setError("");
+				isValidated();
 			}
 		};
 		control.addModifyListener(validation);
 		controls.add(validation);
 	}
 
-	public boolean isValid() {
-		for (IValidation validator : controls) {
-			if (!validator.isValid()) {
+	public boolean isValidated() {
+		for (IValidation control : controls) {
+			if (!control.isValid()) {
 				setError(error);
 				return false;
 			}
 		}
-		setError("");
+		setError(null);
 		return true;
 	}
 
@@ -51,8 +51,7 @@ public abstract class Validator {
 		ControlDecoration controlDecoration = new ControlDecoration(destControl, SWT.LEFT | SWT.TOP);
 		controlDecoration.setDescriptionText(hoverText);
 
-		FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(
-				FieldDecorationRegistry.DEC_ERROR);
+		FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
 
 		controlDecoration.setImage(fieldDecoration.getImage());
 		return controlDecoration;

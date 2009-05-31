@@ -66,9 +66,11 @@ public class SharingWizard extends Wizard implements IConfigurationWizard {
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 			setErrorMessage(e.getMessage());
+			return false;
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			setErrorMessage(e.getMessage());
+			return false;
 		}
 
 		if (command.getResult().isSuccess()) {
@@ -80,9 +82,8 @@ public class SharingWizard extends Wizard implements IConfigurationWizard {
 			return true;
 		} else {
 			setErrorMessage(command.getResult().getMessage());
+			return false;
 		}
-
-		return true;
 	}
 
 	private void setErrorMessage(String error) {

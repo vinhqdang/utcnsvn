@@ -10,7 +10,7 @@ public class ImageDescriptorManager {
 	public static final String SHARE_WIZARD = "share_icon.png";
 	public static final String DCORATOR_SHARED="shared.png";
 	public static final String DCORATOR_CHANGED="modified.png";
-	public static final String DCORATOR_ADDED="";
+	public static final String DCORATOR_ADDED="added.gif";
 	public static final String DCORATOR_="";
 	
 	public static ImageDescriptor getImageDescriptor(String imageUrl) {

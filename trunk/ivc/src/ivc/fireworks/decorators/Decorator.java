@@ -1,7 +1,9 @@
 package ivc.fireworks.decorators;
 
+import ivc.manager.ProjectsManager;
 import ivc.plugin.IVCPlugin;
 import ivc.plugin.ImageDescriptorManager;
+import ivc.repository.Status;
 
 import java.util.List;
 import java.util.Vector;
@@ -23,11 +25,9 @@ import org.eclipse.ui.IDecoratorManager;
  */
 @SuppressWarnings("unchecked")
 public class Decorator extends LabelProvider implements ILabelDecorator {
-
-	
+	public static final String ID = "ivc.fireworks.decorators.Decorator";
 	/**
-	 * Flag indicating whether decorations are enabled or not true - decorations
-	 * are enabled(resources can be decorated) false - decorations are not
+	 * Flag indicating whether decorations are enabled or not true - decorations are enabled(resources can be decorated) false - decorations are not
 	 * enabled(resources cannot be decorated)
 	 */
 	public static boolean enableDecoration = false;
@@ -50,11 +50,11 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 		IDecoratorManager decoratorManager = IVCPlugin.getDefault().getWorkbench().getDecoratorManager();
 
 		// if the decorator manager is enabled
-		if (decoratorManager.getEnabled("ivc.fireworks.decorators.wk.Decorator")) {
+		if (decoratorManager.getEnabled(Decorator.ID)) {
 
 			// return the label decorator which applies the decorations from all
 			// enabled decorators
-			return (Decorator) decoratorManager.getLabelDecorator("ivc.fireworks.decorators.wk.Decorator");
+			return (Decorator) decoratorManager.getLabelDecorator(Decorator.ID);
 		}
 
 		return null;
@@ -64,9 +64,7 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 	 * Used to provide image decorations for resources
 	 * 
 	 * @param baseImage
-	 *            Base image with which the object to be decorated is already
-	 *            decorated with Eclipse. Our decoration will be added to this
-	 *            decoration.
+	 *            Base image with which the object to be decorated is already decorated with Eclipse. Our decoration will be added to this decoration.
 	 * @param object
 	 *            Object representing the resource to be decorated
 	 * 
@@ -80,73 +78,27 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 		if (enableDecoration) {
 
 			// resource to be decorated is a method
+			if (object instanceof IResource) {
 
-			// if (ResourceManager.getResource(object.toString())) {
+				IResource resource = (IResource) object;
+				if (ProjectsManager.instance().isManaged(resource)) {
 
-			try {
-				decoratorImageKeys = findDecorationImage();
+					try {
+						Status status = ProjectsManager.instance().getResourceStatus(resource);
+						decoratorImageKeys = findDecorationImage(status);
 
-				if (decoratorImageKeys.size() != 0) {
-					image = drawIconImage(baseImage, decoratorImageKeys);
-					return image;
-				} else
-					return null;
-			} catch (Exception e) {
-				System.out.println("Error decorating image");
+						if (decoratorImageKeys.size() != 0) {
+							image = drawIconImage(baseImage, decoratorImageKeys);
+							return image;
+
+						} else
+							return null;
+					} catch (Exception e) {
+						System.out.println("Error decorating image");
+					}
+				}
+
 			}
-			// }
-
-			// the object to be decorated is a resource( an instance of
-			// IResource)
-			// if (object instanceof IResource) {
-			// IResource objectResource = (IResource) object;
-			// if (objectResource == null) {
-			// return null;
-			// }
-			//				
-			// // we check if this object needs to be decorated;
-			// // ResourceManager class maintains a list of object that need to
-			// be decorated
-			// if (ResourceManager.getResource(objectResource.getFullPath()
-			// .toString())) {
-			//				
-			// // we get the type of this resource
-			// int objectType = objectResource.getType();
-			//
-			// // resource to be decorated is either a project or a folder or a
-			// file
-			// if (objectType == IResource.PROJECT
-			// || objectType == IResource.FOLDER
-			// || objectType == IResource.FILE) {
-			//
-			// try {
-			// // we get a vector that contains the images
-			// // that will be used in decorating the object passed as parameter
-			// decoratorImageKeys = findDecorationImage();
-			//
-			// if (decoratorImageKeys.size() != 0) {
-			// // we get the image that will be used for the decoration of the
-			// parameter object
-			// image = drawIconImage(baseImage,
-			// decoratorImageKeys);
-			// return image;
-			// } else {
-			// return null;
-			// }
-			// } catch (Exception e) {
-			// System.out.println("Error decorating image");
-			// }
-			//
-			// }
-			//
-			//
-			// // classes are not decorated
-			// if (objectResource.getClass() == IResource.class) {
-			// return null;
-			// }
-			//
-			// }
-
 		}
 
 		return null;
@@ -160,8 +112,7 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 	 * @param object
 	 *            Object representing the resource to be decorated
 	 * 
-	 * @return label with which the object should be decorated. If null is
-	 *         returned, then the object is decorated with default label
+	 * @return label with which the object should be decorated. If null is returned, then the object is decorated with default label
 	 * 
 	 */
 	public String decorateText(String label, Object object) {
@@ -184,7 +135,7 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 				// decorate only files
 				if (objectType == IResource.FILE) {
 					try {
-						return label + " [deleted]";
+						return label + " [shared]";
 
 					} catch (Exception e) {
 						System.out.println("Error decorating image");
@@ -213,8 +164,7 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 	}
 
 	/**
-	 * Refresh the resources only those of the project that are contained in
-	 * resourcesToBeUpdaterd List
+	 * Refresh the resources only those of the project that are contained in resourcesToBeUpdaterd List
 	 * 
 	 * @param resourcesToBeUpdated
 	 *            List of resources whose decorations need to be refreshed
@@ -232,8 +182,7 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 	}
 
 	/**
-	 * Fire a Label Change event so that the label decorators are automatically
-	 * refreshed.
+	 * Fire a Label Change event so that the label decorators are automatically refreshed.
 	 * 
 	 * @param event
 	 *            LabelProviderChangedEvent
@@ -259,27 +208,33 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 	 */
 	private Image drawIconImage(Image baseImage, Vector images) {
 
-		OverlayImageIcon overlayIcon = new OverlayImageIcon(baseImage, images,OverlayImageIcon.BOTTOM_LEFT);
+		OverlayImageIcon overlayIcon = new OverlayImageIcon(baseImage, images);
 		return overlayIcon.getImage();
 
 	}
 
 	/**
-	 * Create a vector with the keys of the images that will be used for
-	 * resource decoration; here only one image key is used. Image keys consist
-	 * of the names of the images.
+	 * Create a vector with the keys of the images that will be used for resource decoration; here only one image key is used. Image keys consist of
+	 * the names of the images.
 	 * 
-	 * @return A Vector with the keys of the images that will be used for
-	 *         decorating the resources of the project.
+	 * @return A Vector with the keys of the images that will be used for decorating the resources of the project.
 	 */
-	public static Vector findDecorationImage() {
+	public static Vector findDecorationImage(Status status) {
+		// TODO change for different types of status
 		// create a new Vector
 		Vector images = new Vector();
-		String value;
-		
 		// add an image key to the vector
-		images.add(ImageDescriptorManager.DCORATOR_SHARED);
-
+		images.add(new ImageIcon(ImageDescriptorManager.DCORATOR_SHARED, Position.BOTTOM_RIGHT));
+		switch (status) {
+		case Added:
+			images.add(new ImageIcon(ImageDescriptorManager.DCORATOR_ADDED, Position.TOP_LEFT));
+			break;
+		case Modified:
+			images.add(new ImageIcon(ImageDescriptorManager.DCORATOR_CHANGED, Position.TOP_LEFT));
+			break;
+		default:
+			break;
+		}
 		return images;
 	}
 }

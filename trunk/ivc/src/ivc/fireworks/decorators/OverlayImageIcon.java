@@ -29,24 +29,12 @@ public class OverlayImageIcon extends CompositeImageDescriptor {
 	/**
 	 * Vector of image keys
 	 */
-	private Vector<String> images;
-
-	/**
-	 * 
-	 */
-	int position;
-	/**
-	 * Demo Image instance
-	 */
-	public static final int TOP_LEFT = 0;
-	public static final int TOP_RIGHT = 1;
-	public static final int BOTTOM_LEFT = 2;
-	public static final int BOTTOM_RIGHT = 3;
+	private Vector<ImageIcon> images;
 
 	/**
 	 * Constructor for overlayImageIcon.
 	 */
-	public OverlayImageIcon(Image baseImage, Vector images,int position) {
+	public OverlayImageIcon(Image baseImage, Vector images) {
 		// Base image of the object
 		this.baseImage = baseImage;
 		// Demo Image Object
@@ -64,7 +52,9 @@ public class OverlayImageIcon extends CompositeImageDescriptor {
 		drawImage(baseImage.getImageData(), 0, 0);
 
 		for (int i = 0; i < images.size(); i++) {
-			ImageData imageData = ImageDescriptorManager.getImageData(images.get(i));
+			ImageIcon icon=images.get(i);
+			ImageData imageData = ImageDescriptorManager.getImageData(icon.path);
+			Position position=icon.position;
 			switch (position) {
 			// Draw on the top left corner
 			case TOP_LEFT:
