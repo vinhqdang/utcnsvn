@@ -1,13 +1,10 @@
 package ivc.listeners;
 
+import ivc.manager.ProjectsManager;
+
 import java.util.ArrayList;
 
-import ivc.fireworks.decorators.Decorator;
-import ivc.manager.ProjectsManager;
-import ivc.repository.Status;
-
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -22,6 +19,7 @@ public class ResourceChangedListener implements IResourceChangeListener {
 	 * @param event
 	 *            Describes the resource change that occurred
 	 */
+	private ProjectsManager projectsManager = ProjectsManager.instance();
 	ArrayList<IResource> toBeRefreshed = new ArrayList<IResource>();
 	ArrayList<IResource> opened = new ArrayList<IResource>();
 
@@ -36,7 +34,10 @@ public class ResourceChangedListener implements IResourceChangeListener {
 					// a new resource was created
 					case IResourceDelta.ADDED: {
 						resource = delta.getResource();
-						
+						// TODO 2 use code
+						// if (projectsManager.getFileVersion(resource) != 0) {
+						// projectsManager.addDefaultStatus(resource);
+						// }
 					}
 						break;
 
@@ -59,18 +60,15 @@ public class ResourceChangedListener implements IResourceChangeListener {
 					// an existing resource was changed; we don't handle this
 					// case
 					case IResourceDelta.OPEN: {
-						resource = delta.getResource();
-						if (resource instanceof IFile) {
-							IFile file = (IFile) resource;
-							opened.add(file);
-						}
+
 					}
+						break;
 					case IResourceDelta.CHANGED:
-						resource = delta.getResource();
-						if (resource instanceof IFile) {
-							IFile file = (IFile) resource;
-							toBeRefreshed.add(file);
-						}
+						// resource = delta.getResource();
+						// if (resource instanceof IFile) {
+						// IFile file = (IFile) resource;
+						// toBeRefreshed.add(file);
+						// }
 						break;
 					default:
 						break;
@@ -78,17 +76,11 @@ public class ResourceChangedListener implements IResourceChangeListener {
 					return true;
 				}
 			});
-			for (IResource resource : opened) {
-				if (ProjectsManager.instance().isManaged(resource)) {
-					if (resource instanceof IFile) {
-						IFile file = (IFile) resource;
-						file.getHistory(null);
-					}
 
-				}
-			}
-			Decorator.getDecorator().refresh(toBeRefreshed);
+			toBeRefreshed.clear();
+
 		} catch (CoreException ex) {
+			ex.printStackTrace();
 		}
 	}
 }

@@ -89,11 +89,11 @@ public class IVCProject implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public int getFileVersion(String filePath) {
+	public int getFileVersion(String path) {
 		HashMap<String, Integer> localVersion = (HashMap<String, Integer>) FileUtils.readObjectFromFile(project.getLocation().toOSString()
 				+ Constants.IvcFolder + Constants.CurrentVersionFile);
-		if (localVersion.containsKey(filePath)) {
-			return localVersion.get(filePath);
+		if (localVersion.containsKey(path)) {
+			return localVersion.get(path);
 		}
 		return 0;
 	}

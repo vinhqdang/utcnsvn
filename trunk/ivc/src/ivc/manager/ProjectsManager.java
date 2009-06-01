@@ -25,7 +25,13 @@ public class ProjectsManager {
 	private HashMap<String, IVCProject> projects;
 	private CacheManager cacheManager;
 
-	ResourceStatus addedStatus = new ResourceStatus(1, new Date(), Status.Added);
+	private ResourceStatus getAddedStatus() {
+		return new ResourceStatus(1, new Date(), Status.Added);
+	}
+
+	private ResourceStatus getDefaultStatus() {
+		return new ResourceStatus(1, new Date(), Status.Commited);
+	}
 
 	private ProjectsManager() {
 		projects = new HashMap<String, IVCProject>();
@@ -123,8 +129,12 @@ public class ProjectsManager {
 		cacheManager.setStatus(resource, resStatus);
 	}
 
-	public void addDefaultStatus(IResource resource) {
-		cacheManager.setStatus(resource, addedStatus);
+	public void setDefaultStatus(IResource resource) {
+		cacheManager.setStatus(resource, getDefaultStatus());
+	}
+
+	public void setAddedStatus(IResource resource) {
+		cacheManager.setStatus(resource, getAddedStatus());
 	}
 
 	public HashMap<String, IVCProject> getProjects() {
@@ -147,10 +157,10 @@ public class ProjectsManager {
 	}
 
 	// TODO 2 use method
-	public int getFileVersion(IFile file) {
-		IVCProject proj = getIVCProjectByName(file.getProject().getName());
+	public int getFileVersion(IResource resource) {
+		IVCProject proj = getIVCProjectByName(resource.getProject().getName());
 		if (proj != null)
-			proj.getFileVersion(file.getLocation().toOSString());
+			proj.getFileVersion(resource.getLocation().toOSString());
 		return 0;
 	}
 

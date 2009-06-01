@@ -181,6 +181,7 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 	private void handleResource(IResource resource) {
 		int resourceType = resource.getType();
 		// found file
+		ProjectsManager.instance().setAddedStatus(resource);
 		if (resourceType == IResource.FILE) {
 			IFile file = (IFile) resource;
 			try {

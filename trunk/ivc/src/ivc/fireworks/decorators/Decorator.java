@@ -181,7 +181,9 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 		}
 	}
 
-	
+	public void inDepthRefresh(IResource resource) {
+		
+	}
 
 	/**
 	 * Fire a Label Change event so that the label decorators are automatically refreshed.

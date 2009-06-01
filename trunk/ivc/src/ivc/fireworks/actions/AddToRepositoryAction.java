@@ -57,7 +57,7 @@ public class AddToRepositoryAction extends BaseActionDelegate {
 				args.putArgument(Constants.IPROJECT, resource.getProject());
 				command.execute(args);
 				
-				ProjectsManager.instance().addDefaultStatus(resource);
+				ProjectsManager.instance().setAddedStatus(resource);
 
 			}
 		}
