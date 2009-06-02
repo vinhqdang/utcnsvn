@@ -40,7 +40,8 @@ public class AddToRepositoryAction extends BaseActionDelegate {
 					InputStream is;
 					try {
 						is = ((IFile)resource).getContents();
-						operation.setText(FileUtils.InputStreamToStringBuffer(is).toString());
+						//TODO 1 add entire file to subversion
+						//operation.setChar(FileUtils.InputStreamToStringBuffer(is).toString());
 					} catch (CoreException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

@@ -6,22 +6,24 @@ import java.util.List;
 
 public class OperationHistory implements Serializable {
 
+	public OperationHistory() {
+		operations=new LinkedList<Operation>();
+	}
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * 
 	 */
 	private String filePath;
-	
+
 	/**
 	 * 
 	 */
 	private LinkedList<Operation> operations;
-	
-	
 
 	/**
 	 * @return the filePath
@@ -31,7 +33,8 @@ public class OperationHistory implements Serializable {
 	}
 
 	/**
-	 * @param filePath the filePath to set
+	 * @param filePath
+	 *            the filePath to set
 	 */
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
@@ -45,22 +48,18 @@ public class OperationHistory implements Serializable {
 	}
 
 	/**
-	 * @param operations the operations to set
+	 * @param operations
+	 *            the operations to set
 	 */
 	public void setTransformations(LinkedList<Operation> operations) {
 		this.operations = operations;
 	}
-	
-	public void addTransformations(LinkedList<Operation> trs){
+
+	public void addTransformations(LinkedList<Operation> trs) {
 		this.operations.addAll(trs);
 	}
-	
-	public void addTransformation(Operation tr){
+
+	public void addOperation(Operation tr) {
 		operations.addFirst(tr);
 	}
-	
-	
-	
-	
-
 }

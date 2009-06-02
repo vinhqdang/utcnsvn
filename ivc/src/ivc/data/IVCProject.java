@@ -21,6 +21,15 @@ public class IVCProject implements Serializable {
 	private IProject project;
 	private String serverAddress;
 	private String serverPath;
+	private HashMap<String, Integer> localVersion;
+
+	public HashMap<String, Integer> getLocalVersion() {
+		if (localVersion == null) {
+			localVersion = (HashMap<String, Integer>) FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder
+					+ Constants.CurrentVersionFile);
+		}
+		return localVersion;
+	}
 
 	public IVCProject() {
 		super();
@@ -88,14 +97,12 @@ public class IVCProject implements Serializable {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	public int getFileVersion(String path) {
-		HashMap<String, Integer> localVersion = (HashMap<String, Integer>) FileUtils.readObjectFromFile(project.getLocation().toOSString()
-				+ Constants.IvcFolder + Constants.CurrentVersionFile);
+		if (localVersion == null)
+			return 0;
 		if (localVersion.containsKey(path)) {
 			return localVersion.get(path);
 		}
 		return 0;
 	}
-
 }

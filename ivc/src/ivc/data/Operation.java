@@ -38,7 +38,7 @@ public class Operation implements Serializable {
 	
 	private Integer position;
 	
-	private String text;
+	private Character chr;
 	
 	private Boolean commited;
 	
@@ -49,9 +49,13 @@ public class Operation implements Serializable {
 	 */
 	private Integer operationType;
 	
-	
-	public Operation()  {
+	public Operation(){
 		date = new Date();
+	}
+	public Operation(Character chr,int type)  {
+		date = new Date();
+		this.chr=chr;
+		this.operationType=type;
 	}
 	
 
@@ -141,17 +145,17 @@ public class Operation implements Serializable {
 	}
 
 	/**
-	 * @return the text
+	 * @return the character
 	 */
-	public String getText() {
-		return text;
+	public Character getChr() {
+		return chr;
 	}
 
 	/**
 	 * @param text the text to set
 	 */
-	public void setText(String text) {
-		this.text = text;
+	public void setText(Character chr) {
+		this.chr = chr;
 	}
 
 	/**

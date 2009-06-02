@@ -36,6 +36,10 @@ public class CacheManager implements IResourceChangeListener {
 	public void setStatus(IResource resource, ResourceStatus status) {
 		statusCache.addStatus(resource, status);
 	}
+	
+	public void removeStatus(IResource resource){
+		statusCache.removeStatus(resource);
+	}
 
 	@Override
 	public void resourceChanged(IResourceChangeEvent arg0) {

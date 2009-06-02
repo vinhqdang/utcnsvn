@@ -35,9 +35,9 @@ public class ResourceChangedListener implements IResourceChangeListener {
 					case IResourceDelta.ADDED: {
 						resource = delta.getResource();
 						// TODO 2 use code
-						// if (projectsManager.getFileVersion(resource) != 0) {
-						// projectsManager.addDefaultStatus(resource);
-						// }
+						if (projectsManager.getFileVersion(resource) != 0) {
+							projectsManager.setDefaultStatus(resource);
+						}
 					}
 						break;
 

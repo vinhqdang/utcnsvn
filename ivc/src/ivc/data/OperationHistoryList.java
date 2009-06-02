@@ -99,7 +99,7 @@ public class OperationHistoryList implements Serializable {
 		while(it.hasNext()){
 			OperationHistory th = it.next();
 			if (th.getFilePath().equalsIgnoreCase(filePath)){
-				th.addTransformation(transf);
+				th.addOperation(transf);
 			}
 		}
 	return this;
