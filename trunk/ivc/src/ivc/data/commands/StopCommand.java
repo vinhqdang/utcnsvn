@@ -5,7 +5,7 @@ package ivc.data.commands;
 
 import ivc.connection.ConnectionManager;
 import ivc.data.IVCProject;
-import ivc.data.TransformationHistoryList;
+import ivc.data.OperationHistoryList;
 import ivc.data.exception.Exceptions;
 import ivc.manager.ProjectsManager;
 import ivc.rmi.client.ClientIntf;

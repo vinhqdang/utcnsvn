@@ -5,7 +5,7 @@ package ivc.rmi.server;
 
 import ivc.data.BaseVersion;
 import ivc.data.Peer;
-import ivc.data.TransformationHistoryList;
+import ivc.data.OperationHistoryList;
 import ivc.rmi.client.ClientIntf;
 
 import java.rmi.Remote;
@@ -30,9 +30,9 @@ public interface ServerIntf extends Remote {
 	
 	//head version
 	
-	public TransformationHistoryList returnHeadVersion(String projectPath) throws RemoteException;
+	public OperationHistoryList returnHeadVersion(String projectPath) throws RemoteException;
 	
-	public void updateHeadVersion(String projectPath,TransformationHistoryList thl) throws RemoteException;
+	public void updateHeadVersion(String projectPath,OperationHistoryList thl) throws RemoteException;
 	
 	// version number
 	
@@ -42,13 +42,13 @@ public interface ServerIntf extends Remote {
 	
 	//pending transfomations
 	
-	public void updatePendingRCL(String projectPath,List<String> hosts, TransformationHistoryList thl)throws RemoteException;
+	public void updatePendingRCL(String projectPath,List<String> hosts, OperationHistoryList thl)throws RemoteException;
 	
-	public TransformationHistoryList returnPendingRCL(String projectPath, String hostAddress) throws RemoteException;
+	public OperationHistoryList returnPendingRCL(String projectPath, String hostAddress) throws RemoteException;
 	
-	public void updatePendingRUL(String projectPath,String sourceHost,List<String> hosts,TransformationHistoryList thl) throws RemoteException;
+	public void updatePendingRUL(String projectPath,String sourceHost,List<String> hosts,OperationHistoryList thl) throws RemoteException;
 	
-	public Map<String,TransformationHistoryList> returnPendingRUL(String projectPath, String hostAddress) throws RemoteException;
+	public Map<String,OperationHistoryList> returnPendingRUL(String projectPath, String hostAddress) throws RemoteException;
 
 	
 	/**********************************client connection methods**********************************************/

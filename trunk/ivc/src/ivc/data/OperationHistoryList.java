@@ -18,26 +18,26 @@ import org.eclipse.core.runtime.CoreException;
  * @author danielan
  * 
  */
-public class TransformationHistoryList implements Serializable {
+public class OperationHistoryList implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private LinkedList<TransformationHistory> transformations;
+	private LinkedList<OperationHistory> transformations;
 
 	/**
 	 * 
 	 */
-	public TransformationHistoryList() {
-		transformations = new LinkedList<TransformationHistory>();
+	public OperationHistoryList() {
+		transformations = new LinkedList<OperationHistory>();
 	}
 
 	/**
 	 * @return the transformations
 	 */
-	public LinkedList<TransformationHistory> getTransformationHist() {
+	public LinkedList<OperationHistory> getTransformationHist() {
 		return transformations;
 	}
 
@@ -45,18 +45,18 @@ public class TransformationHistoryList implements Serializable {
 	 * @param transformations
 	 *            the transformations to set
 	 */
-	public void setTransformationHist(LinkedList<TransformationHistory> transformations) {
+	public void setTransformationHist(LinkedList<OperationHistory> transformations) {
 		this.transformations = transformations;
 	}
 
-	public Iterator<TransformationHistory> iterator() {
-		return (Iterator<TransformationHistory>) transformations.iterator();
+	public Iterator<OperationHistory> iterator() {
+		return (Iterator<OperationHistory>) transformations.iterator();
 	}
 
-	public LinkedList<Transformation> getTransformationsForFile(String filePath) {
-		Iterator<TransformationHistory> it = this.transformations.iterator();
+	public LinkedList<Operation> getTransformationsForFile(String filePath) {
+		Iterator<OperationHistory> it = this.transformations.iterator();
 		while (it.hasNext()) {
-			TransformationHistory th = it.next();
+			OperationHistory th = it.next();
 			if (th.getFilePath().equalsIgnoreCase(filePath)) {
 				return th.getTransformations();
 			}
@@ -64,11 +64,11 @@ public class TransformationHistoryList implements Serializable {
 		return null;
 	}
 
-	public TransformationHistoryList appendTransformationHistory(TransformationHistory th) {
+	public OperationHistoryList appendTransformationHistory(OperationHistory th) {
 		boolean isnew = true;
-		Iterator<TransformationHistory> it = this.transformations.iterator();
+		Iterator<OperationHistory> it = this.transformations.iterator();
 		while (it.hasNext()) {
-			TransformationHistory cth = it.next();
+			OperationHistory cth = it.next();
 			if (th.getFilePath().equalsIgnoreCase(th.getFilePath())) {
 				isnew = false;
 				cth.addTransformations(th.getTransformations());
@@ -81,23 +81,23 @@ public class TransformationHistoryList implements Serializable {
 		return this;
 	}
 
-	public TransformationHistoryList appendTransformationHistoryList(TransformationHistoryList thl) {
+	public OperationHistoryList appendTransformationHistoryList(OperationHistoryList thl) {
 		if (thl == null || thl.getTransformationHist() == null) {
 			return this;
 		}
-		Iterator<TransformationHistory> it = thl.iterator();
+		Iterator<OperationHistory> it = thl.iterator();
 		while (it.hasNext()) {
-			TransformationHistory th = it.next();
+			OperationHistory th = it.next();
 			appendTransformationHistory(th);
 		}
 		return this;
 	}
 	
-	public TransformationHistoryList appendTransformation(Transformation transf) {
+	public OperationHistoryList appendTransformation(Operation transf) {
 		String filePath = transf.getFilePath();
-		Iterator<TransformationHistory> it = iterator();
+		Iterator<OperationHistory> it = iterator();
 		while(it.hasNext()){
-			TransformationHistory th = it.next();
+			OperationHistory th = it.next();
 			if (th.getFilePath().equalsIgnoreCase(filePath)){
 				th.addTransformation(transf);
 			}
@@ -105,15 +105,15 @@ public class TransformationHistoryList implements Serializable {
 	return this;
 	}
 
-	public TransformationHistoryList removeTransformationHistory(TransformationHistory th) {
+	public OperationHistoryList removeTransformationHistory(OperationHistory th) {
 		transformations.remove(th);
 		return this;
 	}
 
-	private TransformationHistory getTransformationHistForFile(String filePath) {
-		Iterator<TransformationHistory> it = this.transformations.iterator();
+	private OperationHistory getTransformationHistForFile(String filePath) {
+		Iterator<OperationHistory> it = this.transformations.iterator();
 		while (it.hasNext()) {
-			TransformationHistory th = it.next();
+			OperationHistory th = it.next();
 			if (th.getFilePath().equalsIgnoreCase(th.getFilePath())) {
 				return th;
 			}
@@ -121,26 +121,26 @@ public class TransformationHistoryList implements Serializable {
 		return null;
 	}
 
-	public TransformationHistoryList removeTransformationHistForFile(String filePath) {
-		TransformationHistory th = getTransformationHistForFile(filePath);
+	public OperationHistoryList removeTransformationHistForFile(String filePath) {
+		OperationHistory th = getTransformationHistForFile(filePath);
 		if (th != null) {
 			transformations.remove(th);
 		}
 		return this;
 	}
 	
-	public TransformationHistoryList removeTransformationHistList(TransformationHistoryList thl) {
+	public OperationHistoryList removeTransformationHistList(OperationHistoryList thl) {
 			transformations.removeAll(thl.getTransformationHist());
 		return this;
 	}
 
 	public void applyTransformationHistoryList(IProject project) {
-		Iterator<TransformationHistory> it = iterator();
+		Iterator<OperationHistory> it = iterator();
 		while (it.hasNext()) {
-			TransformationHistory th = it.next();
+			OperationHistory th = it.next();
 			// the most recent transformation
-			Transformation firstTransf = th.getTransformations().getFirst();
-			if (firstTransf.getOperationType() == Transformation.REMOVE_FILE || firstTransf.getOperationType() == Transformation.REMOVE_FOLDER ){
+			Operation firstTransf = th.getTransformations().getFirst();
+			if (firstTransf.getOperationType() == Operation.REMOVE_FILE || firstTransf.getOperationType() == Operation.REMOVE_FOLDER ){
 				firstTransf.applyStructureTransformation();
 				return;
 			}
@@ -153,13 +153,13 @@ public class TransformationHistoryList implements Serializable {
 				is = file.getContents();
 				 baseContent = FileUtils.InputStreamToStringBuffer(is);
 				}
-				for (Iterator<Transformation> iterator = th.getTransformations().iterator(); iterator.hasNext();) {
-					Transformation transformation = iterator.next();
-					if (transformation.getOperationType() == Transformation.CHARACTER_ADD
-							|| transformation.getOperationType() == Transformation.CHARACTER_DELETE) {
-						baseContent = transformation.applyContentTransformation(baseContent);
+				for (Iterator<Operation> iterator = th.getTransformations().iterator(); iterator.hasNext();) {
+					Operation operation = iterator.next();
+					if (operation.getOperationType() == Operation.CHARACTER_ADD
+							|| operation.getOperationType() == Operation.CHARACTER_DELETE) {
+						baseContent = operation.applyContentTransformation(baseContent);
 					} else {
-						transformation.applyStructureTransformation();
+						operation.applyStructureTransformation();
 						break;
 					}
 				}

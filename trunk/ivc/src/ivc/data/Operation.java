@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.UUID;
 
-public class Transformation implements Serializable {
+public class Operation implements Serializable {
 	
 	/**
 	 * used for serialization
@@ -42,13 +42,15 @@ public class Transformation implements Serializable {
 	
 	private Boolean commited;
 	
+	private Integer sid;
+	
 	/**
 	 *  DELETE / INSERT
 	 */
 	private Integer operationType;
 	
 	
-	public Transformation()  {
+	public Operation()  {
 		date = new Date();
 	}
 	
@@ -80,7 +82,6 @@ public class Transformation implements Serializable {
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
-
 	
 	
 	/**
@@ -168,6 +169,24 @@ public class Transformation implements Serializable {
 	}
 	
 	
+	
+	
+	/**
+	 * @return the sid
+	 */
+	public Integer getSid() {
+		return sid;
+	}
+
+
+	/**
+	 * @param sid the sid to set
+	 */
+	public void setSid(Integer sid) {
+		this.sid = sid;
+	}
+
+
 	public void applyStructureTransformation(){
 		
 	}

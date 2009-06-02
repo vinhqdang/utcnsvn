@@ -1,8 +1,8 @@
 package ivc.rmi.client;
 
-import ivc.data.Transformation;
-import ivc.data.TransformationHistory;
-import ivc.data.TransformationHistoryList;
+import ivc.data.Operation;
+import ivc.data.OperationHistory;
+import ivc.data.OperationHistoryList;
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.Result;
 
@@ -18,11 +18,11 @@ public interface ClientIntf extends Remote {
 	 * this method is the sender the notification is ignored, otherwise it refreshes the 
 	 * log files and updates annotations.
 	 * 
-	 * @param transformation
+	 * @param operation
 	 * @return
 	 * @throws RemoteException
 	 */
-	public void receiveTransformation(Transformation transformation) throws RemoteException;
+	public void receiveTransformation(Operation operation) throws RemoteException;
 	
 	
 	/**
@@ -40,7 +40,7 @@ public interface ClientIntf extends Remote {
 	 * @param thl
 	 * @throws RemoteException
 	 */
-	public void updateRCL( String projectServerPath, String sourceHost,TransformationHistoryList thl )throws RemoteException;
+	public void updateRCL( String projectServerPath, String sourceHost,OperationHistoryList thl )throws RemoteException;
 	
 	
 
@@ -51,7 +51,7 @@ public interface ClientIntf extends Remote {
 	 * @param thl
 	 * @throws RemoteException
 	 */
-	public void updateRUL( String projectServerPath,String sourceHost,TransformationHistoryList thl )throws RemoteException;
+	public void updateRUL( String projectServerPath,String sourceHost,OperationHistoryList thl )throws RemoteException;
 	
 	/**
 	 * Called when a peer exposes its interface

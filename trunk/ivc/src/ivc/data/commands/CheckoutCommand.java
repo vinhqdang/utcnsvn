@@ -3,9 +3,9 @@ package ivc.data.commands;
 import ivc.connection.ConnectionManager;
 import ivc.data.BaseVersion;
 import ivc.data.Peer;
-import ivc.data.Transformation;
-import ivc.data.TransformationHistory;
-import ivc.data.TransformationHistoryList;
+import ivc.data.Operation;
+import ivc.data.OperationHistory;
+import ivc.data.OperationHistoryList;
 import ivc.data.exception.Exceptions;
 import ivc.data.exception.IVCException;
 import ivc.rmi.client.ClientIntf;
@@ -155,7 +155,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		ServerIntf server = connectionManager.getServer();
 		try {
 			BaseVersion bv = server.returnBaseVersion(projectPath);
-			TransformationHistoryList thl = server.returnHeadVersion(projectPath);
+			OperationHistoryList thl = server.returnHeadVersion(projectPath);
 			// create folder structure
 			Iterator<String> itfld = bv.getFolders().iterator();
 			while (itfld.hasNext()) {

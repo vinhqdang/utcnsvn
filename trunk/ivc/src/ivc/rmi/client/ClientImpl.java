@@ -2,8 +2,8 @@ package ivc.rmi.client;
 
 import ivc.connection.ConnectionManager;
 import ivc.data.IVCProject;
-import ivc.data.Transformation;
-import ivc.data.TransformationHistoryList;
+import ivc.data.Operation;
+import ivc.data.OperationHistoryList;
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.ConnectToPeerCommand;
 import ivc.data.commands.Result;
@@ -32,7 +32,7 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 	}
 
 	@Override
-	public void receiveTransformation(Transformation transformation) throws RemoteException {
+	public void receiveTransformation(Operation operation) throws RemoteException {
 		// TODO 1.receive transformation
 		
 	}
@@ -60,13 +60,13 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ivc.rmi.client.ClientIntf#updateRCL(java.lang.String, ivc.data.TransformationHistoryList)
+	 * @see ivc.rmi.client.ClientIntf#updateRCL(java.lang.String, ivc.data.OperationHistoryList)
 	 */
 	@Override
-	public void updateRCL(String projectServerPath, String sourceHost, TransformationHistoryList thl) throws RemoteException {		
+	public void updateRCL(String projectServerPath, String sourceHost, OperationHistoryList thl) throws RemoteException {		
 		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(projectServerPath);		
-		TransformationHistoryList oldThl = (TransformationHistoryList) FileUtils.readObjectFromFile(project.getProject().getLocation().toOSString() + Constants.RemoteCommitedLog);
-		TransformationHistoryList newThl = oldThl.appendTransformationHistoryList(thl);
+		OperationHistoryList oldThl = (OperationHistoryList) FileUtils.readObjectFromFile(project.getProject().getLocation().toOSString() + Constants.RemoteCommitedLog);
+		OperationHistoryList newThl = oldThl.appendTransformationHistoryList(thl);
 		FileUtils.writeObjectToFile(project.getProject().getLocation().toOSString() + Constants.RemoteCommitedLog, newThl);
 		File f  = new File(project.getProject().getLocation().toOSString() +Constants.IvcFolder + Constants.RemoteUnCommitedLog+"_" + sourceHost.replaceAll(".", "_"));
 		if (!f.exists()){
@@ -81,9 +81,9 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 		if (o == null){
 			return;
 		}
-		if (o instanceof TransformationHistoryList){
-			TransformationHistoryList rul = (TransformationHistoryList) o;
-			TransformationHistoryList newrul = rul.removeTransformationHistList(thl);
+		if (o instanceof OperationHistoryList){
+			OperationHistoryList rul = (OperationHistoryList) o;
+			OperationHistoryList newrul = rul.removeTransformationHistList(thl);
 			FileUtils.writeObjectToFile(f.getAbsolutePath(),newrul);
 		}
 	}
@@ -107,7 +107,7 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 		if (!f.exists()){
 			try {
 				f.createNewFile();
-				FileUtils.writeObjectToFile(f.getAbsolutePath(), new TransformationHistoryList());
+				FileUtils.writeObjectToFile(f.getAbsolutePath(), new OperationHistoryList());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -116,10 +116,10 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 	}
 
 	/* (non-Javadoc)
-	 * @see ivc.rmi.client.ClientIntf#updateRUL(java.lang.String, java.lang.String, ivc.data.TransformationHistoryList)
+	 * @see ivc.rmi.client.ClientIntf#updateRUL(java.lang.String, java.lang.String, ivc.data.OperationHistoryList)
 	 */
 	@Override
-	public void updateRUL(String projectServerPath, String sourceHost, TransformationHistoryList thl) throws RemoteException {
+	public void updateRUL(String projectServerPath, String sourceHost, OperationHistoryList thl) throws RemoteException {
 		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(projectServerPath);	
 		File f  = new File(project.getProject().getLocation().toOSString() +Constants.IvcFolder + Constants.RemoteUnCommitedLog+"_" + sourceHost.replaceAll(".", "_"));
 		if (!f.exists()){
@@ -132,10 +132,10 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 		}
 		Object ofromFile = FileUtils.readObjectFromFile(f.getAbsolutePath());
 		if (ofromFile == null){
-			ofromFile = new TransformationHistoryList();
+			ofromFile = new OperationHistoryList();
 		}
-		TransformationHistoryList currentThl = (TransformationHistoryList) ofromFile;
-		TransformationHistoryList newThl = currentThl.appendTransformationHistoryList(thl);
+		OperationHistoryList currentThl = (OperationHistoryList) ofromFile;
+		OperationHistoryList newThl = currentThl.appendTransformationHistoryList(thl);
 		FileUtils.writeObjectToFile(f.getAbsolutePath(), newThl);
 		
 	}

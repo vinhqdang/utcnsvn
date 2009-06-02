@@ -1,8 +1,8 @@
 package ivc.fireworks.actions;
 
-import ivc.data.Transformation;
+import ivc.data.Operation;
 import ivc.data.commands.CommandArgs;
-import ivc.data.commands.HandleTransformationCommand;
+import ivc.data.commands.HandleOperationCommand;
 import ivc.manager.ProjectsManager;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
@@ -34,26 +34,26 @@ public class AddToRepositoryAction extends BaseActionDelegate {
 		for (IResource resource : getSelectedResources()) {
 			if (!resourceInRepository(resource)) {
 				// TODO 1. add file to repository
-				Transformation transformation = new Transformation();
+				Operation operation = new Operation();
 				if (resource.getType() == IResource.FILE) {
-					transformation.setOperationType(Transformation.ADD_FILE);
+					operation.setOperationType(Operation.ADD_FILE);
 					InputStream is;
 					try {
 						is = ((IFile)resource).getContents();
-						transformation.setText(FileUtils.InputStreamToStringBuffer(is).toString());
+						operation.setText(FileUtils.InputStreamToStringBuffer(is).toString());
 					} catch (CoreException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				} else {
-					transformation.setOperationType(Transformation.ADD_FOLDER);
+					operation.setOperationType(Operation.ADD_FOLDER);
 				}
-				transformation.setFilePath(resource.getProjectRelativePath().toOSString());
-				transformation.setFileVersion(1);
-				transformation.setDate(new Date());
-				HandleTransformationCommand command = new HandleTransformationCommand();
+				operation.setFilePath(resource.getProjectRelativePath().toOSString());
+				operation.setFileVersion(1);
+				operation.setDate(new Date());
+				HandleOperationCommand command = new HandleOperationCommand();
 				CommandArgs args = new CommandArgs();
-				args.putArgument(Constants.TRANSFORMATION, transformation);
+				args.putArgument(Constants.TRANSFORMATION, operation);
 				args.putArgument(Constants.IPROJECT, resource.getProject());
 				command.execute(args);
 				
