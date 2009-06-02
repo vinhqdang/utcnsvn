@@ -65,8 +65,7 @@ public class MergeChangesCommand implements CommandIntf {
 			if (thl2.getTransformationsForFile(filePath) != null) {
 				LinkedList<Operation> trs1 = thl1.getTransformationsForFile(filePath);
 				LinkedList<Operation> trs2 = thl2.getTransformationsForFile(filePath);
-				if (trs2.getFirst().getOperationType() == Operation.REMOVE_FILE
-						|| trs2.getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
+				if (trs2.getFirst().getOperationType() == Operation.REMOVE_FILE || trs2.getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
 					newThl2.appendTransformation(trs2.getFirst());
 				} else {
 					// merge lists of content transformations
@@ -101,8 +100,7 @@ public class MergeChangesCommand implements CommandIntf {
 			if (thl1.getTransformationsForFile(filePath) != null) {
 				LinkedList<Operation> trs1 = thl1.getTransformationsForFile(filePath);
 				LinkedList<Operation> trs2 = thl2.getTransformationsForFile(filePath);
-				if (trs1.getFirst().getOperationType() == Operation.REMOVE_FILE
-						|| trs1.getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
+				if (trs1.getFirst().getOperationType() == Operation.REMOVE_FILE || trs1.getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
 					newThl1.appendTransformation(trs2.getFirst());
 				} else {
 					// merge lists of content transformations
@@ -144,7 +142,7 @@ public class MergeChangesCommand implements CommandIntf {
 		operation.setFilePath(t1.getFilePath());
 		operation.setFileVersion(t1.getFileVersion());
 		operation.setOperationType(t1.getOperationType());
-		operation.setText(t1.getText());
+		operation.setText(t1.getChr());
 		operation.setUserID(t1.getUserID());
 
 		// the positions of the operations
@@ -158,28 +156,28 @@ public class MergeChangesCommand implements CommandIntf {
 		// both local and remote operations are insertions
 		if (t1Type == Operation.CHARACTER_ADD && t2Type == Operation.CHARACTER_ADD) {
 			if (t1Position >= t2Position) {
-				operation.setPosition(t1Position + t2.getText().length());
+				operation.setPosition(t1Position + 1);
 			}
 		}
 
 		// operation1 is insertion and operation2 is deletion
 		if (t1Type == Operation.CHARACTER_ADD && t2Type == Operation.CHARACTER_DELETE) {
 			if (t1Position > t2Position) {
-				operation.setPosition(t1Position - t2.getText().length());
+				operation.setPosition(t1Position - 1);
 			}
 		}
 
 		// operation1 is deletion and operation2 is insertion
 		if (t1Type == Operation.CHARACTER_DELETE && t2Type == Operation.CHARACTER_ADD) {
 			if (t1Position >= t2Position) {
-				operation.setPosition(t1Position + t2.getText().length());
+				operation.setPosition(t1Position + 1);
 			}
 		}
 
 		// both operations are deletions
 		if (t1Type == Operation.CHARACTER_DELETE && t2Type == Operation.CHARACTER_DELETE) {
 			if (t1Position > t2Position) {
-				operation.setPosition(t1Position - t2.getText().length());
+				operation.setPosition(t1Position - 1);
 			}
 		}
 		return operation;

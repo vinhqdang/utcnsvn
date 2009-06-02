@@ -1,8 +1,8 @@
 package ivc.manager;
 
 import ivc.data.IVCProject;
-import ivc.fireworks.decorators.Decorator;
 import ivc.repository.CacheManager;
+import ivc.repository.IVCRepositoryProvider;
 import ivc.repository.ResourceStatus;
 import ivc.repository.Status;
 import ivc.util.Constants;
@@ -12,12 +12,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.team.core.RepositoryProvider;
 
 public class ProjectsManager {
 
@@ -42,10 +43,26 @@ public class ProjectsManager {
 		return projects.containsKey(project.getName());
 	}
 
+	private void remove(IResource resource) throws CoreException {
+		removeStatus(resource);
+		if (resource instanceof IFolder)
+			for (IResource res : ((IFolder) resource).members()) {
+				remove(res);
+			}
+	}
+
 	public void findProjects() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IProject[] wsProjects = workspace.getRoot().getProjects();
 		for (IProject project : wsProjects) {
+			// try {
+			// for (IResource resource : project.members()) {
+			// remove(resource);
+			// }
+			//
+			// } catch (Exception e) {
+			// e.printStackTrace();
+			// }
 			tryAddProject(project);
 		}
 	}
@@ -119,6 +136,10 @@ public class ProjectsManager {
 		return null;
 	}
 
+	public void removeStatus(IResource resource) {
+		cacheManager.removeStatus(resource);
+	}
+
 	public boolean isManaged(IResource resource) {
 		return cacheManager.isManaged(resource);
 	}
@@ -158,6 +179,8 @@ public class ProjectsManager {
 
 	// TODO 2 use method
 	public int getFileVersion(IResource resource) {
+		if (!(RepositoryProvider.getProvider(resource.getProject()) instanceof IVCRepositoryProvider))
+			return 0;
 		IVCProject proj = getIVCProjectByName(resource.getProject().getName());
 		if (proj != null)
 			proj.getFileVersion(resource.getLocation().toOSString());

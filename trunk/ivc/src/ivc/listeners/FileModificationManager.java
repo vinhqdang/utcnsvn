@@ -67,7 +67,7 @@ public class FileModificationManager implements IResourceChangeListener {
 		IFileState[] states = file.getHistory(null);
 		System.out.println(file);
 		if (states.length > 1) {
-			StringComparer comparer = new StringComparer(states[0].getContents(), file.getContents());
+			StringComparer comparer = new StringComparer(file, states[0].getContents());
 			comparer.compare();
 		}
 	}
