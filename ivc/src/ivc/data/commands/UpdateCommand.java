@@ -4,9 +4,9 @@
 package ivc.data.commands;
 
 import ivc.connection.ConnectionManager;
-import ivc.data.Transformation;
-import ivc.data.TransformationHistory;
-import ivc.data.TransformationHistoryList;
+import ivc.data.Operation;
+import ivc.data.OperationHistory;
+import ivc.data.OperationHistoryList;
 import ivc.rmi.server.ServerIntf;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
@@ -35,7 +35,7 @@ public class UpdateCommand implements CommandIntf {
 	private List<String> filesToUpdate;
 
 	private boolean updateAll;
-	private TransformationHistoryList rcl;
+	private OperationHistoryList rcl;
 
 	/*
 	 * (non-Javadoc)
@@ -58,6 +58,9 @@ public class UpdateCommand implements CommandIntf {
 		applyRCL();
 		// 2. clean rcl
 		cleanRCL();
+		// 3. update ll to include effects of rcl
+		updateLL();
+		// 4. update rul of others to contain modified version of ll 
 
 		return new Result(true, "Success", null);
 	}
@@ -76,18 +79,18 @@ public class UpdateCommand implements CommandIntf {
 		try {
 			ServerIntf server = ConnectionManager.getInstance(project.getName()).getServer();
 			HashMap<String, Integer> currentCommitedVersion = (HashMap) server.getVersionNumber(projectPath);
-			rcl = (TransformationHistoryList) FileUtils.readObjectFromFile(projectPath +Constants.IvcFolder + Constants.RemoteCommitedLog);
-			Iterator<TransformationHistory> it = rcl.iterator();
+			rcl = (OperationHistoryList) FileUtils.readObjectFromFile(projectPath +Constants.IvcFolder + Constants.RemoteCommitedLog);
+			Iterator<OperationHistory> it = rcl.iterator();
 			while (it.hasNext()) {
-				TransformationHistory th = it.next();
+				OperationHistory th = it.next();
 				String filePath = th.getFilePath();
 				if (filesToUpdate == null || filesToUpdate.contains(filePath)) {
-					LinkedList<Transformation> transformations = th.getTransformations();
-					if (transformations != null) {
-						Iterator<Transformation> itt = transformations.descendingIterator();
+					LinkedList<Operation> operations = th.getTransformations();
+					if (operations != null) {
+						Iterator<Operation> itt = operations.descendingIterator();
 						while (itt.hasNext()) {
-							Transformation tr = itt.next();
-							if (tr.getOperationType() == Transformation.CHARACTER_ADD || tr.getOperationType() == Transformation.CHARACTER_DELETE) {
+							Operation tr = itt.next();
+							if (tr.getOperationType() == Operation.CHARACTER_ADD || tr.getOperationType() == Operation.CHARACTER_DELETE) {
 								// handle file content modifications
 								IFile file = (IFile) project.findMember(filePath);
 								InputStream contentStream;
@@ -119,7 +122,7 @@ public class UpdateCommand implements CommandIntf {
 
 	private void cleanRCL() {
 		if (filesToUpdate == null) {
-			rcl = new TransformationHistoryList();
+			rcl = new OperationHistoryList();
 		} else {
 			Iterator<String> it = filesToUpdate.iterator();
 			while (it.hasNext()) {
@@ -128,4 +131,11 @@ public class UpdateCommand implements CommandIntf {
 		}
 	}
 
+	private void updateLL(){		
+	}
+	
+	private void updateRUL(){
+		
+	}
+	
 }

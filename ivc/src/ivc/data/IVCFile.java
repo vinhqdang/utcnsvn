@@ -11,7 +11,7 @@ public class IVCFile {
 	private String projectName;
 	
 	private StringBuffer content;
-	private TransformationHistory history; 
+	private OperationHistory history; 
 		
 	public IVCFile() {
 		super();
@@ -72,14 +72,14 @@ public class IVCFile {
 	/**
 	 * @return the history
 	 */
-	public TransformationHistory getHistory() {
+	public OperationHistory getHistory() {
 		return history;
 	}
 
 	/**
 	 * @param history the history to set
 	 */
-	public void setHistory(TransformationHistory history) {
+	public void setHistory(OperationHistory history) {
 		this.history = history;
 	}
 	

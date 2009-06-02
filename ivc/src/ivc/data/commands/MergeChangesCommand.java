@@ -3,9 +3,9 @@
  */
 package ivc.data.commands;
 
-import ivc.data.Transformation;
-import ivc.data.TransformationHistory;
-import ivc.data.TransformationHistoryList;
+import ivc.data.Operation;
+import ivc.data.OperationHistory;
+import ivc.data.OperationHistoryList;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
 
@@ -18,11 +18,11 @@ import java.util.LinkedList;
  */
 public class MergeChangesCommand implements CommandIntf {
 
-	private TransformationHistoryList thl1;
-	private TransformationHistoryList thl2;
+	private OperationHistoryList thl1;
+	private OperationHistoryList thl2;
 
-	private TransformationHistoryList newThl1;
-	private TransformationHistoryList newThl2;
+	private OperationHistoryList newThl1;
+	private OperationHistoryList newThl2;
 
 	/*
 	 * (non-Javadoc)
@@ -33,12 +33,12 @@ public class MergeChangesCommand implements CommandIntf {
 	public Result execute(CommandArgs args) {
 		// TODO 1.implement merge command
 		String thl1Path = (String) args.getArgumentValue(Constants.TRANSFORMATION_HIST_LIST1);
-		thl1 = (TransformationHistoryList) FileUtils.readObjectFromFile(thl1Path);
+		thl1 = (OperationHistoryList) FileUtils.readObjectFromFile(thl1Path);
 		String thl2Path = (String) args.getArgumentValue(Constants.TRANSFORMATION_HIST_LIST2);
-		thl2 = (TransformationHistoryList) FileUtils.readObjectFromFile(thl2Path);
+		thl2 = (OperationHistoryList) FileUtils.readObjectFromFile(thl2Path);
 
-		newThl1 = new TransformationHistoryList();
-		newThl2 = new TransformationHistoryList();
+		newThl1 = new OperationHistoryList();
+		newThl2 = new OperationHistoryList();
 		if (thl1 == null || thl1.getTransformationHist().isEmpty()) {
 			newThl2 = thl2;
 			args.putArgument(Constants.TRANSFORMATION_HIST_LIST1, newThl1);
@@ -53,30 +53,30 @@ public class MergeChangesCommand implements CommandIntf {
 		}
 
 		// build newTh1
-		Iterator<TransformationHistory> it = thl1.iterator();
+		Iterator<OperationHistory> it = thl1.iterator();
 		while (it.hasNext()) {
-			TransformationHistory th1 = it.next();
+			OperationHistory th1 = it.next();
 			String filePath = th1.getFilePath();
-			if (th1.getTransformations().getFirst().getOperationType() == Transformation.REMOVE_FILE
-					|| th1.getTransformations().getFirst().getOperationType() == Transformation.REMOVE_FOLDER) {
+			if (th1.getTransformations().getFirst().getOperationType() == Operation.REMOVE_FILE
+					|| th1.getTransformations().getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
 				newThl1.appendTransformation(th1.getTransformations().getFirst());
 			} else
 			// if both lists have transformations for the same file
 			if (thl2.getTransformationsForFile(filePath) != null) {
-				LinkedList<Transformation> trs1 = thl1.getTransformationsForFile(filePath);
-				LinkedList<Transformation> trs2 = thl2.getTransformationsForFile(filePath);
-				if (trs2.getFirst().getOperationType() == Transformation.REMOVE_FILE
-						|| trs2.getFirst().getOperationType() == Transformation.REMOVE_FOLDER) {
+				LinkedList<Operation> trs1 = thl1.getTransformationsForFile(filePath);
+				LinkedList<Operation> trs2 = thl2.getTransformationsForFile(filePath);
+				if (trs2.getFirst().getOperationType() == Operation.REMOVE_FILE
+						|| trs2.getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
 					newThl2.appendTransformation(trs2.getFirst());
 				} else {
 					// merge lists of content transformations
-					Iterator<Transformation> itt1 = trs1.descendingIterator();
+					Iterator<Operation> itt1 = trs1.descendingIterator();
 					while (itt1.hasNext()) {
-						Transformation tr1 = itt1.next();
-						Transformation newTr1 = tr1;
-						Iterator<Transformation> itt2 = trs2.descendingIterator();
+						Operation tr1 = itt1.next();
+						Operation newTr1 = tr1;
+						Iterator<Operation> itt2 = trs2.descendingIterator();
 						while (itt2.hasNext()) {
-							Transformation tr2 = itt2.next();
+							Operation tr2 = itt2.next();
 							newTr1 = mergeTransformations(newTr1, tr2);
 						}
 						newThl1.appendTransformation(newTr1);
@@ -91,28 +91,28 @@ public class MergeChangesCommand implements CommandIntf {
 		// build newTh2
 		it = thl2.iterator();
 		while (it.hasNext()) {
-			TransformationHistory th2 = it.next();
+			OperationHistory th2 = it.next();
 			String filePath = th2.getFilePath();
-			if (th2.getTransformations().getFirst().getOperationType() == Transformation.REMOVE_FILE
-					|| th2.getTransformations().getFirst().getOperationType() == Transformation.REMOVE_FOLDER) {
+			if (th2.getTransformations().getFirst().getOperationType() == Operation.REMOVE_FILE
+					|| th2.getTransformations().getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
 				newThl2.appendTransformation(th2.getTransformations().getFirst());
 			} else
 			// if both lists have transformations for the same file
 			if (thl1.getTransformationsForFile(filePath) != null) {
-				LinkedList<Transformation> trs1 = thl1.getTransformationsForFile(filePath);
-				LinkedList<Transformation> trs2 = thl2.getTransformationsForFile(filePath);
-				if (trs1.getFirst().getOperationType() == Transformation.REMOVE_FILE
-						|| trs1.getFirst().getOperationType() == Transformation.REMOVE_FOLDER) {
+				LinkedList<Operation> trs1 = thl1.getTransformationsForFile(filePath);
+				LinkedList<Operation> trs2 = thl2.getTransformationsForFile(filePath);
+				if (trs1.getFirst().getOperationType() == Operation.REMOVE_FILE
+						|| trs1.getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
 					newThl1.appendTransformation(trs2.getFirst());
 				} else {
 					// merge lists of content transformations
-					Iterator<Transformation> itt2 = trs2.descendingIterator();
+					Iterator<Operation> itt2 = trs2.descendingIterator();
 					while (itt2.hasNext()) {
-						Transformation tr2 = itt2.next();
-						Transformation newTr2 = tr2;
-						Iterator<Transformation> itt1 = trs1.descendingIterator();
+						Operation tr2 = itt2.next();
+						Operation newTr2 = tr2;
+						Iterator<Operation> itt1 = trs1.descendingIterator();
 						while (itt1.hasNext()) {
-							Transformation tr1 = itt1.next();
+							Operation tr1 = itt1.next();
 							newTr2 = mergeTransformations(newTr2, tr1);
 						}
 						newThl2.appendTransformation(newTr2);
@@ -136,16 +136,16 @@ public class MergeChangesCommand implements CommandIntf {
 	/**
 	 * T1 includes changes from T2
 	 */
-	private Transformation mergeTransformations(Transformation t1, Transformation t2) {
+	private Operation mergeTransformations(Operation t1, Operation t2) {
 		// get a clone of this operation
-		Transformation transformation = new Transformation();
-		transformation.setCommited(t1.getCommited());
-		transformation.setDate(t1.getDate());
-		transformation.setFilePath(t1.getFilePath());
-		transformation.setFileVersion(t1.getFileVersion());
-		transformation.setOperationType(t1.getOperationType());
-		transformation.setText(t1.getText());
-		transformation.setUserID(t1.getUserID());
+		Operation operation = new Operation();
+		operation.setCommited(t1.getCommited());
+		operation.setDate(t1.getDate());
+		operation.setFilePath(t1.getFilePath());
+		operation.setFileVersion(t1.getFileVersion());
+		operation.setOperationType(t1.getOperationType());
+		operation.setText(t1.getText());
+		operation.setUserID(t1.getUserID());
 
 		// the positions of the operations
 		int t1Position = t1.getPosition();
@@ -156,33 +156,33 @@ public class MergeChangesCommand implements CommandIntf {
 		int t2Type = t2.getOperationType();
 
 		// both local and remote operations are insertions
-		if (t1Type == Transformation.CHARACTER_ADD && t2Type == Transformation.CHARACTER_ADD) {
+		if (t1Type == Operation.CHARACTER_ADD && t2Type == Operation.CHARACTER_ADD) {
 			if (t1Position >= t2Position) {
-				transformation.setPosition(t1Position + t2.getText().length());
+				operation.setPosition(t1Position + t2.getText().length());
 			}
 		}
 
 		// operation1 is insertion and operation2 is deletion
-		if (t1Type == Transformation.CHARACTER_ADD && t2Type == Transformation.CHARACTER_DELETE) {
+		if (t1Type == Operation.CHARACTER_ADD && t2Type == Operation.CHARACTER_DELETE) {
 			if (t1Position > t2Position) {
-				transformation.setPosition(t1Position - t2.getText().length());
+				operation.setPosition(t1Position - t2.getText().length());
 			}
 		}
 
 		// operation1 is deletion and operation2 is insertion
-		if (t1Type == Transformation.CHARACTER_DELETE && t2Type == Transformation.CHARACTER_ADD) {
+		if (t1Type == Operation.CHARACTER_DELETE && t2Type == Operation.CHARACTER_ADD) {
 			if (t1Position >= t2Position) {
-				transformation.setPosition(t1Position + t2.getText().length());
+				operation.setPosition(t1Position + t2.getText().length());
 			}
 		}
 
 		// both operations are deletions
-		if (t1Type == Transformation.CHARACTER_DELETE && t2Type == Transformation.CHARACTER_DELETE) {
+		if (t1Type == Operation.CHARACTER_DELETE && t2Type == Operation.CHARACTER_DELETE) {
 			if (t1Position > t2Position) {
-				transformation.setPosition(t1Position - t2.getText().length());
+				operation.setPosition(t1Position - t2.getText().length());
 			}
 		}
-		return transformation;
+		return operation;
 	}
 
 }

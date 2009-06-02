@@ -6,8 +6,8 @@ package ivc.data.commands;
 import ivc.connection.ConnectionManager;
 import ivc.data.IVCProject;
 import ivc.data.Peer;
-import ivc.data.Transformation;
-import ivc.data.TransformationHistoryList;
+import ivc.data.Operation;
+import ivc.data.OperationHistoryList;
 import ivc.manager.ProjectsManager;
 import ivc.rmi.client.ClientIntf;
 import ivc.util.Constants;
@@ -25,9 +25,9 @@ import org.eclipse.core.resources.IProject;
  * @author danielan
  * 
  */
-public class HandleTransformationCommand implements CommandIntf {
+public class HandleOperationCommand implements CommandIntf {
 
-	private Transformation transformation;
+	private Operation operation;
 	private IVCProject ivcProject;
 
 	/*
@@ -38,13 +38,13 @@ public class HandleTransformationCommand implements CommandIntf {
 	@Override
 	public Result execute(CommandArgs args) {
 		// init local variables
-		transformation = (Transformation) args.getArgumentValue(Constants.TRANSFORMATION);
+		operation = (Operation) args.getArgumentValue(Constants.TRANSFORMATION);
 		IProject project = (IProject) args.getArgumentValue(Constants.IPROJECT);
 		ivcProject = ProjectsManager.instance().getIVCProjectByName(project.getName());
 
-		// 1.add transformation to ll
+		// 1.add operation to ll
 		updateLL();
-		// 2.add transformation to rul of others
+		// 2.add operation to rul of others
 		updateRUL();
 
 		return new Result(true, "Success", null);
@@ -52,18 +52,18 @@ public class HandleTransformationCommand implements CommandIntf {
 
 	private void updateLL() {
 		String llPath = ivcProject.getProject().getLocation().toOSString() + Constants.IvcFolder + Constants.LocalLog;
-		TransformationHistoryList oldLL = (TransformationHistoryList) FileUtils.readObjectFromFile(llPath);
+		OperationHistoryList oldLL = (OperationHistoryList) FileUtils.readObjectFromFile(llPath);
 		if (oldLL == null) {
-			oldLL = new TransformationHistoryList();
+			oldLL = new OperationHistoryList();
 		}
-		TransformationHistoryList newLL = oldLL.appendTransformation(transformation);
+		OperationHistoryList newLL = oldLL.appendTransformation(operation);
 		FileUtils.writeObjectToFile(llPath, newLL);
 	}
 
 	private void updateRUL() {
 		ConnectionManager connMan = ConnectionManager.getInstance(ivcProject.getName());
-		TransformationHistoryList thl = new TransformationHistoryList();
-		thl.appendTransformation(transformation);
+		OperationHistoryList thl = new OperationHistoryList();
+		thl.appendTransformation(operation);
 		List<String> disconnected = new ArrayList<String>();
 		try {
 			List<Peer> allHosts = connMan.getServer().getAllClientHosts(ivcProject.getServerPath());

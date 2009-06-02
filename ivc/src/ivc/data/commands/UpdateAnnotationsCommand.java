@@ -5,7 +5,7 @@ package ivc.data.commands;
 
 import java.util.List;
 
-import ivc.data.Transformation;
+import ivc.data.Operation;
 
 /**
  * @author danielan
@@ -42,7 +42,7 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 	 * 
 	 * @param rl
 	 */
-	private void computeCommitedAnnotations(List<Transformation> rl) {
+	private void computeCommitedAnnotations(List<Operation> rl) {
 
 	}
 
@@ -56,7 +56,7 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 	 * 
 	 * @param l
 	 */
-	private void transformIntoConc(List<Transformation> l) {
+	private void transformIntoConc(List<Operation> l) {
 
 	}
 
@@ -72,7 +72,7 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 	 * @param arl
 	 * @param flag
 	 */
-	private void applyAnnotations(List<Transformation> arl, boolean flag) {
+	private void applyAnnotations(List<Operation> arl, boolean flag) {
 
 	}
 

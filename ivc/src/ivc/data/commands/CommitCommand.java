@@ -5,8 +5,8 @@ package ivc.data.commands;
 
 import ivc.connection.ConnectionManager;
 import ivc.data.Peer;
-import ivc.data.TransformationHistory;
-import ivc.data.TransformationHistoryList;
+import ivc.data.OperationHistory;
+import ivc.data.OperationHistoryList;
 import ivc.data.exception.Exceptions;
 import ivc.manager.ProjectsManager;
 import ivc.rmi.client.ClientIntf;
@@ -31,7 +31,7 @@ public class CommitCommand implements CommandIntf {
 	private String projectPath;
 	private List<String> filePaths;
 
-	private TransformationHistoryList changedFiles;
+	private OperationHistoryList changedFiles;
 	private HashMap<String, Integer> currentCommitedVersion;
 	private ConnectionManager connectionManager;
 
@@ -76,23 +76,23 @@ public class CommitCommand implements CommandIntf {
 
 	private void getChangedFiles() {
 		// added files, folders; removed files, folders, modified files
-		changedFiles = (TransformationHistoryList) FileUtils.readObjectFromFile(projectPath + Constants.IvcFolder + Constants.LocalLog);
+		changedFiles = (OperationHistoryList) FileUtils.readObjectFromFile(projectPath + Constants.IvcFolder + Constants.LocalLog);
 		// TODO: 1.added removed, modified files outside eclipse
 	}
 
 	private boolean checkVersion() {
 		// rcl must be empty and also version on server same as local version of
 		// the file
-		List<TransformationHistory> rcl = (List<TransformationHistory>) FileUtils.readObjectFromFile(projectPath + Constants.IvcFolder
+		List<OperationHistory> rcl = (List<OperationHistory>) FileUtils.readObjectFromFile(projectPath + Constants.IvcFolder
 				+ Constants.RemoteCommitedLog);
 		if (rcl != null || !rcl.isEmpty()) {
 			return false;
 		}
 		try {
 			currentCommitedVersion = (HashMap) connectionManager.getServer().getVersionNumber(projectPath);
-			Iterator<TransformationHistory> it = changedFiles.iterator();
+			Iterator<OperationHistory> it = changedFiles.iterator();
 			while (it.hasNext()) {
-				TransformationHistory th = it.next();
+				OperationHistory th = it.next();
 				String filePath = th.getFilePath();
 				if (!th.getTransformations().isEmpty()) {
 					Integer localVersion = th.getTransformations().get(0).getFileVersion();
@@ -115,10 +115,10 @@ public class CommitCommand implements CommandIntf {
 			connectionManager.getServer().updateHeadVersion(projectPath, changedFiles);
 			HashMap<String, Integer> localVersion = (HashMap<String, Integer>) FileUtils.readObjectFromFile(projectPath + Constants.IvcFolder
 					+ Constants.CurrentVersionFile);
-			Iterator<TransformationHistory> it = changedFiles.iterator();
+			Iterator<OperationHistory> it = changedFiles.iterator();
 			// increment version numbers
 			while (it.hasNext()) {
-				TransformationHistory th = it.next();
+				OperationHistory th = it.next();
 				String filePath = th.getFilePath();
 				// update current version number
 				Integer localNo = localVersion.get(filePath);
@@ -186,7 +186,7 @@ public class CommitCommand implements CommandIntf {
 	}
 
 	private void cleanLL() {
-		LinkedList<TransformationHistory> ll = new LinkedList<TransformationHistory>();
+		LinkedList<OperationHistory> ll = new LinkedList<OperationHistory>();
 		FileUtils.writeObjectToFile(projectPath + Constants.IvcFolder + Constants.LocalLog, ll);
 	}
 

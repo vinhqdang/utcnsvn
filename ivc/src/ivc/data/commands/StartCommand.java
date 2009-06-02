@@ -5,7 +5,7 @@ package ivc.data.commands;
 
 import ivc.connection.ConnectionManager;
 import ivc.data.IVCProject;
-import ivc.data.TransformationHistoryList;
+import ivc.data.OperationHistoryList;
 import ivc.data.exception.Exceptions;
 import ivc.data.exception.IVCException;
 import ivc.manager.ProjectsManager;
@@ -70,8 +70,8 @@ public class StartCommand implements CommandIntf {
 		}
 		// 2. append pending rcl transformations
 		try {
-			TransformationHistoryList pendingRCL = connectionManager.getServer().returnPendingRCL(ivcProject.getServerPath(), NetworkUtils.getHostAddress());
-			TransformationHistoryList RCL = (TransformationHistoryList)FileUtils.readObjectFromFile(ivcProject.getProject().getLocation().toOSString() + Constants.IvcFolder +Constants.RemoteCommitedLog);
+			OperationHistoryList pendingRCL = connectionManager.getServer().returnPendingRCL(ivcProject.getServerPath(), NetworkUtils.getHostAddress());
+			OperationHistoryList RCL = (OperationHistoryList)FileUtils.readObjectFromFile(ivcProject.getProject().getLocation().toOSString() + Constants.IvcFolder +Constants.RemoteCommitedLog);
 			RCL.appendTransformationHistoryList(pendingRCL);
 			FileUtils.writeObjectToFile(ivcProject.getProject().getLocation().toOSString() + Constants.IvcFolder +Constants.RemoteCommitedLog, RCL);
 		} catch (RemoteException e) {
@@ -88,7 +88,7 @@ public class StartCommand implements CommandIntf {
 				if (!rulfile.exists()){
 					try {
 						rulfile.createNewFile();
-						FileUtils.writeObjectToFile(rulfile.getAbsolutePath(), new TransformationHistoryList());
+						FileUtils.writeObjectToFile(rulfile.getAbsolutePath(), new OperationHistoryList());
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -99,12 +99,12 @@ public class StartCommand implements CommandIntf {
 
 		// 4. append pending rul transformations
 		try {
-			Map<String,TransformationHistoryList> pendingRULs = connectionManager.getServer().returnPendingRUL(ivcProject.getServerPath(), NetworkUtils.getHostAddress());
+			Map<String,OperationHistoryList> pendingRULs = connectionManager.getServer().returnPendingRUL(ivcProject.getServerPath(), NetworkUtils.getHostAddress());
 			Iterator<String> it = pendingRULs.keySet().iterator();
 			while (it.hasNext()){
 				String host = it.next();
-				TransformationHistoryList pendingRUL = pendingRULs.get(host);
-				TransformationHistoryList rul = new TransformationHistoryList();
+				OperationHistoryList pendingRUL = pendingRULs.get(host);
+				OperationHistoryList rul = new OperationHistoryList();
 				File rulfile = new File(ivcProject.getProject().getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_" + host.replaceAll(".", "_"));
 				if (!rulfile.exists()){
 					try {
@@ -114,7 +114,7 @@ public class StartCommand implements CommandIntf {
 						e.printStackTrace();
 					}
 				}else{
-					rul =  (TransformationHistoryList) FileUtils.readObjectFromFile(rulfile.getAbsolutePath());
+					rul =  (OperationHistoryList) FileUtils.readObjectFromFile(rulfile.getAbsolutePath());
 				}
 				rul.appendTransformationHistoryList(pendingRUL);
 				FileUtils.writeObjectToFile(rulfile.getAbsolutePath(),rul);
