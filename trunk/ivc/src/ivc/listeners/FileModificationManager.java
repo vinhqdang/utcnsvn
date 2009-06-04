@@ -5,6 +5,7 @@ import ivc.data.OperationHistory;
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.HandleOperationCommand;
 import ivc.manager.ProjectsManager;
+import ivc.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,16 +61,17 @@ public class FileModificationManager implements IResourceChangeListener {
 
 	private void getChanges(IFile file) throws CoreException {
 		IFileState[] states = file.getHistory(null);
-		System.out.println(file);
 		if (states.length > 1) {
 			StringComparer comparer = new StringComparer(file, states[0].getContents());
 			comparer.compare();
-			// TODO 1 return the history
 			OperationHistory oh = comparer.getOperationHistory();
 			HandleOperationCommand hoc =  new HandleOperationCommand();
 			CommandArgs args = new CommandArgs();
-			
-			
+			args.putArgument(Constants.IPROJECT, file.getProject());
+			args.putArgument(Constants.OPERATION_HIST, oh);
+			hoc.execute(args);
 		}
 	}
+	
+	
 }
