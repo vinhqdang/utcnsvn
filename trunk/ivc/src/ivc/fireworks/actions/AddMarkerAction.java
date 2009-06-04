@@ -1,6 +1,7 @@
 package ivc.fireworks.actions;
 
 import ivc.fireworks.markers.MarkersManager;
+import ivc.manager.ProjectsManager;
 import ivc.util.WorkspaceUtils;
 
 import org.eclipse.jface.action.IAction;
@@ -28,7 +29,7 @@ public class AddMarkerAction extends BaseActionDelegate {
 
 	@Override
 	public void run(IAction arg0) {
-		MarkersManager.updateMarkers(WorkspaceUtils.getCurrentFile());
+		ProjectsManager.instance().removeStatus(getSelectedResources()[0]);
 	}
 
 }
