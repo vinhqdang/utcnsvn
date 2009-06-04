@@ -226,6 +226,7 @@ public class Operation implements Serializable {
 		newOp.setOperationType(op.getOperationType());
 		newOp.setText(op.getChr());
 		newOp.setUserID(op.getUserID());
+		newOp.setSid(op.getSid());
 
 		// the positions of the operations
 		int posOther = op.getPosition();
