@@ -203,7 +203,7 @@ public class OperationHistoryList implements Serializable {
 			}
 		}
 
-		return this;
+		return newOhl;
 	}
 	
 }

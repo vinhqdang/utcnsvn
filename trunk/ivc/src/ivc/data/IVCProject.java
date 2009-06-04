@@ -105,4 +105,19 @@ public class IVCProject implements Serializable {
 		}
 		return 0;
 	}
+
+	public OperationHistoryList getLocalLog() {
+		return (OperationHistoryList) FileUtils.readObjectFromFile(name + Constants.IvcFolder + Constants.LocalLog);
+	}
+
+	public OperationHistoryList getRemoteCommitedLog() {
+		return (OperationHistoryList) FileUtils.readObjectFromFile(name + Constants.IvcFolder + Constants.RemoteCommitedLog);
+	}
+
+	public OperationHistoryList getRemoteUncommitedLog(String hostAddress) {
+		return (OperationHistoryList) FileUtils.readObjectFromFile(name + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
+				+ hostAddress.replaceAll(".", "_"));
+	}
+
+
 }
