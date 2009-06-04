@@ -6,10 +6,6 @@ import java.util.List;
 
 public class OperationHistory implements Serializable {
 
-	public OperationHistory() {
-		operations=new LinkedList<Operation>();
-	}
-
 	/**
 	 * 
 	 */
@@ -24,6 +20,11 @@ public class OperationHistory implements Serializable {
 	 * 
 	 */
 	private LinkedList<Operation> operations;
+	
+
+	public OperationHistory() {
+		operations = new LinkedList<Operation>();
+	}
 
 	/**
 	 * @return the filePath

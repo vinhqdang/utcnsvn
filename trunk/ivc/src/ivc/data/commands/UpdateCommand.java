@@ -73,15 +73,12 @@ public class UpdateCommand implements CommandIntf {
 
 	private void applyRCL() {
 		IProject project = ivcProject.getProject();
-
 		// read current version
-		HashMap<String, Integer> currentLocalVersion = (HashMap<String, Integer>) FileUtils.readObjectFromFile(project.getLocation().toOSString()
-				+ Constants.IvcFolder + Constants.CurrentVersionFile);
+		HashMap<String, Integer> currentLocalVersion = ivcProject.getCurrentVersion();
 		try {
 			ServerIntf server = ConnectionManager.getInstance(project.getName()).getServer();
-			HashMap<String, Integer> currentCommitedVersion = (HashMap) server.getVersionNumber(projectPath);
-			rcl = (OperationHistoryList) FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder
-					+ Constants.RemoteCommitedLog);
+			HashMap<String, Integer> currentCommitedVersion = (HashMap<String, Integer>) server.getVersionNumber(projectPath);
+			rcl = ivcProject.getRemoteCommitedLog();
 			Iterator<OperationHistory> it = rcl.iterator();
 			while (it.hasNext()) {
 				OperationHistory th = it.next();
@@ -115,7 +112,7 @@ public class UpdateCommand implements CommandIntf {
 					}
 				}
 			}
-			FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.CurrentVersionFile, currentLocalVersion);
+			ivcProject.setCurrentVersion(currentLocalVersion);
 		} catch (RemoteException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -137,10 +134,9 @@ public class UpdateCommand implements CommandIntf {
 	 * ll must be transformed to include effects of rcl we say that we apply an inclusion transformation over operations in ll
 	 */
 	private void updateLL() {
-		OperationHistoryList ll = (OperationHistoryList) FileUtils.readObjectFromFile(ivcProject.getProject().getLocation().toOSString()
-				+ Constants.IvcFolder + Constants.LocalLog);
+		OperationHistoryList ll = ivcProject.getLocalLog();
 		ll = ll.includeOperationHistoryList(rcl);
-		FileUtils.writeObjectToFile((ivcProject.getProject().getLocation().toOSString() + Constants.IvcFolder + Constants.LocalLog), ll);
+		ivcProject.setLocalLog(ll);
 		ConnectionManager connectionManager = ConnectionManager.getInstance(ivcProject.getName());
 		try {
 			List<Peer> all = connectionManager.getServer().getAllClientHosts(projectPath);
@@ -153,7 +149,7 @@ public class UpdateCommand implements CommandIntf {
 				} else {
 					ClientIntf client = connectionManager.getPeerByAddress(peer.getHostAddress());
 					client.updateRUL(ivcProject.getServerPath(), NetworkUtils.getHostAddress(), ll);
-				}
+ 				}
 			}
 			connectionManager.getServer().updatePendingRUL(projectPath, NetworkUtils.getHostAddress(), disconnected, ll);
 		} catch (RemoteException e) {

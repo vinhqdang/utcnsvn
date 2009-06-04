@@ -32,23 +32,23 @@ public class MergeChangesCommand implements CommandIntf {
 	@Override
 	public Result execute(CommandArgs args) {
 		// TODO 1.implement merge command
-		String thl1Path = (String) args.getArgumentValue(Constants.TRANSFORMATION_HIST_LIST1);
+		String thl1Path = (String) args.getArgumentValue(Constants.OPERATION_HIST_LIST1);
 		thl1 = (OperationHistoryList) FileUtils.readObjectFromFile(thl1Path);
-		String thl2Path = (String) args.getArgumentValue(Constants.TRANSFORMATION_HIST_LIST2);
+		String thl2Path = (String) args.getArgumentValue(Constants.OPERATION_HIST_LIST2);
 		thl2 = (OperationHistoryList) FileUtils.readObjectFromFile(thl2Path);
 
 		newThl1 = new OperationHistoryList();
 		newThl2 = new OperationHistoryList();
 		if (thl1 == null || thl1.getTransformationHist().isEmpty()) {
 			newThl2 = thl2;
-			args.putArgument(Constants.TRANSFORMATION_HIST_LIST1, newThl1);
-			args.putArgument(Constants.TRANSFORMATION_HIST_LIST2, newThl2);
+			args.putArgument(Constants.OPERATION_HIST_LIST1, newThl1);
+			args.putArgument(Constants.OPERATION_HIST_LIST2, newThl2);
 			return new Result(true, "Success", null);
 		}
 		if (thl2 == null || thl2.getTransformationHist().isEmpty()) {
 			newThl1 = thl1;
-			args.putArgument(Constants.TRANSFORMATION_HIST_LIST1, newThl1);
-			args.putArgument(Constants.TRANSFORMATION_HIST_LIST2, newThl2);
+			args.putArgument(Constants.OPERATION_HIST_LIST1, newThl1);
+			args.putArgument(Constants.OPERATION_HIST_LIST2, newThl2);
 			return new Result(true, "Success", null);
 		}
 
@@ -59,14 +59,14 @@ public class MergeChangesCommand implements CommandIntf {
 			String filePath = th1.getFilePath();
 			if (th1.getTransformations().getFirst().getOperationType() == Operation.REMOVE_FILE
 					|| th1.getTransformations().getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
-				newThl1.appendTransformation(th1.getTransformations().getFirst());
+				newThl1.appendOperation(th1.getTransformations().getFirst());
 			} else
 			// if both lists have transformations for the same file
 			if (thl2.getTransformationsForFile(filePath) != null) {
 				LinkedList<Operation> trs1 = thl1.getTransformationsForFile(filePath);
 				LinkedList<Operation> trs2 = thl2.getTransformationsForFile(filePath);
 				if (trs2.getFirst().getOperationType() == Operation.REMOVE_FILE || trs2.getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
-					newThl2.appendTransformation(trs2.getFirst());
+					newThl2.appendOperation(trs2.getFirst());
 				} else {
 					// merge lists of content transformations
 					Iterator<Operation> itt1 = trs1.descendingIterator();
@@ -78,12 +78,12 @@ public class MergeChangesCommand implements CommandIntf {
 							Operation tr2 = itt2.next();
 							newTr1 = mergeTransformations(newTr1, tr2);
 						}
-						newThl1.appendTransformation(newTr1);
+						newThl1.appendOperation(newTr1);
 					}
 				}
 			} else {
 				// only thl1 modified the file content
-				newThl1.appendTransformationHistory(th1);
+				newThl1.appendOperationHistory(th1);
 			}
 		}
 
@@ -94,14 +94,14 @@ public class MergeChangesCommand implements CommandIntf {
 			String filePath = th2.getFilePath();
 			if (th2.getTransformations().getFirst().getOperationType() == Operation.REMOVE_FILE
 					|| th2.getTransformations().getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
-				newThl2.appendTransformation(th2.getTransformations().getFirst());
+				newThl2.appendOperation(th2.getTransformations().getFirst());
 			} else
 			// if both lists have transformations for the same file
 			if (thl1.getTransformationsForFile(filePath) != null) {
 				LinkedList<Operation> trs1 = thl1.getTransformationsForFile(filePath);
 				LinkedList<Operation> trs2 = thl2.getTransformationsForFile(filePath);
 				if (trs1.getFirst().getOperationType() == Operation.REMOVE_FILE || trs1.getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
-					newThl1.appendTransformation(trs2.getFirst());
+					newThl1.appendOperation(trs2.getFirst());
 				} else {
 					// merge lists of content transformations
 					Iterator<Operation> itt2 = trs2.descendingIterator();
@@ -113,16 +113,16 @@ public class MergeChangesCommand implements CommandIntf {
 							Operation tr1 = itt1.next();
 							newTr2 = mergeTransformations(newTr2, tr1);
 						}
-						newThl2.appendTransformation(newTr2);
+						newThl2.appendOperation(newTr2);
 					}
 				}
 			} else {
 				// only thl1 modified the file content
-				newThl2.appendTransformationHistory(th2);
+				newThl2.appendOperationHistory(th2);
 			}
 		}
-		args.putArgument(Constants.TRANSFORMATION_HIST_LIST1, newThl1);
-		args.putArgument(Constants.TRANSFORMATION_HIST_LIST2, newThl2);
+		args.putArgument(Constants.OPERATION_HIST_LIST1, newThl1);
+		args.putArgument(Constants.OPERATION_HIST_LIST2, newThl2);
 		return new Result(true, "Success", null);
 	}
 

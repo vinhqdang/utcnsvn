@@ -1,21 +1,16 @@
 package ivc.listeners;
 
-import ivc.compare.IVCCompareEditorInput;
 import ivc.compare.StringComparer;
+import ivc.data.OperationHistory;
+import ivc.data.commands.CommandArgs;
+import ivc.data.commands.HandleOperationCommand;
 import ivc.manager.ProjectsManager;
-import ivc.repository.ResourceStatus;
-import ivc.repository.Status;
-import ivc.util.FileUtils;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.compare.CompareUI;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFileState;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -70,7 +65,11 @@ public class FileModificationManager implements IResourceChangeListener {
 			StringComparer comparer = new StringComparer(file, states[0].getContents());
 			comparer.compare();
 			// TODO 1 return the history
-			comparer.getOperationHistory();
+			OperationHistory oh = comparer.getOperationHistory();
+			HandleOperationCommand hoc =  new HandleOperationCommand();
+			CommandArgs args = new CommandArgs();
+			
+			
 		}
 	}
 }

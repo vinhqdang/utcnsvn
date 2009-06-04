@@ -5,6 +5,7 @@ package ivc.data.commands;
 
 import ivc.connection.ConnectionManager;
 import ivc.data.IVCProject;
+import ivc.data.OperationHistory;
 import ivc.data.Peer;
 import ivc.data.Operation;
 import ivc.data.OperationHistoryList;
@@ -27,7 +28,7 @@ import org.eclipse.core.resources.IProject;
  */
 public class HandleOperationCommand implements CommandIntf {
 
-	private Operation operation;
+	private OperationHistory operationHist;
 	private IVCProject ivcProject;
 
 	/*
@@ -38,7 +39,7 @@ public class HandleOperationCommand implements CommandIntf {
 	@Override
 	public Result execute(CommandArgs args) {
 		// init local variables
-		operation = (Operation) args.getArgumentValue(Constants.TRANSFORMATION);
+		operationHist = (OperationHistory)args.getArgumentValue(Constants.OPERATION_HIST);
 		IProject project = (IProject) args.getArgumentValue(Constants.IPROJECT);
 		ivcProject = ProjectsManager.instance().getIVCProjectByName(project.getName());
 
@@ -56,14 +57,14 @@ public class HandleOperationCommand implements CommandIntf {
 		if (oldLL == null) {
 			oldLL = new OperationHistoryList();
 		}
-		OperationHistoryList newLL = oldLL.appendTransformation(operation);
+		OperationHistoryList newLL = oldLL.appendOperationHistory(operationHist);
 		FileUtils.writeObjectToFile(llPath, newLL);
 	}
 
 	private void updateRUL() {
 		ConnectionManager connMan = ConnectionManager.getInstance(ivcProject.getName());
 		OperationHistoryList thl = new OperationHistoryList();
-		thl.appendTransformation(operation);
+		thl.appendOperationHistory(operationHist);
 		List<String> disconnected = new ArrayList<String>();
 		try {
 			List<Peer> allHosts = connMan.getServer().getAllClientHosts(ivcProject.getServerPath());

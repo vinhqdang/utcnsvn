@@ -247,7 +247,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	@Override
 	public void updateHeadVersion(String projectPath, OperationHistoryList thl) throws RemoteException {
 		OperationHistoryList oldThl = (OperationHistoryList) FileUtils.readObjectFromFile(projectPath + Constants.CommitedLog);
-		oldThl.appendTransformationHistoryList(thl);
+		oldThl.appendOperationHistoryList(thl);
 		FileUtils.writeObjectToFile(projectPath + Constants.CommitedLog, thl);
 	}
 
@@ -300,7 +300,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 			if (oldThl == null) {
 				oldThl = new OperationHistoryList();
 			}
-			oldThl.appendTransformationHistoryList(thl);
+			oldThl.appendOperationHistoryList(thl);
 			FileUtils.writeObjectToFile(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteCommitedLog + "_" + host, thl);
 		}
 
@@ -384,7 +384,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 					if (currentThl == null){
 						currentThl = new OperationHistoryList();
 					}
-					OperationHistoryList newThl = currentThl.appendTransformationHistoryList(thl);
+					OperationHistoryList newThl = currentThl.appendOperationHistoryList(thl);
 					mthl.put(sourceHost, newThl);
 					FileUtils.writeObjectToFile(f.getAbsolutePath(), mthl);
 				}

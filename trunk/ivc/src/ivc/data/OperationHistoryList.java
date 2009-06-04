@@ -64,7 +64,7 @@ public class OperationHistoryList implements Serializable {
 		return null;
 	}
 
-	public OperationHistoryList appendTransformationHistory(OperationHistory th) {
+	public OperationHistoryList appendOperationHistory(OperationHistory th) {
 		boolean isnew = true;
 		Iterator<OperationHistory> it = this.transformations.iterator();
 		while (it.hasNext()) {
@@ -81,19 +81,19 @@ public class OperationHistoryList implements Serializable {
 		return this;
 	}
 
-	public OperationHistoryList appendTransformationHistoryList(OperationHistoryList thl) {
+	public OperationHistoryList appendOperationHistoryList(OperationHistoryList thl) {
 		if (thl == null || thl.getTransformationHist() == null) {
 			return this;
 		}
 		Iterator<OperationHistory> it = thl.iterator();
 		while (it.hasNext()) {
 			OperationHistory th = it.next();
-			appendTransformationHistory(th);
+			appendOperationHistory(th);
 		}
 		return this;
 	}
 	
-	public OperationHistoryList appendTransformation(Operation transf) {
+	public OperationHistoryList appendOperation(Operation transf) {
 		String filePath = transf.getFilePath();
 		Iterator<OperationHistory> it = iterator();
 		while(it.hasNext()){
@@ -194,12 +194,12 @@ public class OperationHistoryList implements Serializable {
 							Operation op = itoOther.next();
 							newOp = newOp.includeOperation(op);
 						}
-						newOhl.appendTransformation(newOp);
+						newOhl.appendOperation(newOp);
 					}
 				}
 			} else {
 				// only we modified the file content
-				newOhl.appendTransformationHistory(oh);
+				newOhl.appendOperationHistory(oh);
 			}
 		}
 
