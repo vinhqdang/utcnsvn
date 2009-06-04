@@ -9,6 +9,7 @@ import ivc.data.commands.ConnectToPeerCommand;
 import ivc.data.commands.Result;
 import ivc.data.exception.IVCException;
 import ivc.manager.ProjectsManager;
+import ivc.plugin.IVCPlugin;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
 
@@ -19,6 +20,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 
 public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 

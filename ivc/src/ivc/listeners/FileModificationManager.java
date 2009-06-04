@@ -49,13 +49,13 @@ public class FileModificationManager implements IResourceChangeListener {
 			});
 
 			for (IResource resource : modifiedResources) {
-				if (projectsManager.isManaged(resource)) {
-					if (resource instanceof IFile) {
-						IFile file = (IFile) resource;
-						getChanges(file);
-					}
-					projectsManager.updateStatus(resource, Status.Modified);
+				// if (projectsManager.isManaged(resource)) {
+				if (resource instanceof IFile) {
+					IFile file = (IFile) resource;
+					getChanges(file);
 				}
+				// projectsManager.updateStatus(resource, Status.Modified);
+				// }
 			}
 			modifiedResources.clear();
 		} catch (CoreException ex) {
@@ -69,6 +69,8 @@ public class FileModificationManager implements IResourceChangeListener {
 		if (states.length > 1) {
 			StringComparer comparer = new StringComparer(file, states[0].getContents());
 			comparer.compare();
+			// TODO 1 return the history
+			comparer.getOperationHistory();
 		}
 	}
 }
