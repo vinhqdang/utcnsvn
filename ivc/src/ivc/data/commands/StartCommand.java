@@ -72,7 +72,7 @@ public class StartCommand implements CommandIntf {
 		try {
 			OperationHistoryList pendingRCL = connectionManager.getServer().returnPendingRCL(ivcProject.getServerPath(), NetworkUtils.getHostAddress());
 			OperationHistoryList RCL = (OperationHistoryList)FileUtils.readObjectFromFile(ivcProject.getProject().getLocation().toOSString() + Constants.IvcFolder +Constants.RemoteCommitedLog);
-			RCL.appendTransformationHistoryList(pendingRCL);
+			RCL.appendOperationHistoryList(pendingRCL);
 			FileUtils.writeObjectToFile(ivcProject.getProject().getLocation().toOSString() + Constants.IvcFolder +Constants.RemoteCommitedLog, RCL);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -116,7 +116,7 @@ public class StartCommand implements CommandIntf {
 				}else{
 					rul =  (OperationHistoryList) FileUtils.readObjectFromFile(rulfile.getAbsolutePath());
 				}
-				rul.appendTransformationHistoryList(pendingRUL);
+				rul.appendOperationHistoryList(pendingRUL);
 				FileUtils.writeObjectToFile(rulfile.getAbsolutePath(),rul);
 			}
 		} catch (RemoteException e) {

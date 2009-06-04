@@ -118,6 +118,28 @@ public class IVCProject implements Serializable {
 		return (OperationHistoryList) FileUtils.readObjectFromFile(name + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
 				+ hostAddress.replaceAll(".", "_"));
 	}
+	
+	public void setLocalLog(OperationHistoryList ll){
+		FileUtils.writeObjectToFile(name+Constants.IvcFolder+Constants.LocalLog, ll);
+	}
+	
+	public void setRemoteCommitedLog(OperationHistoryList rcl){
+		FileUtils.writeObjectToFile(name+Constants.IvcFolder+Constants.LocalLog, rcl);
+	}
+	
+	public void setRemoteUncommitedLog(OperationHistoryList rul, String hostAddress){
+		FileUtils.writeObjectToFile(name+Constants.IvcFolder+Constants.RemoteUnCommitedLog+ "_"
+				+ hostAddress.replaceAll(".", "_"), rul);
+	}
+	
+	public HashMap<String, Integer> getCurrentVersion(){
+		return(HashMap<String,Integer>) FileUtils.readObjectFromFile(name +Constants.IvcFolder+Constants.CurrentVersionFile);
+	}
+	
+	public void setCurrentVersion(HashMap<String,Integer> cv){
+		FileUtils.writeObjectToFile(name+Constants.IvcFolder +Constants.CurrentVersionFile, cv);
+	}
+	
 
 
 }

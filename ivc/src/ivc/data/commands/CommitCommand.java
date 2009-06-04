@@ -4,6 +4,7 @@
 package ivc.data.commands;
 
 import ivc.connection.ConnectionManager;
+import ivc.data.IVCProject;
 import ivc.data.Peer;
 import ivc.data.OperationHistory;
 import ivc.data.OperationHistoryList;
@@ -28,8 +29,8 @@ import java.util.List;
 public class CommitCommand implements CommandIntf {
 
 	private String projectName;
-	private String projectPath;
 	private List<String> filePaths;
+	private IVCProject ivcProject;
 
 	private OperationHistoryList changedFiles;
 	private HashMap<String, Integer> currentCommitedVersion;
@@ -46,8 +47,9 @@ public class CommitCommand implements CommandIntf {
 		// init local fields
 
 		projectName = (String) args.getArgumentValue(Constants.PROJECT_NAME);
-		projectPath = ProjectsManager.instance().getIVCProjectByName(projectName).getServerPath();
 		filePaths = (List<String>) args.getArgumentValue(Constants.FILE_PATHS);
+		
+		ivcProject = ProjectsManager.instance().getIVCProjectByName(projectName);
 		connectionManager = ConnectionManager.getInstance(projectName);
 
 		// if the user tries to commit the entire project must get the changed files
@@ -63,7 +65,7 @@ public class CommitCommand implements CommandIntf {
 		}
 
 		try {
-			connectionManager.getServer().updateHeadVersion(projectPath, changedFiles);
+			connectionManager.getServer().updateHeadVersion(ivcProject.getServerPath(), changedFiles);
 		} catch (RemoteException e) {
 			return new Result(false, Exceptions.SERVER_UPDATE_HEADVERSION_FAILED, e);
 		}
@@ -76,20 +78,19 @@ public class CommitCommand implements CommandIntf {
 
 	private void getChangedFiles() {
 		// added files, folders; removed files, folders, modified files
-		changedFiles = (OperationHistoryList) FileUtils.readObjectFromFile(projectPath + Constants.IvcFolder + Constants.LocalLog);
+		changedFiles = ivcProject.getLocalLog();
 		// TODO: 1.added removed, modified files outside eclipse
 	}
 
 	private boolean checkVersion() {
 		// rcl must be empty and also version on server same as local version of
 		// the file
-		List<OperationHistory> rcl = (List<OperationHistory>) FileUtils.readObjectFromFile(projectPath + Constants.IvcFolder
-				+ Constants.RemoteCommitedLog);
-		if (rcl != null || !rcl.isEmpty()) {
+		OperationHistoryList rcl = ivcProject.getRemoteCommitedLog();
+		if (rcl != null || !rcl.getTransformationHist().isEmpty()) {
 			return false;
 		}
 		try {
-			currentCommitedVersion = (HashMap) connectionManager.getServer().getVersionNumber(projectPath);
+			currentCommitedVersion = (HashMap) connectionManager.getServer().getVersionNumber(ivcProject.getServerPath());
 			Iterator<OperationHistory> it = changedFiles.iterator();
 			while (it.hasNext()) {
 				OperationHistory th = it.next();
@@ -112,9 +113,8 @@ public class CommitCommand implements CommandIntf {
 	private void updateCurrentVersion() {
 		try {
 			// update head version on server
-			connectionManager.getServer().updateHeadVersion(projectPath, changedFiles);
-			HashMap<String, Integer> localVersion = (HashMap<String, Integer>) FileUtils.readObjectFromFile(projectPath + Constants.IvcFolder
-					+ Constants.CurrentVersionFile);
+			connectionManager.getServer().updateHeadVersion(ivcProject.getServerPath(), changedFiles);
+			HashMap<String, Integer> localVersion = ivcProject.getLocalVersion();
 			Iterator<OperationHistory> it = changedFiles.iterator();
 			// increment version numbers
 			while (it.hasNext()) {
@@ -135,16 +135,16 @@ public class CommitCommand implements CommandIntf {
 				localVersion.put(filePath, serverNo);
 			}
 			// update project version
-			Integer localProjNo = localVersion.get(projectPath);
+			Integer localProjNo = localVersion.get(projectName);
 			localProjNo++;
-			localVersion.put(projectPath, localProjNo);
-			Integer serverProjNo = currentCommitedVersion.get(projectPath);
+			localVersion.put(projectName, localProjNo);
+			Integer serverProjNo = currentCommitedVersion.get(projectName);
 			serverProjNo++;
-			currentCommitedVersion.put(projectPath, serverProjNo);
+			currentCommitedVersion.put(projectName, serverProjNo);
 
 			// save new changes
-			FileUtils.writeObjectToFile(projectPath + Constants.IvcFolder + Constants.CurrentVersionFile, localVersion);
-			connectionManager.getServer().updateVersionNumber(projectPath, currentCommitedVersion);
+			ivcProject.setCurrentVersion(localVersion);
+			connectionManager.getServer().updateVersionNumber(ivcProject.getServerPath(), currentCommitedVersion);
 
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -162,14 +162,14 @@ public class CommitCommand implements CommandIntf {
 		while (it.hasNext()) {
 			ClientIntf peer = it.next();
 			try {
-				peer.updateRCL(projectPath,NetworkUtils.getHostAddress(),changedFiles);
+				peer.updateRCL(ivcProject.getServerPath(), NetworkUtils.getHostAddress(), changedFiles);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
 		}
 		// notify peers that are not on line
 		try {
-			List<Peer> all = connectionManager.getServer().getAllClientHosts(projectPath);
+			List<Peer> all = connectionManager.getServer().getAllClientHosts(ivcProject.getServerPath());
 			List<String> disconnected = new ArrayList<String>();
 			Iterator<Peer> itp = all.iterator();
 			while (itp.hasNext()) {
@@ -178,7 +178,7 @@ public class CommitCommand implements CommandIntf {
 					disconnected.add(peer.getHostAddress());
 				}
 			}
-			connectionManager.getServer().updatePendingRCL(projectPath, disconnected, changedFiles);
+			connectionManager.getServer().updatePendingRCL(ivcProject.getServerPath(), disconnected, changedFiles);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -186,14 +186,14 @@ public class CommitCommand implements CommandIntf {
 	}
 
 	private void cleanLL() {
-		LinkedList<OperationHistory> ll = new LinkedList<OperationHistory>();
-		FileUtils.writeObjectToFile(projectPath + Constants.IvcFolder + Constants.LocalLog, ll);
+		OperationHistoryList ll = new OperationHistoryList();
+		ivcProject.setLocalLog(ll);
 	}
 
 	private void updatePendingRUL() {
 		// notify peers that are not on line
 		try {
-			List<Peer> all = connectionManager.getServer().getAllClientHosts(projectPath);
+			List<Peer> all = connectionManager.getServer().getAllClientHosts(ivcProject.getServerPath());
 			List<String> disconnected = new ArrayList<String>();
 			Iterator<Peer> itp = all.iterator();
 			while (itp.hasNext()) {
@@ -202,7 +202,7 @@ public class CommitCommand implements CommandIntf {
 					disconnected.add(peer.getHostAddress());
 				}
 			}
-			connectionManager.getServer().updatePendingRUL(projectPath, NetworkUtils.getHostAddress(), disconnected, changedFiles);
+			connectionManager.getServer().updatePendingRUL(ivcProject.getServerPath(), NetworkUtils.getHostAddress(), disconnected, changedFiles);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

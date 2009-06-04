@@ -54,7 +54,7 @@ public class AddToRepositoryAction extends BaseActionDelegate {
 				operation.setDate(new Date());
 				HandleOperationCommand command = new HandleOperationCommand();
 				CommandArgs args = new CommandArgs();
-				args.putArgument(Constants.TRANSFORMATION, operation);
+				args.putArgument(Constants.OPERATION, operation);
 				args.putArgument(Constants.IPROJECT, resource.getProject());
 				command.execute(args);
 				

@@ -69,7 +69,7 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 	public void updateRCL(String projectServerPath, String sourceHost, OperationHistoryList thl) throws RemoteException {		
 		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(projectServerPath);		
 		OperationHistoryList oldThl = (OperationHistoryList) FileUtils.readObjectFromFile(project.getProject().getLocation().toOSString() + Constants.RemoteCommitedLog);
-		OperationHistoryList newThl = oldThl.appendTransformationHistoryList(thl);
+		OperationHistoryList newThl = oldThl.appendOperationHistoryList(thl);
 		FileUtils.writeObjectToFile(project.getProject().getLocation().toOSString() + Constants.RemoteCommitedLog, newThl);
 		File f  = new File(project.getProject().getLocation().toOSString() +Constants.IvcFolder + Constants.RemoteUnCommitedLog+"_" + sourceHost.replaceAll(".", "_"));
 		if (!f.exists()){
@@ -138,7 +138,7 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 			ofromFile = new OperationHistoryList();
 		}
 		OperationHistoryList currentThl = (OperationHistoryList) ofromFile;
-		OperationHistoryList newThl = currentThl.appendTransformationHistoryList(thl);
+		OperationHistoryList newThl = currentThl.appendOperationHistoryList(thl);
 		FileUtils.writeObjectToFile(f.getAbsolutePath(), newThl);
 		
 	}
