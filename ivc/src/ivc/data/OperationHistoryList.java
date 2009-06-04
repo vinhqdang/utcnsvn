@@ -171,4 +171,39 @@ public class OperationHistoryList implements Serializable {
 
 		}
 	}
+
+	public OperationHistoryList includeOperationHistoryList(OperationHistoryList ohl){
+		OperationHistoryList newOhl = new OperationHistoryList();
+		Iterator<OperationHistory> it = iterator();
+		while (it.hasNext()) {
+			OperationHistory oh = it.next();
+			String filePath = oh.getFilePath();
+			// if both lists have transformations for the same file
+			if (ohl.getTransformationsForFile(filePath) != null) {
+				LinkedList<Operation> ownOps = getTransformationsForFile(filePath);
+				LinkedList<Operation> otherOps = ohl.getTransformationsForFile(filePath);
+			// if the other list deleted the file\folder we have transformations on abort operations 
+			if (otherOps.getFirst().getOperationType() != Operation.REMOVE_FILE || otherOps.getFirst().getOperationType() != Operation.REMOVE_FOLDER) {
+					// merge lists of content transformations
+					Iterator<Operation> itoOwn = ownOps.descendingIterator();
+					while (itoOwn.hasNext()) {
+						Operation ownOp = itoOwn.next();
+						Operation newOp = ownOp;
+						Iterator<Operation> itoOther = otherOps.descendingIterator();
+						while (itoOther.hasNext()) {
+							Operation op = itoOther.next();
+							newOp = newOp.includeOperation(op);
+						}
+						newOhl.appendTransformation(newOp);
+					}
+				}
+			} else {
+				// only we modified the file content
+				newOhl.appendTransformationHistory(oh);
+			}
+		}
+
+		return this;
+	}
+	
 }

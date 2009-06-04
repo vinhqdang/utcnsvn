@@ -131,7 +131,12 @@ public class UpdateCommand implements CommandIntf {
 		}
 	}
 
-	private void updateLL(){		
+	/**
+	 *   ll must be transformed to include effects of rcl
+	 *   we say that we apply an inclusion transformation over operations in ll
+	 */
+	private void updateLL(){	
+		
 	}
 	
 	private void updateRUL(){
