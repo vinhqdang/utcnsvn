@@ -1,13 +1,11 @@
 package ivc.fireworks.actions;
 
-import ivc.fireworks.markers.MarkersManager;
 import ivc.manager.ProjectsManager;
-import ivc.util.WorkspaceUtils;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IWorkbenchWindow;
 
-public class AddMarkerAction extends BaseActionDelegate {
+public class ClearCacheAction extends BaseActionDelegate {
 
 	@Override
 	public boolean menuItemEnabled() {
@@ -30,6 +28,7 @@ public class AddMarkerAction extends BaseActionDelegate {
 	@Override
 	public void run(IAction arg0) {
 		ProjectsManager.instance().removeStatus(getSelectedResources()[0]);
+
 	}
 
 }
