@@ -1,5 +1,6 @@
 package ivc.repository;
 
+import ivc.fireworks.decorators.Decorator;
 import ivc.plugin.IVCPlugin;
 
 import org.eclipse.core.resources.IResource;
@@ -35,10 +36,12 @@ public class CacheManager implements IResourceChangeListener {
 
 	public void setStatus(IResource resource, ResourceStatus status) {
 		statusCache.addStatus(resource, status);
+		Decorator.getDecorator().refresh(resource);
 	}
 	
-	public void removeStatus(IResource resource){
+	public void removeStatus(IResource resource){		
 		statusCache.removeStatus(resource);
+		Decorator.getDecorator().refresh(resource);
 	}
 
 	@Override

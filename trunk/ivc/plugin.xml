@@ -89,15 +89,16 @@
 	               label="Compare"
 	               menubarPath="visible">
 	         </action>
-		</objectContribution>
 		
-		 <objectContribution
-	          id="ivc.contribution.versionedFiles"
-	          objectClass="org.eclipse.core.resources.mapping.ResourceMapping"
-	          adaptable="true">
-			<action class="ivc.fireworks.actions.AddMarkerAction"
-	               id="ivc.fireworks.actions.markeradd"
-	               label="Add marker"
+			<action class="ivc.fireworks.actions.RefreshAction"
+	               id="ivc.fireworks.actions.marker.refresh"
+	               label="Refresh"
+	               menubarPath="visible">
+	         </action>
+	         
+	         <action class="ivc.fireworks.actions.ClearCacheAction"
+	               id="ivc.fireworks.actions.marker.clear"
+	               label="ClearCache"
 	               menubarPath="visible">
 	         </action>
 		</objectContribution>

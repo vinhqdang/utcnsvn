@@ -5,6 +5,7 @@ import ivc.plugin.IVCPlugin;
 import ivc.plugin.ImageDescriptorManager;
 import ivc.repository.Status;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -164,7 +165,7 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 	}
 
 	/**
-	 * Refresh the resources only those of the project that are contained in resourcesToBeUpdaterd List
+	 * Refresh the resources of the project that are contained in resourcesToBeUpdaterd List
 	 * 
 	 * @param resourcesToBeUpdated
 	 *            List of resources whose decorations need to be refreshed
@@ -177,12 +178,26 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 		} else {
 			// fire a label provider changed event to decorate the
 			// resources whose image needs to be updated
-			fireLabelEvent(new LabelProviderChangedEvent(decorator, resourcesToBeUpdated.toArray()));
+			fireLabelEvent(new LabelProviderChangedEvent(decorator));
+		}
+	}
+
+	public void refresh(IResource resource) {
+
+		Decorator decorator = getDecorator();
+		if (decorator == null) {
+			return;
+		} else {
+			// fire a label provider changed event to decorate the
+			// resource whose image needs to be updated
+			ArrayList<IResource> resources = new ArrayList();
+			resources.add(resource);
+			fireLabelEvent(new LabelProviderChangedEvent(decorator, resource));
 		}
 	}
 
 	public void inDepthRefresh(IResource resource) {
-		
+
 	}
 
 	/**
