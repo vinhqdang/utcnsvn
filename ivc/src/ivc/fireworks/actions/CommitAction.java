@@ -36,8 +36,8 @@ public class CommitAction extends BaseActionDelegate {
 			}else{
 				filePaths.add(resource.getProjectRelativePath().toOSString());
 			}
-			boolean result = MarkersManager.addMarker(resource, null, "infoMarker");
-			action.setChecked(result);
+			//boolean result = MarkersManager.updateMarkers(resource);
+			//action.setChecked(result);
 		}
 		CommitCommand commitCommand = new CommitCommand();
 		CommandArgs args = new CommandArgs();

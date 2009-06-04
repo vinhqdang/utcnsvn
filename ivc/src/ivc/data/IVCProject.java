@@ -5,8 +5,10 @@ import ivc.util.Constants;
 import ivc.util.FileUtils;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.HashMap;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 
@@ -141,5 +143,14 @@ public class IVCProject implements Serializable {
 	}
 	
 
+	public String[] getConflictingUserList(IResource resource) {
+		String[] a = new String[2];
+		a[0] = "Johnny";
+		a[1] = "Gimmy";
+		return a;
+	}
 
+	public boolean hasRemoteUncomitedOperations(IFile resource){
+		return true;
+	}
 }

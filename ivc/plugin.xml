@@ -76,20 +76,33 @@
             id="ivc.fireworks.decorators.Decorator"
             label="IVC Decorator"
             state="false">
-      </decorator>
+      </decorator> 	
  	</extension>
-	  <extension
-	       point="org.eclipse.ui.popupMenus">
+	
+	<extension point="org.eclipse.ui.popupMenus">
 	    <objectContribution
 	          id="ivc.contribution.versionedFiles"
 	          objectClass="org.eclipse.core.resources.mapping.ResourceMapping"
 	          adaptable="true">
-	  <action
-	               class="ivc.fireworks.actions.CompareEditorAction"
+			<action class="ivc.fireworks.actions.CompareEditorAction"
 	               id="ivc.fireworks.actions.compare"
 	               label="Compare"
 	               menubarPath="visible">
-	         </action></objectContribution></extension>
+	         </action>
+		</objectContribution>
+		
+		 <objectContribution
+	          id="ivc.contribution.versionedFiles"
+	          objectClass="org.eclipse.core.resources.mapping.ResourceMapping"
+	          adaptable="true">
+			<action class="ivc.fireworks.actions.AddMarkerAction"
+	               id="ivc.fireworks.actions.markeradd"
+	               label="Add marker"
+	               menubarPath="visible">
+	         </action>
+		</objectContribution>
+	</extension>
+	
 	<extension
 	       point="org.eclipse.ui.popupMenus">
 	    <objectContribution
