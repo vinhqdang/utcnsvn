@@ -52,13 +52,9 @@ public class HandleOperationCommand implements CommandIntf {
 	}
 
 	private void updateLL() {
-		String llPath = ivcProject.getProject().getLocation().toOSString() + Constants.IvcFolder + Constants.LocalLog;
-		OperationHistoryList oldLL = (OperationHistoryList) FileUtils.readObjectFromFile(llPath);
-		if (oldLL == null) {
-			oldLL = new OperationHistoryList();
-		}
+		OperationHistoryList oldLL = ivcProject.getLocalLog();		
 		OperationHistoryList newLL = oldLL.appendOperationHistory(operationHist);
-		FileUtils.writeObjectToFile(llPath, newLL);
+		ivcProject.setLocalLog(newLL);
 	}
 
 	private void updateRUL() {

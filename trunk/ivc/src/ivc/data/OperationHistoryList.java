@@ -25,36 +25,36 @@ public class OperationHistoryList implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private LinkedList<OperationHistory> transformations;
+	private LinkedList<OperationHistory> operations;
 
 	/**
 	 * 
 	 */
 	public OperationHistoryList() {
-		transformations = new LinkedList<OperationHistory>();
+		operations = new LinkedList<OperationHistory>();
 	}
 
 	/**
-	 * @return the transformations
+	 * @return the operations
 	 */
 	public LinkedList<OperationHistory> getTransformationHist() {
-		return transformations;
+		return operations;
 	}
 
 	/**
-	 * @param transformations
-	 *            the transformations to set
+	 * @param operations
+	 *            the operations to set
 	 */
 	public void setTransformationHist(LinkedList<OperationHistory> transformations) {
-		this.transformations = transformations;
+		this.operations = transformations;
 	}
 
 	public Iterator<OperationHistory> iterator() {
-		return (Iterator<OperationHistory>) transformations.iterator();
+		return (Iterator<OperationHistory>) operations.iterator();
 	}
 
 	public LinkedList<Operation> getTransformationsForFile(String filePath) {
-		Iterator<OperationHistory> it = this.transformations.iterator();
+		Iterator<OperationHistory> it = this.operations.iterator();
 		while (it.hasNext()) {
 			OperationHistory th = it.next();
 			if (th.getFilePath().equalsIgnoreCase(filePath)) {
@@ -63,20 +63,31 @@ public class OperationHistoryList implements Serializable {
 		}
 		return null;
 	}
+	
+	public OperationHistory getOperationHistForFile(String filePath){
+		Iterator<OperationHistory> it = this.operations.iterator();
+		while (it.hasNext()) {
+			OperationHistory th = it.next();
+			if (th.getFilePath().equalsIgnoreCase(filePath)) {
+				return th;
+			}
+		}
+		return null;
+	}
 
-	public OperationHistoryList appendOperationHistory(OperationHistory th) {
+	public OperationHistoryList appendOperationHistory(OperationHistory oh) {
 		boolean isnew = true;
-		Iterator<OperationHistory> it = this.transformations.iterator();
+		Iterator<OperationHistory> it = this.operations.iterator();
 		while (it.hasNext()) {
 			OperationHistory cth = it.next();
-			if (th.getFilePath().equalsIgnoreCase(th.getFilePath())) {
+			if (oh.getFilePath().equalsIgnoreCase(oh.getFilePath())) {
 				isnew = false;
-				cth.addTransformations(th.getTransformations());
+				cth.addTransformations(oh.getTransformations());
 				break;
 			}
 		}
 		if (isnew) {
-			transformations.add(th);
+			operations.add(oh);
 		}
 		return this;
 	}
@@ -106,12 +117,12 @@ public class OperationHistoryList implements Serializable {
 	}
 
 	public OperationHistoryList removeTransformationHistory(OperationHistory th) {
-		transformations.remove(th);
+		operations.remove(th);
 		return this;
 	}
 
 	private OperationHistory getTransformationHistForFile(String filePath) {
-		Iterator<OperationHistory> it = this.transformations.iterator();
+		Iterator<OperationHistory> it = this.operations.iterator();
 		while (it.hasNext()) {
 			OperationHistory th = it.next();
 			if (th.getFilePath().equalsIgnoreCase(th.getFilePath())) {
@@ -124,13 +135,13 @@ public class OperationHistoryList implements Serializable {
 	public OperationHistoryList removeTransformationHistForFile(String filePath) {
 		OperationHistory th = getTransformationHistForFile(filePath);
 		if (th != null) {
-			transformations.remove(th);
+			operations.remove(th);
 		}
 		return this;
 	}
 	
 	public OperationHistoryList removeTransformationHistList(OperationHistoryList thl) {
-			transformations.removeAll(thl.getTransformationHist());
+			operations.removeAll(thl.getTransformationHist());
 		return this;
 	}
 
@@ -178,13 +189,13 @@ public class OperationHistoryList implements Serializable {
 		while (it.hasNext()) {
 			OperationHistory oh = it.next();
 			String filePath = oh.getFilePath();
-			// if both lists have transformations for the same file
+			// if both lists have operations for the same file
 			if (ohl.getTransformationsForFile(filePath) != null) {
 				LinkedList<Operation> ownOps = getTransformationsForFile(filePath);
 				LinkedList<Operation> otherOps = ohl.getTransformationsForFile(filePath);
-			// if the other list deleted the file\folder we have transformations on abort operations 
+			// if the other list deleted the file\folder we have operations on abort operations 
 			if (otherOps.getFirst().getOperationType() != Operation.REMOVE_FILE || otherOps.getFirst().getOperationType() != Operation.REMOVE_FOLDER) {
-					// merge lists of content transformations
+					// merge lists of content operations
 					Iterator<Operation> itoOwn = ownOps.descendingIterator();
 					while (itoOwn.hasNext()) {
 						Operation ownOp = itoOwn.next();
