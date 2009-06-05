@@ -61,6 +61,7 @@ public class StringComparer {
 		if (operationType == Operation.CHARACTER_ADD) {
 			for (int i = 0; i < chars.length; i++) {
 				Operation operation = new Operation(chars[i], operationType);
+				operation.setFilePath(file.getProjectRelativePath().toOSString());				
 				operation.setPosition(basePosition + i);
 				operation.setFileVersion(fileVersion);
 				history.addOperation(operation);
@@ -68,6 +69,7 @@ public class StringComparer {
 		} else {
 			for (int i = chars.length - 1; i > -1; i--) {
 				Operation operation = new Operation(chars[i], operationType);
+				operation.setFilePath(file.getProjectRelativePath().toOSString());	
 				operation.setFileVersion(fileVersion);
 				operation.setPosition(basePosition + i);
 				history.addOperation(operation);

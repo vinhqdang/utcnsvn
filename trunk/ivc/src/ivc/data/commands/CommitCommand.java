@@ -79,7 +79,6 @@ public class CommitCommand implements CommandIntf {
 	private void getChangedFiles() {
 		// added files, folders; removed files, folders, modified files
 		changedFiles = ivcProject.getLocalLog();
-		// TODO: 1.added removed, modified files outside eclipse
 	}
 
 	private boolean checkVersion() {
@@ -114,7 +113,7 @@ public class CommitCommand implements CommandIntf {
 		try {
 			// update head version on server
 			connectionManager.getServer().updateHeadVersion(ivcProject.getServerPath(), changedFiles);
-			HashMap<String, Integer> localVersion = ivcProject.getLocalVersion();
+			HashMap<String, Integer> localVersion = ivcProject.getCurrentVersion();
 			Iterator<OperationHistory> it = changedFiles.iterator();
 			// increment version numbers
 			while (it.hasNext()) {
@@ -186,8 +185,7 @@ public class CommitCommand implements CommandIntf {
 	}
 
 	private void cleanLL() {
-		OperationHistoryList ll = new OperationHistoryList();
-		ivcProject.setLocalLog(ll);
+		ivcProject.setLocalLog(new OperationHistoryList());
 	}
 
 	private void updatePendingRUL() {

@@ -71,10 +71,10 @@ public class StartCommand implements CommandIntf {
 		// 2. append pending rcl transformations
 		try {
 			OperationHistoryList pendingRCL = connectionManager.getServer().returnPendingRCL(ivcProject.getServerPath(), NetworkUtils.getHostAddress());
-			OperationHistoryList RCL = (OperationHistoryList)FileUtils.readObjectFromFile(ivcProject.getProject().getLocation().toOSString() + Constants.IvcFolder +Constants.RemoteCommitedLog);
+			OperationHistoryList RCL = ivcProject.getRemoteCommitedLog();
 			RCL.appendOperationHistoryList(pendingRCL);
-			FileUtils.writeObjectToFile(ivcProject.getProject().getLocation().toOSString() + Constants.IvcFolder +Constants.RemoteCommitedLog, RCL);
-		} catch (RemoteException e) {
+			ivcProject.setRemoteCommitedLog(RCL);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -114,10 +114,10 @@ public class StartCommand implements CommandIntf {
 						e.printStackTrace();
 					}
 				}else{
-					rul =  (OperationHistoryList) FileUtils.readObjectFromFile(rulfile.getAbsolutePath());
+					rul =  ivcProject.getRemoteUncommitedLog(host);
 				}
 				rul.appendOperationHistoryList(pendingRUL);
-				FileUtils.writeObjectToFile(rulfile.getAbsolutePath(),rul);
+				ivcProject.setRemoteUncommitedLog(rul, host);				
 			}
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block

@@ -61,7 +61,7 @@ public class FileModificationManager implements IResourceChangeListener {
 
 	private void getChanges(IFile file) throws CoreException {
 		IFileState[] states = file.getHistory(null);
-		if (states.length > 1) {
+		if (states.length > 0) {
 			StringComparer comparer = new StringComparer(file, states[0].getContents());
 			comparer.compare();
 			OperationHistory oh = comparer.getOperationHistory();

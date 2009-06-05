@@ -340,7 +340,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	 */
 	@Override
 	public Map<String, OperationHistoryList> returnPendingRUL(String projectPath, String hostAddress) throws RemoteException {
-		Map<String, OperationHistoryList> thl = null;
+		Map<String, OperationHistoryList> thl = new HashMap<String, OperationHistoryList>();
 		File f = new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteUncommitedLog +  "_" + hostAddress.replaceAll(".", "_"));
 		if (f.exists()) {
 			Object objectFromFile = FileUtils.readObjectFromFile(f.getAbsolutePath());
