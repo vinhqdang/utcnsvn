@@ -46,9 +46,10 @@ public class FileUtils {
 		}
 		ObjectOutputStream oos;
 		try {
-
 			oos = new ObjectOutputStream(fos);
 			oos.writeObject(o);
+			oos.flush();
+			fos.flush();
 			oos.close();
 			fos.close();
 		} catch (IOException e) {
@@ -68,7 +69,9 @@ public class FileUtils {
 						ObjectInputStream ois = new ObjectInputStream(fis);
 
 						try {
-							return ois.readObject();
+							obj = ois.readObject();
+							ois.close();
+							fis.close();
 						} catch (ClassNotFoundException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

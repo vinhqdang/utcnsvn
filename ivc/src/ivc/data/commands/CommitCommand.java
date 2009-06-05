@@ -48,25 +48,22 @@ public class CommitCommand implements CommandIntf {
 
 		projectName = (String) args.getArgumentValue(Constants.PROJECT_NAME);
 		filePaths = (List<String>) args.getArgumentValue(Constants.FILE_PATHS);
-		
+
 		ivcProject = ProjectsManager.instance().getIVCProjectByName(projectName);
 		connectionManager = ConnectionManager.getInstance(projectName);
 
 		// if the user tries to commit the entire project must get the changed files
-		if (filePaths == null || filePaths.isEmpty()) {
-			getChangedFiles();
-			if (filePaths == null || filePaths.isEmpty()) {
-				return new Result(true, Exceptions.COMMIT_NOFILE_CHANGED, null);
-			}
+		getChangedFiles();
+		if (changedFiles == null || changedFiles.getTransformationHist().isEmpty()) {
+			return new Result(true, Exceptions.COMMIT_NOFILE_CHANGED, null);
 		}
-
 		if (!checkVersion()) {
 			return new Result(false, Exceptions.FILE_OUT_OF_SYNC, null);
 		}
 
 		try {
 			connectionManager.getServer().updateHeadVersion(ivcProject.getServerPath(), changedFiles);
-		} catch (RemoteException e) {
+		} catch (Exception e) {
 			return new Result(false, Exceptions.SERVER_UPDATE_HEADVERSION_FAILED, e);
 		}
 		updateCurrentVersion();
@@ -77,32 +74,56 @@ public class CommitCommand implements CommandIntf {
 	}
 
 	private void getChangedFiles() {
+		changedFiles = new OperationHistoryList();
 		// added files, folders; removed files, folders, modified files
-		changedFiles = ivcProject.getLocalLog();
+		OperationHistoryList ll = ivcProject.getLocalLog();
+		if (!ll.getTransformationHist().isEmpty() && filePaths != null && !filePaths.isEmpty()) {
+			Iterator<String> it = filePaths.iterator();
+			while (it.hasNext()) {
+				String filePath = it.next();
+				if (ll.getOperationHistForFile(filePath) != null) {
+					OperationHistory oh = ll.getOperationHistForFile(filePath);
+					changedFiles.appendOperationHistory(oh);
+				}
+			}
+		}
+		changedFiles.appendOperationHistoryList(ll);
+
 	}
 
 	private boolean checkVersion() {
 		// rcl must be empty and also version on server same as local version of
 		// the file
 		OperationHistoryList rcl = ivcProject.getRemoteCommitedLog();
-		if (rcl != null || !rcl.getTransformationHist().isEmpty()) {
-			return false;
+		if (rcl != null && !rcl.getTransformationHist().isEmpty()) {
+			if (filePaths == null || filePaths.isEmpty()) {
+				return false;
+			}
+			Iterator<String> it = filePaths.iterator();
+			while (it.hasNext()) {
+				String filePath = it.next();
+				if (rcl.getOperationHistForFile(filePath) != null && !rcl.getOperationHistForFile(filePath).getTransformations().isEmpty()) {
+					return false;
+				}
+			}
 		}
 		try {
 			currentCommitedVersion = (HashMap) connectionManager.getServer().getVersionNumber(ivcProject.getServerPath());
 			Iterator<OperationHistory> it = changedFiles.iterator();
 			while (it.hasNext()) {
-				OperationHistory th = it.next();
-				String filePath = th.getFilePath();
-				if (!th.getTransformations().isEmpty()) {
-					Integer localVersion = th.getTransformations().get(0).getFileVersion();
+				OperationHistory oh = it.next();
+				String filePath = oh.getFilePath();
+				if (!oh.getTransformations().isEmpty()) {
+					Integer localVersion = oh.getTransformations().getLast().getFileVersion();
 					Integer commitedVersion = currentCommitedVersion.get(filePath);
-					if (localVersion < commitedVersion) {
-						return false;
+					if (commitedVersion != null) {
+						if (localVersion < commitedVersion) {
+							return false;
+						}
 					}
 				}
 			}
-		} catch (RemoteException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -137,9 +158,9 @@ public class CommitCommand implements CommandIntf {
 			Integer localProjNo = localVersion.get(projectName);
 			localProjNo++;
 			localVersion.put(projectName, localProjNo);
-			Integer serverProjNo = currentCommitedVersion.get(projectName);
+			Integer serverProjNo = currentCommitedVersion.get(ivcProject.getServerPath());
 			serverProjNo++;
-			currentCommitedVersion.put(projectName, serverProjNo);
+			currentCommitedVersion.put(ivcProject.getServerPath(), serverProjNo);
 
 			// save new changes
 			ivcProject.setCurrentVersion(localVersion);

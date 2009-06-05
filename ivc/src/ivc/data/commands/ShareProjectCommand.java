@@ -123,7 +123,7 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 			e1.printStackTrace();
 			return;
 		}
-		if (result != null)
+		if (result == null)
 			result = new Result(true, "Success", null);
 
 	}
@@ -168,8 +168,9 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 				Set<String> files = bv.getFiles().keySet();
 				for (Iterator<String> iterator = files.iterator(); iterator.hasNext();) {
 					String file = iterator.next();
-					cv.put(file, 0);
+					cv.put(file, 1);
 				}
+				cv.put(project.getName(), 1);
 				FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.CurrentVersionFile, cv);
 			} catch (CoreException e) {
 				// TODO Auto-generated catch block
