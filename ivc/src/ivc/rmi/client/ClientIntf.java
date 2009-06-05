@@ -1,10 +1,10 @@
 package ivc.rmi.client;
 
-import ivc.data.Operation;
-import ivc.data.OperationHistory;
-import ivc.data.OperationHistoryList;
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.Result;
+import ivc.data.operation.Operation;
+import ivc.data.operation.OperationHistory;
+import ivc.data.operation.OperationHistoryList;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

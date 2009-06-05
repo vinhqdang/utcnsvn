@@ -5,7 +5,7 @@ package ivc.rmi.server;
 
 import ivc.data.BaseVersion;
 import ivc.data.Peer;
-import ivc.data.OperationHistoryList;
+import ivc.data.operation.OperationHistoryList;
 import ivc.rmi.client.ClientIntf;
 
 import java.rmi.Remote;

@@ -1,6 +1,5 @@
 package ivc.plugin;
 
-
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.StartCommand;
 import ivc.data.commands.StopCommand;
@@ -16,6 +15,7 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -45,41 +45,37 @@ public class IVCPlugin extends AbstractUIPlugin {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
-	 * )
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext )
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		baseURL = context.getBundle().getEntry("/");
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		ResourceChangedListener changeListener = new ResourceChangedListener();
-		FileModificationManager modifications= new FileModificationManager();
+		FileModificationManager modifications = new FileModificationManager();
 		workspace.addResourceChangeListener(changeListener);
-		workspace.addResourceChangeListener(modifications,IResourceChangeEvent.PRE_BUILD);
+		workspace.addResourceChangeListener(modifications, IResourceChangeEvent.PRE_BUILD);
 		Decorator.enableDecoration = true;
-		
+
 		// call start command for establishing connections with the other peers
 		StartCommand startCommand = new StartCommand();
-		startCommand.execute( new CommandArgs());
+		startCommand.execute(new CommandArgs());
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
-	 * )
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext )
 	 */
 	public void stop(BundleContext context) throws Exception {
-		// disconnect from server and notify hosts 
+		// disconnect from server and notify hosts
 		System.out.println("Stooooooooooooooop");
 		StopCommand stopCommand = new StopCommand();
-		stopCommand.execute( new CommandArgs());
+		stopCommand.execute(new CommandArgs());
 		plugin = null;
 		super.stop(context);
 	}
-	
+
 	/**
 	 * Returns the shared instance
 	 * 
@@ -88,9 +84,8 @@ public class IVCPlugin extends AbstractUIPlugin {
 	public static IVCPlugin getDefault() {
 		return plugin;
 	}
-	
-	public void runWithProgress(Shell parent, boolean cancelable,
-			final IRunnableWithProgress runnable) throws InvocationTargetException,
+
+	public void runWithProgress(Shell parent, boolean cancelable, final IRunnableWithProgress runnable) throws InvocationTargetException,
 			InterruptedException {
 
 		boolean createdShell = false;
@@ -136,6 +131,21 @@ public class IVCPlugin extends AbstractUIPlugin {
 				parent.dispose();
 		}
 	}
-	
+
+	public static IStatus openError(Shell providedShell, String title, String message, Throwable exception, int flags) {
+		// Unwrap InvocationTargetExceptions
+		if (exception instanceof InvocationTargetException) {
+			Throwable target = ((InvocationTargetException) exception).getTargetException();
+			// re-throw any runtime exceptions or errors so they can be handled by the workbench
+			if (target instanceof RuntimeException) {
+				throw (RuntimeException) target;
+			}
+			if (target instanceof Error) {
+				throw (Error) target;
+			}
+			return openError(providedShell, title, message, target, flags);
+		}
+		return null;
+	}
 
 }

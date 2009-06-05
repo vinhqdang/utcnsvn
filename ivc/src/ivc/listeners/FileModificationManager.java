@@ -1,9 +1,9 @@
 package ivc.listeners;
 
 import ivc.compare.StringComparer;
-import ivc.data.OperationHistory;
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.HandleOperationCommand;
+import ivc.data.operation.OperationHistory;
 import ivc.manager.ProjectsManager;
 import ivc.util.Constants;
 

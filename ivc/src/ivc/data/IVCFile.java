@@ -1,5 +1,7 @@
 package ivc.data;
 
+import ivc.data.operation.OperationHistory;
+
 import java.util.Date;
 import java.util.UUID;
 

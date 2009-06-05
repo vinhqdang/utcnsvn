@@ -5,7 +5,7 @@ package ivc.data.commands;
 
 import java.util.List;
 
-import ivc.data.Operation;
+import ivc.data.operation.Operation;
 
 /**
  * @author danielan

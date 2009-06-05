@@ -225,7 +225,7 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 	 * 
 	 * @return icon image with which the resource is to be decorated
 	 */
-	private Image drawIconImage(Image baseImage, Vector images) {
+	private static Image drawIconImage(Image baseImage, Vector images) {
 
 		OverlayImageIcon overlayIcon = new OverlayImageIcon(baseImage, images);
 		return overlayIcon.getImage();
@@ -255,5 +255,9 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 			break;
 		}
 		return images;
+	}
+
+	public static Image getImage(Image base, Status status) {
+		return drawIconImage(base, findDecorationImage(status));
 	}
 }

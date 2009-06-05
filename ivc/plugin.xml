@@ -68,8 +68,8 @@
 	      </actionSet>    
     </extension>
 
-	 <extension
-         point="org.eclipse.ui.decorators">
+	 <extension point="org.eclipse.ui.decorators">
+      
       <decorator
             adaptable="true"
             class="ivc.fireworks.decorators.Decorator"
@@ -77,6 +77,15 @@
             label="IVC Decorator"
             state="false">
       </decorator> 	
+      
+      <decorator
+            adaptable="true"
+            class="ivc.fireworks.decorators.TreeDecorator"
+            id="ivc.fireworks.decorators.TreeDecorator"
+            label="IVC Tree Decorator"
+            state="false">
+      </decorator>
+ 	
  	</extension>
 	
 	<extension point="org.eclipse.ui.popupMenus">
