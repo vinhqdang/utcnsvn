@@ -23,15 +23,7 @@ public class IVCProject implements Serializable {
 	private IProject project;
 	private String serverAddress;
 	private String serverPath;
-	private HashMap<String, Integer> localVersion;
-
-	public HashMap<String, Integer> getLocalVersion() {
-		if (localVersion == null) {
-			localVersion = (HashMap<String, Integer>) FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder
-					+ Constants.CurrentVersionFile);
-		}
-		return localVersion;
-	}
+	
 
 	public IVCProject() {
 		super();
@@ -99,7 +91,56 @@ public class IVCProject implements Serializable {
 		return null;
 	}
 
+	
+
+	public OperationHistoryList getLocalLog() {
+		Object obj = FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.LocalLog);
+		if (obj != null && obj instanceof OperationHistoryList) {
+			return (OperationHistoryList) obj;
+		}
+		return new OperationHistoryList();
+	}
+
+	public OperationHistoryList getRemoteCommitedLog() {
+		Object obj = FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteCommitedLog);
+		if (obj != null && obj instanceof OperationHistoryList) {
+			return (OperationHistoryList) obj;
+		}
+		return new OperationHistoryList();
+	}
+
+	public OperationHistoryList getRemoteUncommitedLog(String hostAddress) {
+		Object obj = FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
+				+ hostAddress.replaceAll(".", "_"));
+		if (obj != null && obj instanceof OperationHistoryList) {
+			return (OperationHistoryList) obj;
+		}
+		return new OperationHistoryList();
+	}
+
+	public void setLocalLog(OperationHistoryList ll) {
+		FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.LocalLog, ll);
+	}
+
+	public void setRemoteCommitedLog(OperationHistoryList rcl) {
+		FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.LocalLog, rcl);
+	}
+
+	public void setRemoteUncommitedLog(OperationHistoryList rul, String hostAddress) {
+		FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_" + hostAddress.replaceAll(".", "_"), rul);
+	}
+
+	public HashMap<String, Integer> getCurrentVersion() {
+		return (HashMap<String, Integer>) FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.CurrentVersionFile);
+	}
+
+	public void setCurrentVersion(HashMap<String, Integer> cv) {
+		FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.CurrentVersionFile, cv);
+	}
+	
+	
 	public int getFileVersion(String path) {
+		HashMap<String, Integer> localVersion = getCurrentVersion(); 
 		if (localVersion == null)
 			return 0;
 		if (localVersion.containsKey(path)) {
@@ -108,41 +149,6 @@ public class IVCProject implements Serializable {
 		return 0;
 	}
 
-	public OperationHistoryList getLocalLog() {
-		return (OperationHistoryList) FileUtils.readObjectFromFile(name + Constants.IvcFolder + Constants.LocalLog);
-	}
-
-	public OperationHistoryList getRemoteCommitedLog() {
-		return (OperationHistoryList) FileUtils.readObjectFromFile(name + Constants.IvcFolder + Constants.RemoteCommitedLog);
-	}
-
-	public OperationHistoryList getRemoteUncommitedLog(String hostAddress) {
-		return (OperationHistoryList) FileUtils.readObjectFromFile(name + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
-				+ hostAddress.replaceAll(".", "_"));
-	}
-	
-	public void setLocalLog(OperationHistoryList ll){
-		FileUtils.writeObjectToFile(name+Constants.IvcFolder+Constants.LocalLog, ll);
-	}
-	
-	public void setRemoteCommitedLog(OperationHistoryList rcl){
-		FileUtils.writeObjectToFile(name+Constants.IvcFolder+Constants.LocalLog, rcl);
-	}
-	
-	public void setRemoteUncommitedLog(OperationHistoryList rul, String hostAddress){
-		FileUtils.writeObjectToFile(name+Constants.IvcFolder+Constants.RemoteUnCommitedLog+ "_"
-				+ hostAddress.replaceAll(".", "_"), rul);
-	}
-	
-	public HashMap<String, Integer> getCurrentVersion(){
-		return(HashMap<String,Integer>) FileUtils.readObjectFromFile(name +Constants.IvcFolder+Constants.CurrentVersionFile);
-	}
-	
-	public void setCurrentVersion(HashMap<String,Integer> cv){
-		FileUtils.writeObjectToFile(name+Constants.IvcFolder +Constants.CurrentVersionFile, cv);
-	}
-	
-
 	public String[] getConflictingUserList(IResource resource) {
 		String[] a = new String[2];
 		a[0] = "Johnny";
@@ -150,7 +156,7 @@ public class IVCProject implements Serializable {
 		return a;
 	}
 
-	public boolean hasRemoteUncomitedOperations(IFile resource){
+	public boolean hasRemoteUncomitedOperations(IFile resource) {
 		return true;
 	}
 }
