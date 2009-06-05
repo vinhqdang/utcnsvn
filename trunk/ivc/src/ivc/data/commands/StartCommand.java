@@ -5,9 +5,9 @@ package ivc.data.commands;
 
 import ivc.connection.ConnectionManager;
 import ivc.data.IVCProject;
-import ivc.data.OperationHistoryList;
 import ivc.data.exception.Exceptions;
 import ivc.data.exception.IVCException;
+import ivc.data.operation.OperationHistoryList;
 import ivc.manager.ProjectsManager;
 import ivc.rmi.client.ClientIntf;
 import ivc.util.Constants;

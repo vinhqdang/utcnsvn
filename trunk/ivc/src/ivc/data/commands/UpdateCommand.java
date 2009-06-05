@@ -5,10 +5,10 @@ package ivc.data.commands;
 
 import ivc.connection.ConnectionManager;
 import ivc.data.IVCProject;
-import ivc.data.Operation;
-import ivc.data.OperationHistory;
-import ivc.data.OperationHistoryList;
 import ivc.data.Peer;
+import ivc.data.operation.Operation;
+import ivc.data.operation.OperationHistory;
+import ivc.data.operation.OperationHistoryList;
 import ivc.rmi.client.ClientIntf;
 import ivc.rmi.server.ServerIntf;
 import ivc.util.Constants;

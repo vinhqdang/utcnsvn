@@ -1,11 +1,13 @@
 package ivc.data;
 
+import ivc.data.annotation.ResourcesAnnotations;
+import ivc.data.annotation.UsersAnnotations;
+import ivc.data.operation.OperationHistoryList;
 import ivc.repository.Status;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.HashMap;
 
 import org.eclipse.core.resources.IFile;
@@ -23,10 +25,11 @@ public class IVCProject implements Serializable {
 	private IProject project;
 	private String serverAddress;
 	private String serverPath;
-	
+	private ResourcesAnnotations annotations;
 
 	public IVCProject() {
 		super();
+		annotations = new ResourcesAnnotations();
 	}
 
 	public IVCProject(String name) {
@@ -91,8 +94,6 @@ public class IVCProject implements Serializable {
 		return null;
 	}
 
-	
-
 	public OperationHistoryList getLocalLog() {
 		Object obj = FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.LocalLog);
 		if (obj != null && obj instanceof OperationHistoryList) {
@@ -127,20 +128,21 @@ public class IVCProject implements Serializable {
 	}
 
 	public void setRemoteUncommitedLog(OperationHistoryList rul, String hostAddress) {
-		FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_" + hostAddress.replaceAll(".", "_"), rul);
+		FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
+				+ hostAddress.replaceAll(".", "_"), rul);
 	}
 
 	public HashMap<String, Integer> getCurrentVersion() {
-		return (HashMap<String, Integer>) FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.CurrentVersionFile);
+		return (HashMap<String, Integer>) FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder
+				+ Constants.CurrentVersionFile);
 	}
 
 	public void setCurrentVersion(HashMap<String, Integer> cv) {
 		FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.CurrentVersionFile, cv);
 	}
-	
-	
+
 	public int getFileVersion(String path) {
-		HashMap<String, Integer> localVersion = getCurrentVersion(); 
+		HashMap<String, Integer> localVersion = getCurrentVersion();
 		if (localVersion == null)
 			return 0;
 		if (localVersion.containsKey(path)) {
@@ -158,5 +160,13 @@ public class IVCProject implements Serializable {
 
 	public boolean hasRemoteUncomitedOperations(IFile resource) {
 		return true;
+	}
+
+	public ResourcesAnnotations getResourcesAnnotations() {
+		return annotations;
+	}
+
+	public UsersAnnotations getUsersAnnotations(IResource resource) {
+		return annotations.getAnnotations(resource);
 	}
 }

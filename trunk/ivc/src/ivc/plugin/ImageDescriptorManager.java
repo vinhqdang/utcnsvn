@@ -8,12 +8,15 @@ import org.eclipse.swt.graphics.ImageData;
 
 public class ImageDescriptorManager {
 	public static final String SHARE_WIZARD = "share_icon.png";
-	public static final String DCORATOR_SHARED="shared.png";
-	public static final String DCORATOR_CHANGED="modified.png";
-	public static final String DCORATOR_ADDED="added.gif";
-	public static final String DCORATOR_="";
-	public static final String MARKER="shared.png";
-	
+	public static final String DCORATOR_SHARED = "shared.png";
+	public static final String DCORATOR_CHANGED = "modified.png";
+	public static final String DCORATOR_ADDED = "added.gif";
+	public static final String DCORATOR_ = "";
+	public static final String MARKER = "shared.png";
+	public static final String TREE_FLAT = "tree_flat.png";
+	public static final String TREE_AFFECTED_PATHS = "tree.png";
+	public static final String TREE_AFFECTED_PATHS_COMPRESSED = "tree_compressed.gif";
+
 	public static ImageDescriptor getImageDescriptor(String imageUrl) {
 		URL url;
 		try {
@@ -39,6 +42,7 @@ public class ImageDescriptorManager {
 		}
 		return null;
 	}
+
 	public static ImageData getImageData(String imageUrl) {
 		URL url;
 		try {

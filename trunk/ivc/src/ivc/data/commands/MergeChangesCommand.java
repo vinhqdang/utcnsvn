@@ -3,9 +3,9 @@
  */
 package ivc.data.commands;
 
-import ivc.data.Operation;
-import ivc.data.OperationHistory;
-import ivc.data.OperationHistoryList;
+import ivc.data.operation.Operation;
+import ivc.data.operation.OperationHistory;
+import ivc.data.operation.OperationHistoryList;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
 

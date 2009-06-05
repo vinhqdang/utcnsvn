@@ -5,7 +5,6 @@ import ivc.data.BaseVersion;
 import ivc.data.exception.Exceptions;
 import ivc.data.exception.IVCException;
 import ivc.manager.ProjectsManager;
-import ivc.rmi.server.ServerBusiness;
 import ivc.rmi.server.ServerIntf;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
@@ -17,22 +16,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.internal.ole.win32.CONTROLINFO;
-import org.eclipse.swt.internal.ole.win32.COSERVERINFO;
 
 public class ShareProjectCommand implements IRunnableWithProgress {
 	private IProject project;
@@ -182,7 +175,7 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 	private void handleResource(IResource resource) {
 		int resourceType = resource.getType();
 		// found file
-		ProjectsManager.instance().setAddedStatus(resource);
+		ProjectsManager.instance().setDefaultStatus(resource);
 		if (resourceType == IResource.FILE) {
 			IFile file = (IFile) resource;
 			try {

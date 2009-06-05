@@ -144,18 +144,43 @@ public class ProjectsManager {
 		return cacheManager.isManaged(resource);
 	}
 
-	public void updateStatus(IResource resource, Status status) {
+	public void updateStatus(IResource resource, Status status, boolean recursive) {
 		ResourceStatus resStatus = cacheManager.getResourceStatus(resource);
 		resStatus.setStatus(status);
 		cacheManager.setStatus(resource, resStatus);
+		if (recursive) {
+			updateTree(resource.getParent());
+		}
+	}
+
+	private void updateTree(IResource resource) {
+		if (resource != null) {
+			ResourceStatus resStatus = cacheManager.getResourceStatus(resource);
+			if (resStatus != null) {
+				resStatus.setStatus(Status.Modified);
+				cacheManager.setStatus(resource, resStatus);
+				updateTree(resource.getParent());
+			}
+		}
+
 	}
 
 	public void setDefaultStatus(IResource resource) {
 		cacheManager.setStatus(resource, getDefaultStatus());
 	}
 
+	private void setAddedStatusToParents(IResource resource) {
+		if (resource != null) {
+			if (cacheManager.getResourceStatus(resource) == null) {
+				cacheManager.setStatus(resource, getAddedStatus());
+				setAddedStatusToParents(resource.getParent());
+			}
+		}
+	}
+
 	public void setAddedStatus(IResource resource) {
 		cacheManager.setStatus(resource, getAddedStatus());
+		setAddedStatusToParents(resource.getParent());
 	}
 
 	public HashMap<String, IVCProject> getProjects() {

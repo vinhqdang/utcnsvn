@@ -2,12 +2,12 @@ package ivc.rmi.client;
 
 import ivc.connection.ConnectionManager;
 import ivc.data.IVCProject;
-import ivc.data.Operation;
-import ivc.data.OperationHistoryList;
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.ConnectToPeerCommand;
 import ivc.data.commands.Result;
 import ivc.data.exception.IVCException;
+import ivc.data.operation.Operation;
+import ivc.data.operation.OperationHistoryList;
 import ivc.manager.ProjectsManager;
 import ivc.plugin.IVCPlugin;
 import ivc.util.Constants;

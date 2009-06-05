@@ -1,4 +1,4 @@
-package ivc.data;
+package ivc.data.operation;
 
 import java.io.Serializable;
 import java.util.LinkedList;

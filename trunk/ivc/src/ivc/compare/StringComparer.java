@@ -1,7 +1,7 @@
 package ivc.compare;
 
-import ivc.data.Operation;
-import ivc.data.OperationHistory;
+import ivc.data.operation.Operation;
+import ivc.data.operation.OperationHistory;
 import ivc.manager.ProjectsManager;
 import ivc.util.StringUtils;
 
