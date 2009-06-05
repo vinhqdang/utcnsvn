@@ -42,7 +42,9 @@ public class CommitAction extends BaseActionDelegate {
 	private IResource[] findAllResources() throws CoreException {
 		List<IResource> resourcesTo = new ArrayList<IResource>();
 		for (IResource resource : getSelectedResources()) {
-			addResource(resourcesTo, resource);
+			if (!resource.isTeamPrivateMember()) {
+				addResource(resourcesTo, resource);
+			}
 		}
 		return (IResource[]) resourcesTo.toArray();
 	}
@@ -53,13 +55,17 @@ public class CommitAction extends BaseActionDelegate {
 			if (resource instanceof IProject) {
 				IProject proj = (IProject) resource;
 				for (IResource res : proj.members()) {
-					addResource(resources, res);
+					if (!res.isTeamPrivateMember()) {
+						addResource(resources, res);
+					}
 				}
 			} else {
 				if (resource instanceof IFolder) {
 					IFolder fold = (IFolder) resource;
 					for (IResource res : fold.members()) {
-						addResource(resources, res);
+						if (!res.isTeamPrivateMember()) {
+							addResource(resources, res);
+						}
 					}
 				}
 			}
@@ -67,10 +73,15 @@ public class CommitAction extends BaseActionDelegate {
 	}
 
 	@Override
-	public void run(IAction action){
+	public void run(IAction action) {
 
 		Map<IResource, Status> statusMap = new HashMap<IResource, Status>();
-		IResource[] resources = getSelectedResources();
+		IResource[] resources = null;
+		try {
+			resources = findAllResources();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		for (IResource resource : resources) {
 			statusMap.put(resource, ProjectsManager.instance().getStatus(resource));
