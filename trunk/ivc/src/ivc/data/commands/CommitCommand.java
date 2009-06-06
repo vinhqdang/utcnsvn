@@ -52,23 +52,28 @@ public class CommitCommand implements CommandIntf {
 		ivcProject = ProjectsManager.instance().getIVCProjectByName(projectName);
 		connectionManager = ConnectionManager.getInstance(projectName);
 
-		// if the user tries to commit the entire project must get the changed files
+		// if the user tries to commit the entire project must get only the changed files
 		getChangedFiles();
 		if (changedFiles == null || changedFiles.getTransformationHist().isEmpty()) {
 			return new Result(true, Exceptions.COMMIT_NOFILE_CHANGED, null);
 		}
+		// we must check if what the user commits contains latest commited changes
 		if (!checkVersion()) {
 			return new Result(false, Exceptions.FILE_OUT_OF_SYNC, null);
 		}
-
 		try {
+			// send commited changes to the server
 			connectionManager.getServer().updateHeadVersion(ivcProject.getServerPath(), changedFiles);
 		} catch (Exception e) {
 			return new Result(false, Exceptions.SERVER_UPDATE_HEADVERSION_FAILED, e);
 		}
+		// increment file versions
 		updateCurrentVersion();
+		// update RCL for all hosts interested in the project
 		updateRCLFiles();
+		// refresh uncommited changes from the pending rul files from the server
 		updatePendingRUL();
+		// clean local log as the operations in it are now commited
 		cleanLL();
 		return new Result(true, "Success", null);
 	}
@@ -132,8 +137,6 @@ public class CommitCommand implements CommandIntf {
 
 	private void updateCurrentVersion() {
 		try {
-			// update head version on server
-			connectionManager.getServer().updateHeadVersion(ivcProject.getServerPath(), changedFiles);
 			HashMap<String, Integer> localVersion = ivcProject.getCurrentVersion();
 			Iterator<OperationHistory> it = changedFiles.iterator();
 			// increment version numbers
@@ -165,7 +168,6 @@ public class CommitCommand implements CommandIntf {
 			// save new changes
 			ivcProject.setCurrentVersion(localVersion);
 			connectionManager.getServer().updateVersionNumber(ivcProject.getServerPath(), currentCommitedVersion);
-
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
