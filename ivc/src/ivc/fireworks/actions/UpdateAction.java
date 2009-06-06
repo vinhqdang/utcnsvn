@@ -1,17 +1,21 @@
 package ivc.fireworks.actions;
 
-import javax.jws.Oneway;
-
+import ivc.data.IVCProject;
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.UpdateCommand;
+import ivc.manager.ProjectsManager;
 import ivc.util.Constants;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-public class UpdateAction implements IWorkbenchWindowActionDelegate {
+public class UpdateAction extends BaseActionDelegate {
 
 	@Override
 	public void dispose() {
@@ -22,23 +26,46 @@ public class UpdateAction implements IWorkbenchWindowActionDelegate {
 	@Override
 	public void init(IWorkbenchWindow arg0) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void run(IAction arg0) {
-		UpdateCommand uc = new UpdateCommand();
-		CommandArgs args =  new CommandArgs();
-		args.putArgument(Constants.IVCPROJECT, null);
-		args.putArgument(Constants.FILE_PATHS,null);
-		uc.execute(args);
-		System.out.println("trestdse");
+		try {
+			List<String> files = new ArrayList<String>();
+			IResource[] resources = findAllResources();
+			for (int i = 0; i < resources.length; i++) {
+				IResource resource = resources[i];
+				String filePath = resource.getProjectRelativePath().toOSString();
+				files.add(filePath);
+			}
+			String projName = resources[0].getProject().getName();
+			UpdateCommand uc = new UpdateCommand();
+			CommandArgs args = new CommandArgs();
+			IVCProject project = ProjectsManager.instance().getIVCProjectByName(projName);
+			args.putArgument(Constants.IVCPROJECT, project);
+			args.putArgument(Constants.FILE_PATHS, files);
+			uc.execute(args);
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Update successfull.");
 	}
 
 	@Override
 	public void selectionChanged(IAction arg0, ISelection arg1) {
 		// TODO Auto-generated method stub
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ivc.fireworks.actions.BaseActionDelegate#menuItemEnabled()
+	 */
+	@Override
+	public boolean menuItemEnabled() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 }
