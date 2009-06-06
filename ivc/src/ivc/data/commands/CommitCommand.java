@@ -194,7 +194,7 @@ public class CommitCommand implements CommandIntf {
 			Iterator<Peer> itp = all.iterator();
 			while (itp.hasNext()) {
 				Peer peer = itp.next();
-				if (!connectionManager.getPeerHosts().contains(peer.getHostAddress())) {
+				if (!connectionManager.getPeerHosts().contains(peer.getHostAddress()) && !peer.getHostAddress().equalsIgnoreCase(NetworkUtils.getHostAddress())) {
 					disconnected.add(peer.getHostAddress());
 				}
 			}
@@ -217,7 +217,7 @@ public class CommitCommand implements CommandIntf {
 			Iterator<Peer> itp = all.iterator();
 			while (itp.hasNext()) {
 				Peer peer = itp.next();
-				if (!connectionManager.getPeerHosts().contains(peer.getHostAddress())) {
+				if (!connectionManager.getPeerHosts().contains(peer.getHostAddress()) && !peer.getHostAddress().equalsIgnoreCase(NetworkUtils.getHostAddress())) {
 					disconnected.add(peer.getHostAddress());
 				}
 			}

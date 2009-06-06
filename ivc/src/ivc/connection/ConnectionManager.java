@@ -74,7 +74,7 @@ public class ConnectionManager implements Serializable {
 							}
 						}
 					} catch (IVCException e) {
-						e.logError();
+						e.printStackTrace();
 					}
 					if (peer != null) {
 						peers.put(peerHost.getHostAddress(), peer);

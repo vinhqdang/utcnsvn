@@ -67,7 +67,7 @@ public class HandleOperationCommand implements CommandIntf {
 			Iterator<Peer> it = allHosts.iterator();
 			while (it.hasNext()) {
 				Peer peer = it.next();
-				if (peer.getConnectionStatus().equalsIgnoreCase(Constants.CONNECTED)) {
+				if (peer.getConnectionStatus().equalsIgnoreCase(Constants.CONNECTED) && peer.getHostAddress() != null) {
 					ClientIntf clientIntf = connMan.getPeerByAddress(peer.getHostAddress());
 					clientIntf.updateRUL(ivcProject.getServerPath(), NetworkUtils.getHostAddress(), thl);
 				} else {
