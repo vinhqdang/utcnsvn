@@ -265,6 +265,54 @@ public class Operation implements Serializable {
 	}
 
 		
+	public Operation excludeOperation(Operation op){
+		Operation newOp = new Operation();		
+		newOp.setCommited(op.getCommited());
+		newOp.setDate(op.getDate());
+		newOp.setFilePath(op.getFilePath());
+		newOp.setFileVersion(op.getFileVersion());
+		newOp.setOperationType(op.getOperationType());
+		newOp.setText(op.getChr());
+		newOp.setUserID(op.getUserID());
+		newOp.setSid(op.getSid());
+		
+		// the positions of the operations
+		int posOther = op.getPosition();
+
+		// the effects of the operations
+		int typeOther = op.getOperationType();
+
+		// both local and remote operations are insertions
+		if (operationType == Operation.CHARACTER_ADD && typeOther == Operation.CHARACTER_ADD) {
+			if (position >= posOther) {
+				newOp.setPosition(position - 1);
+			}
+		}
+
+		// operation1 is insertion and operation2 is deletion
+		if (operationType == Operation.CHARACTER_ADD && typeOther == Operation.CHARACTER_DELETE) {
+			if (position > posOther) {
+				newOp.setPosition(position + 1);
+			}
+		}
+
+		// operation1 is deletion and operation2 is insertion
+		if (operationType == Operation.CHARACTER_DELETE && typeOther == Operation.CHARACTER_ADD) {
+			if (position >= posOther) {
+				newOp.setPosition(position - 1);
+			}
+		}
+
+		// both operations are deletions
+		if (operationType == Operation.CHARACTER_DELETE && typeOther == Operation.CHARACTER_DELETE) {
+			if (position > posOther) {
+				newOp.setPosition(position + 1);
+			}
+		}
+		
+		
+		return newOp;
+	}
 	
 	
 	

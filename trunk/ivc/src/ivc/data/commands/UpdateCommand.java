@@ -125,7 +125,7 @@ public class UpdateCommand implements CommandIntf {
 		} else {
 			Iterator<String> it = filesToUpdate.iterator();
 			while (it.hasNext()) {
-				rcl.removeTransformationHistForFile(it.next());
+				rcl.removeOperationHistForFile(it.next());
 			}
 		}
 	}

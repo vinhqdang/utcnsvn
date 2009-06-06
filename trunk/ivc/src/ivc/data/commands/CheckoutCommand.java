@@ -175,7 +175,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 					e.printStackTrace();
 				}
 			}
-			thl.applyTransformationHistoryList(project);
+			thl.applyOperationHistoryList(project);
 			// refresh project
 			try {
 				project.refreshLocal(IResource.DEPTH_INFINITE, monitor);

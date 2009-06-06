@@ -7,6 +7,7 @@ import ivc.repository.Status;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -111,10 +112,14 @@ public class IVCProject implements Serializable {
 	}
 
 	public OperationHistoryList getRemoteUncommitedLog(String hostAddress) {
-		Object obj = FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
+		File f = new File(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
 				+ hostAddress.replaceAll(".", "_"));
-		if (obj != null && obj instanceof OperationHistoryList) {
-			return (OperationHistoryList) obj;
+		if (f.exists()) {
+			Object obj = FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
+					+ hostAddress.replaceAll(".", "_"));
+			if (obj != null && obj instanceof OperationHistoryList) {
+				return (OperationHistoryList) obj;
+			}
 		}
 		return new OperationHistoryList();
 	}

@@ -1,6 +1,7 @@
 package ivc.data.operation;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,7 +21,6 @@ public class OperationHistory implements Serializable {
 	 * 
 	 */
 	private LinkedList<Operation> operations;
-	
 
 	public OperationHistory() {
 		operations = new LinkedList<Operation>();
@@ -52,15 +52,53 @@ public class OperationHistory implements Serializable {
 	 * @param operations
 	 *            the operations to set
 	 */
-	public void setTransformations(LinkedList<Operation> operations) {
+	public void setOperations(LinkedList<Operation> operations) {
 		this.operations = operations;
 	}
 
-	public void addTransformations(LinkedList<Operation> trs) {
+	public void addOperations(LinkedList<Operation> trs) {
 		this.operations.addAll(trs);
 	}
 
 	public void addOperation(Operation tr) {
 		operations.addFirst(tr);
+	}
+
+	public void setOperation(int i, Operation op) {
+		operations.set(i, op);
+	}
+
+	public OperationHistory excludeOperations(OperationHistory oh) {
+		OperationHistory newOh = new OperationHistory();
+		newOh.setFilePath(oh.getFilePath());
+		Iterator<Operation> itoOwn = operations.descendingIterator();
+		while (itoOwn.hasNext()) {
+			Operation ownOp = itoOwn.next();
+			Operation newOp = ownOp;
+			Iterator<Operation> itoOther = oh.getTransformations().descendingIterator();
+			while (itoOther.hasNext()) {
+				Operation op = itoOther.next();
+				newOp = newOp.excludeOperation(op);
+			}
+			newOh.addOperation(newOp);
+		}
+		return newOh;
+	}
+
+	public OperationHistory includeOperations(OperationHistory oh) {
+		OperationHistory newOh = new OperationHistory();
+		newOh.setFilePath(oh.getFilePath());
+		Iterator<Operation> itoOwn = operations.descendingIterator();
+		while (itoOwn.hasNext()) {
+			Operation ownOp = itoOwn.next();
+			Operation newOp = ownOp;
+			Iterator<Operation> itoOther = oh.getTransformations().descendingIterator();
+			while (itoOther.hasNext()) {
+				Operation op = itoOther.next();
+				newOp = newOp.includeOperation(op);
+			}
+			newOh.addOperation(newOp);
+		}
+		return newOh;
 	}
 }
