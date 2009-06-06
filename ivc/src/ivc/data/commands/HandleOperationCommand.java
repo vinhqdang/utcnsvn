@@ -39,7 +39,7 @@ public class HandleOperationCommand implements CommandIntf {
 	@Override
 	public Result execute(CommandArgs args) {
 		// init local variables
-		operationHist = (OperationHistory)args.getArgumentValue(Constants.OPERATION_HIST);
+		operationHist = (OperationHistory) args.getArgumentValue(Constants.OPERATION_HIST);
 		IProject project = (IProject) args.getArgumentValue(Constants.IPROJECT);
 		ivcProject = ProjectsManager.instance().getIVCProjectByName(project.getName());
 
@@ -52,7 +52,7 @@ public class HandleOperationCommand implements CommandIntf {
 	}
 
 	private void updateLL() {
-		OperationHistoryList oldLL = ivcProject.getLocalLog();		
+		OperationHistoryList oldLL = ivcProject.getLocalLog();
 		OperationHistoryList newLL = oldLL.appendOperationHistory(operationHist);
 		ivcProject.setLocalLog(newLL);
 	}
@@ -67,9 +67,11 @@ public class HandleOperationCommand implements CommandIntf {
 			Iterator<Peer> it = allHosts.iterator();
 			while (it.hasNext()) {
 				Peer peer = it.next();
-				if (peer.getConnectionStatus().equalsIgnoreCase(Constants.CONNECTED) && peer.getHostAddress() != null) {
+				if (peer.getConnectionStatus().equalsIgnoreCase(Constants.CONNECTED) && connMan.getPeerByAddress(peer.getHostAddress()) != null) {
 					ClientIntf clientIntf = connMan.getPeerByAddress(peer.getHostAddress());
-					clientIntf.updateRUL(ivcProject.getServerPath(), NetworkUtils.getHostAddress(), thl);
+					if (clientIntf != null) {
+						clientIntf.updateRUL(ivcProject.getServerPath(), NetworkUtils.getHostAddress(), thl);
+					}
 				} else {
 					disconnected.add(peer.getHostAddress());
 				}
