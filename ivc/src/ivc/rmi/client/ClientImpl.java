@@ -3,13 +3,12 @@ package ivc.rmi.client;
 import ivc.connection.ConnectionManager;
 import ivc.data.IVCProject;
 import ivc.data.commands.CommandArgs;
-import ivc.data.commands.ConnectToPeerCommand;
-import ivc.data.commands.Result;
+import ivc.data.commands.UpdateAnnotationsCommand;
 import ivc.data.exception.IVCException;
 import ivc.data.operation.Operation;
+import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
 import ivc.manager.ProjectsManager;
-import ivc.plugin.IVCPlugin;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
 
@@ -17,11 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
+import java.util.Iterator;
 
 public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 
@@ -66,14 +61,27 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 	 * @see ivc.rmi.client.ClientIntf#updateRCL(java.lang.String, ivc.data.OperationHistoryList)
 	 */
 	@Override
-	public void updateRCL(String projectServerPath, String sourceHost, OperationHistoryList thl) throws RemoteException {
+	public void updateRCL(String projectServerPath, String sourceHost, OperationHistoryList ohl) throws RemoteException {
+		if (ohl == null || ohl.getTransformationHist() == null){
+			return;
+		}		
 		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(projectServerPath);
-		OperationHistoryList oldThl = project.getRemoteCommitedLog();
-		OperationHistoryList newThl = oldThl.appendOperationHistoryList(thl);
-		project.setRemoteCommitedLog(newThl);
-		OperationHistoryList rul = project.getRemoteUncommitedLog(sourceHost);
-		OperationHistoryList newrul = rul.removeOperationHistList(thl);
-		project.setRemoteUncommitedLog(newrul, sourceHost);
+		UpdateAnnotationsCommand command = new UpdateAnnotationsCommand();
+		CommandArgs args =  new CommandArgs();
+		args.putArgument(Constants.IVCPROJECT, project);
+		args.putArgument(Constants.HOST_ADDRESS, sourceHost);
+		Iterator<OperationHistory> it = ohl.iterator();
+		while(it.hasNext()){
+			OperationHistory oh = it.next();
+			args.putArgument(Constants.OPERATION_HIST, oh);
+			command.execute(args);
+		}
+//		OperationHistoryList oldThl = project.getRemoteCommitedLog();
+//		OperationHistoryList newThl = oldThl.appendOperationHistoryList(thl);
+//		project.setRemoteCommitedLog(newThl);
+//		OperationHistoryList rul = project.getRemoteUncommitedLog(sourceHost);
+//		OperationHistoryList newrul = rul.removeOperationHistList(thl);
+//		project.setRemoteUncommitedLog(newrul, sourceHost);
 	}
 
 	/*

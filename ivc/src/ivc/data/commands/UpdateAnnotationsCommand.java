@@ -23,6 +23,11 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 
 	private IVCProject project;
 	private OperationHistory rl;
+	private String remoteAddress;
+	
+	private OperationHistoryList rcl;
+	private OperationHistoryList rul;
+	
 
 	/*
 	 * (non-Javadoc)
@@ -34,7 +39,17 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 		// TODO 1. implement update annotations command
 		project = (IVCProject) args.getArgumentValue(Constants.IVCPROJECT);
 		rl = (OperationHistory) args.getArgumentValue(Constants.OPERATION_HIST);
-
+		remoteAddress = (String) args.getArgumentValue(Constants.HOST_ADDRESS);
+		
+		rcl = project.getRemoteCommitedLog();
+		rul = project.getRemoteUncommitedLog(remoteAddress);
+		
+		computeCommitedAnnotations(rl);
+		computeUncommitedAnnotations(rl, remoteAddress);
+		
+		project.setRemoteCommitedLog(rcl);
+		project.setRemoteUncommitedLog(rul, remoteAddress);
+		
 		return new Result(true, "Success", null);
 	}
 
@@ -53,13 +68,13 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 	 */
 	private void computeCommitedAnnotations(OperationHistory rl) {
 		OperationHistory arl = new OperationHistory();
-		OperationHistoryList rcl = project.getRemoteCommitedLog();
 		if (causallyReady(rl)) {
 			arl = rl.excludeOperations(rcl.getOperationHistForFile(rl.getFilePath()));
 			arl = transformIntoConc(arl);
 			applyAnnotations(arl, true, null);
 		}
 		rcl.appendOperationHistory(rl);
+
 	}
 
 	/**
@@ -134,7 +149,6 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 	 */
 	private void computeUncommitedAnnotations(OperationHistory rl, String hostAddress) {
 		OperationHistory arl = new OperationHistory();
-		OperationHistoryList rul = project.getRemoteUncommitedLog(hostAddress);
 		String filePath = rl.getFilePath();
 		OperationHistory rulOh = rul.getOperationHistForFile(filePath);
 		if (causallyReady(rl)) {
