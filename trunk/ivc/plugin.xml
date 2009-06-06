@@ -11,7 +11,7 @@
 	<extension	point="org.eclipse.team.core.ignore">
     	<ignore
             enabled="true"
-            pattern=".ivc">
+            pattern=".ivc,.class,.project">
 		</ignore>
  		
 	</extension>

@@ -2,6 +2,7 @@ package ivc.fireworks.actions;
 
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.CommitCommand;
+import ivc.fireworks.markers.MarkersManager;
 import ivc.manager.ProjectsManager;
 import ivc.repository.Status;
 import ivc.util.Constants;
@@ -13,6 +14,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
+
+import javax.swing.JTable.PrintMode;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -37,13 +41,17 @@ public class CommitAction extends BaseActionDelegate {
 	}
 
 	private IResource[] findAllResources() throws CoreException {
-		List<IResource> resourcesTo = new ArrayList<IResource>();
-		for (IResource resource : getSelectedResources()) {
+		Vector<IResource> resourcesTo = new Vector<IResource>();
+		IResource[] resources = getSelectedResources();
+		for (IResource resource : resources) {
 			if (!resource.isTeamPrivateMember()) {
 				addResource(resourcesTo, resource);
 			}
 		}
-		return (IResource[]) resourcesTo.toArray();
+		IResource[] result = new IResource[resourcesTo.size()];
+		resourcesTo.toArray(result);
+
+		return result;
 	}
 
 	private void addResource(List<IResource> resources, IResource resource) throws CoreException {
@@ -52,7 +60,7 @@ public class CommitAction extends BaseActionDelegate {
 			if (resource instanceof IProject) {
 				IProject proj = (IProject) resource;
 				for (IResource res : proj.members()) {
-					if (!res.isTeamPrivateMember()) {
+					if (!res.isTeamPrivateMember() && (!res.getName().equals("bin"))) {
 						addResource(resources, res);
 					}
 				}
@@ -83,18 +91,18 @@ public class CommitAction extends BaseActionDelegate {
 		for (IResource resource : resources) {
 			statusMap.put(resource, ProjectsManager.instance().getStatus(resource));
 		}
-		CommitWizardPage commitPage = new CommitWizardPage(getSelectedResources(), statusMap, false);
+		CommitWizardPage commitPage = new CommitWizardPage(resources, statusMap, false);
 		CommitWizard wizard = new CommitWizard(commitPage);
 		CommitWizardDialog dialog = new CommitWizardDialog(getShell(), wizard);
 
 		wizard.setParentDialog(dialog);
 		boolean commitOK = (dialog.open() == WizardDialog.OK);
-		if (commitOK) {
+		if (!commitOK) {
 			return;
 		}
 		List<String> filePaths = new ArrayList<String>();
-
-		for (IResource resource : resources) {
+		IResource[] commitedResources = commitPage.getSelectedResources();
+		for (IResource resource : commitedResources) {
 			if (resource.getType() == IResource.PROJECT) {
 				break;
 			} else {
@@ -105,7 +113,7 @@ public class CommitAction extends BaseActionDelegate {
 		}
 		CommitCommand commitCommand = new CommitCommand();
 		CommandArgs args = new CommandArgs();
-		args.putArgument(Constants.PROJECT_NAME, resources[0].getProject().getName());
+		args.putArgument(Constants.PROJECT_NAME, commitedResources[0].getProject().getName());
 		args.putArgument(Constants.FILE_PATHS, filePaths);
 		commitCommand.execute(args);
 	}
@@ -118,5 +126,4 @@ public class CommitAction extends BaseActionDelegate {
 		}
 		return true;
 	}
-
 }

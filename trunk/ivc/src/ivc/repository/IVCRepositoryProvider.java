@@ -1,5 +1,6 @@
 package ivc.repository;
 
+import ivc.manager.ProjectsManager;
 import ivc.plugin.IVCPlugin;
 import ivc.util.Constants;
 
@@ -24,16 +25,17 @@ public class IVCRepositoryProvider extends RepositoryProvider {
 		try {
 			project.accept(new IResourceVisitor() {
 				public boolean visit(IResource resource) throws CoreException {
-					if ((resource.getType() == IResource.FOLDER)
-							&& (resource.getName().equals(Constants.IvcFolder.replaceAll("\\","")))&& (!resource.isTeamPrivateMember())) {
+					if ((resource.getType() == IResource.FOLDER) && (resource.getName().equals(Constants.IvcFolder.replaceAll("\\", "")))
+							&& (!resource.isTeamPrivateMember())) {
 						resource.setTeamPrivateMember(true);
 						return false;
+						// TODO setdefault values
 					} else {
+						ProjectsManager.instance().setDefaultStatus(resource);
 						return true;
 					}
 				}
-			}, IResource.DEPTH_INFINITE, IContainer.INCLUDE_PHANTOMS
-					| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS);
+			}, IResource.DEPTH_INFINITE, IContainer.INCLUDE_PHANTOMS | IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS);
 		} catch (CoreException e) {
 			// SVNProviderPlugin.log(SVNException.wrapException(e));
 			e.printStackTrace();
@@ -52,6 +54,7 @@ public class IVCRepositoryProvider extends RepositoryProvider {
 		// TODO Auto-generated method stub
 
 	}
+
 	@Override
 	public boolean canHandleLinkedResources() {
 		// TODO Auto-generated method stub

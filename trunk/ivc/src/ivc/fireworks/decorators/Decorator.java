@@ -3,6 +3,7 @@ package ivc.fireworks.decorators;
 import ivc.manager.ProjectsManager;
 import ivc.plugin.IVCPlugin;
 import ivc.plugin.ImageDescriptorManager;
+import ivc.repository.IVCRepositoryProvider;
 import ivc.repository.Status;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.team.core.RepositoryProvider;
 import org.eclipse.ui.IDecoratorManager;
 
 /**
@@ -82,7 +84,7 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 			if (object instanceof IResource) {
 
 				IResource resource = (IResource) object;
-				if (ProjectsManager.instance().isManaged(resource)) {
+				if (IVCRepositoryProvider.isShared(resource.getProject())) {
 
 					try {
 						Status status = ProjectsManager.instance().getStatus(resource);
@@ -243,13 +245,18 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 		// create a new Vector
 		Vector images = new Vector();
 		// add an image key to the vector
-		images.add(new ImageIcon(ImageDescriptorManager.DCORATOR_SHARED, Position.BOTTOM_RIGHT));
+		ImageIcon versioned=new ImageIcon(ImageDescriptorManager.DCORATOR_SHARED, Position.BOTTOM_RIGHT);
+		images.add(versioned);
 		switch (status) {
 		case Added:
 			images.add(new ImageIcon(ImageDescriptorManager.DCORATOR_ADDED, Position.TOP_LEFT));
 			break;
 		case Modified:
 			images.add(new ImageIcon(ImageDescriptorManager.DCORATOR_CHANGED, Position.TOP_LEFT));
+			break;
+		case Unversioned:
+			images.add(new ImageIcon(ImageDescriptorManager.dCORATOR_URSIONED, Position.TOP_LEFT));
+			images.remove(versioned);
 			break;
 		default:
 			break;
