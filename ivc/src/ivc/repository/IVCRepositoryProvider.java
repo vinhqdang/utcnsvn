@@ -25,7 +25,7 @@ public class IVCRepositoryProvider extends RepositoryProvider {
 		try {
 			project.accept(new IResourceVisitor() {
 				public boolean visit(IResource resource) throws CoreException {
-					if ((resource.getType() == IResource.FOLDER) && (resource.getName().equals(Constants.IvcFolder.replaceAll("\\", "")))
+					if ((resource.getType() == IResource.FOLDER) && (resource.getName().equals("bin"))
 							&& (!resource.isTeamPrivateMember())) {
 						resource.setTeamPrivateMember(true);
 						return false;
