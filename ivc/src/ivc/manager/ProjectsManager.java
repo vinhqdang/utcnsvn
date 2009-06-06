@@ -63,6 +63,7 @@ public class ProjectsManager {
 			// } catch (Exception e) {
 			// e.printStackTrace();
 			// }
+			
 			tryAddProject(project);
 		}
 	}
@@ -157,9 +158,11 @@ public class ProjectsManager {
 		if (resource != null) {
 			ResourceStatus resStatus = cacheManager.getResourceStatus(resource);
 			if (resStatus != null) {
-				resStatus.setStatus(Status.Modified);
-				cacheManager.setStatus(resource, resStatus);
-				updateTree(resource.getParent());
+				if (!resStatus.getStatus().equals(Status.Modified)) {
+					resStatus.setStatus(Status.Modified);
+					cacheManager.setStatus(resource, resStatus);
+					updateTree(resource.getParent());
+				}
 			}
 		}
 
@@ -188,7 +191,7 @@ public class ProjectsManager {
 	}
 
 	public Status getStatus(IResource resource) {
-		
+
 		ResourceStatus rStatus = cacheManager.getResourceStatus(resource);
 		if (rStatus == null) {
 			return Status.Unversioned;

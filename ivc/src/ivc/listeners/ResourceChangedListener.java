@@ -2,10 +2,13 @@ package ivc.listeners;
 
 import ivc.data.IVCProject;
 import ivc.manager.ProjectsManager;
+import ivc.repository.IVCRepositoryProvider;
+import ivc.repository.Status;
 
 import java.util.ArrayList;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -35,29 +38,23 @@ public class ResourceChangedListener implements IResourceChangeListener {
 					// a new resource was created
 					case IResourceDelta.ADDED: {
 						resource = delta.getResource();
-						// TODO 2 use code
-						if (projectsManager.getFileVersion(resource) != 0) {
-							projectsManager.setDefaultStatus(resource);
+						if (IVCRepositoryProvider.isShared(resource.getProject())) {
+
+							// toBeRefreshed.add(resource.getParent());
+							if (projectsManager.getFileVersion(resource) != 0) {
+								projectsManager.setDefaultStatus(resource);
+							}
 						}
 					}
 						break;
 
 					case IResourceDelta.REMOVED:
-
-						// get a reference to the newly created resource
 						resource = delta.getResource();
-
-						// the removed resource is a java file
-						// if (resource instanceof IFile && (resource.getFileExtension().compareTo("java") == 0)) {
-						// perform updates of the local data structures in
-						// order to
-						// reflect the deletion of the file
-						// AttachListeners.detachFileListener((IFile)resource);
-						// get the parent resources of the created resource
-						// getFileParents(resource);
-						// }
-						IVCProject project = ProjectsManager.instance().getIVCProjectByName(resource.getProject().getName());
-						project.addToDeleted(resource);
+						if (IVCRepositoryProvider.isShared(resource.getProject())) {
+							if (!(resource instanceof IProject)) {
+								toBeRefreshed.add(resource.getParent());
+							}
+						}
 						break;
 
 					// an existing resource was changed; we don't handle this
@@ -79,11 +76,17 @@ public class ResourceChangedListener implements IResourceChangeListener {
 					return true;
 				}
 			});
-
+			refreshResources(toBeRefreshed);
 			toBeRefreshed.clear();
 
 		} catch (CoreException ex) {
 			ex.printStackTrace();
+		}
+	}
+
+	private void refreshResources(ArrayList<IResource> resources) {
+		for (IResource resource : resources) {
+			projectsManager.updateStatus(resource, Status.Modified, true);
 		}
 	}
 }

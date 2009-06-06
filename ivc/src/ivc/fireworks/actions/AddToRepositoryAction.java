@@ -41,9 +41,9 @@ public class AddToRepositoryAction extends BaseActionDelegate {
 					operation.setOperationType(Operation.ADD_FILE);
 					InputStream is;
 					try {
-						is = ((IFile)resource).getContents();
-						//TODO 1 add entire file to subversion
-						//operation.setChar(FileUtils.InputStreamToStringBuffer(is).toString());
+						is = ((IFile) resource).getContents();
+						// TODO 1 add entire file to subversion
+						// operation.setChar(FileUtils.InputStreamToStringBuffer(is).toString());
 					} catch (CoreException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -61,7 +61,7 @@ public class AddToRepositoryAction extends BaseActionDelegate {
 				args.putArgument(Constants.OPERATION_HIST, oh);
 				args.putArgument(Constants.IPROJECT, resource.getProject());
 				command.execute(args);
-				
+
 				ProjectsManager.instance().setAddedStatus(resource);
 
 			}

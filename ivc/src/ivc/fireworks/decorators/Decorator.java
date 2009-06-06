@@ -254,8 +254,11 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 		case Modified:
 			images.add(new ImageIcon(ImageDescriptorManager.DCORATOR_CHANGED, Position.TOP_LEFT));
 			break;
+		case Deleted:
+			images.add(new ImageIcon(ImageDescriptorManager.DCORATOR_DELETED, Position.TOP_LEFT));
+			break;
 		case Unversioned:
-			images.add(new ImageIcon(ImageDescriptorManager.dCORATOR_URSIONED, Position.TOP_LEFT));
+			images.add(new ImageIcon(ImageDescriptorManager.DCORATOR_UNVERSIONED, Position.TOP_LEFT));
 			images.remove(versioned);
 			break;
 		default:

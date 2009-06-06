@@ -1,6 +1,5 @@
 package ivc.wizards.validation;
 
-import ivc.wizards.sharing.pages.IValidation;
 
 import java.util.Vector;
 

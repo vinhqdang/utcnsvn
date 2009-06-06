@@ -53,7 +53,7 @@ public class IVCPlugin extends AbstractUIPlugin {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		ResourceChangedListener changeListener = new ResourceChangedListener();
 		FileModificationManager modifications = new FileModificationManager();
-		workspace.addResourceChangeListener(changeListener);
+		workspace.addResourceChangeListener(changeListener, IResourceChangeEvent.PRE_BUILD);
 		workspace.addResourceChangeListener(modifications, IResourceChangeEvent.PRE_BUILD);
 		Decorator.enableDecoration = true;
 
@@ -62,8 +62,8 @@ public class IVCPlugin extends AbstractUIPlugin {
 		startCommand.execute(new CommandArgs());
 	}
 
-	/*7
-	 * (non-Javadoc)
+	/*
+	 * 7 (non-Javadoc)
 	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext )
 	 */
