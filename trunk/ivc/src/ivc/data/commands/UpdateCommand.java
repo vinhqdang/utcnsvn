@@ -54,8 +54,8 @@ public class UpdateCommand implements CommandIntf {
 		// init local variables
 		ivcProject = (IVCProject) args.getArgumentValue(Constants.IVCPROJECT);
 		projectPath = ivcProject.getServerPath();
-		if (args.getArgumentValue("filesToUpdate") != null) {
-			filesToUpdate = (List<String>) args.getArgumentValue("filesToUpdate");
+		if (args.getArgumentValue(Constants.FILE_PATHS) != null) {
+			filesToUpdate = (List<String>) args.getArgumentValue(Constants.FILE_PATHS);
 		}
 		if (filesToUpdate == null) {
 			updateAll = true;
