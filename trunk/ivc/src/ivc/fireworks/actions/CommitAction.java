@@ -40,43 +40,7 @@ public class CommitAction extends BaseActionDelegate {
 
 	}
 
-	private IResource[] findAllResources() throws CoreException {
-		ArrayList<IResource> resourcesTo = new ArrayList<IResource>();
-		IResource[] resources = getSelectedResources();
-		for (IResource resource : resources) {
-			if (!resource.isTeamPrivateMember()) {
-				addResource(resourcesTo, resource);
-			}
-		}
-		resourcesTo.addAll(ProjectsManager.instance().getIVCProjectByName(resources[0].getProject().getName()).getDeleted());
-		IResource[] result = new IResource[resourcesTo.size()];
-		resourcesTo.toArray(result);
-
-		return result;
-	}
-
-	private void addResource(List<IResource> resources, IResource resource) throws CoreException {
-		if (!resources.contains(resource)) {
-			resources.add(resource);
-			if (resource instanceof IProject) {
-				IProject proj = (IProject) resource;
-				for (IResource res : proj.members()) {
-					if (!res.isTeamPrivateMember()) {
-						addResource(resources, res);
-					}
-				}
-			} else {
-				if (resource instanceof IFolder) {
-					IFolder fold = (IFolder) resource;
-					for (IResource res : fold.members()) {
-						if (!res.isTeamPrivateMember()) {
-							addResource(resources, res);
-						}
-					}
-				}
-			}
-		}
-	}
+	
 
 	@Override
 	public void run(IAction action) {
@@ -90,8 +54,10 @@ public class CommitAction extends BaseActionDelegate {
 		}
 		try {
 			for (IResource resource : resources) {
-
-				statusMap.put(resource, ProjectsManager.instance().getStatus(resource));
+				if (!resource.isPhantom())
+					statusMap.put(resource, ProjectsManager.instance().getStatus(resource));
+				else
+					statusMap.put(resource, Status.Deleted);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

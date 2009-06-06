@@ -6,7 +6,10 @@ import ivc.plugin.IVCPlugin;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.resources.mapping.ResourceTraversal;
@@ -24,19 +27,56 @@ public abstract class BaseActionDelegate implements IWorkbenchWindowActionDelega
 	private ISelection selection;
 	private Shell shell;
 
-		
+	public IResource[] findAllResources() throws CoreException {
+		ArrayList<IResource> resourcesTo = new ArrayList<IResource>();
+		IResource[] resources = getSelectedResources();
+		for (IResource resource : resources) {
+			if (!resource.isTeamPrivateMember()) {
+				addResource(resourcesTo, resource);
+			}
+		}
+		// resourcesTo.addAll(ProjectsManager.instance().getIVCProjectByName(resources[0].getProject().getName()).getDeleted());
+		IResource[] result = new IResource[resourcesTo.size()];
+		resourcesTo.toArray(result);
+
+		return result;
+	}
+
+	private void addResource(List<IResource> resources, IResource resource) throws CoreException {
+		if (!resources.contains(resource)) {
+			resources.add(resource);
+			if (resource instanceof IProject) {
+				IProject proj = (IProject) resource;
+				for (IResource res : proj.members(true)) {
+					if (!res.isTeamPrivateMember() && !resource.getName().equals("bin")) {
+						addResource(resources, res);
+					}
+				}
+			} else {
+				if (resource instanceof IFolder) {
+					IFolder fold = (IFolder) resource;
+					for (IResource res : fold.members(true)) {
+						if (!res.isTeamPrivateMember()) {
+							addResource(resources, res);
+						}
+					}
+				}
+			}
+		}
+	}
+
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 		action.setEnabled(menuItemEnabled());
 	}
-	
+
 	public abstract boolean menuItemEnabled();
-	
+
 	protected boolean resourceInRepository(IResource resource) {
 		return ProjectsManager.instance().isManaged(resource);
 	}
-	
+
 	public Shell getShell() {
 		if (shell != null) {
 			return shell;
@@ -50,12 +90,12 @@ public abstract class BaseActionDelegate implements IWorkbenchWindowActionDelega
 			return window.getShell();
 		}
 	}
-	
+
 	protected Object[] getSelectedAdaptables(ISelection selection, Class<?> c) {
 		ArrayList<Object> result = null;
 		if (selection != null && !selection.isEmpty()) {
 			result = new ArrayList<Object>();
-			IStructuredSelection structuredSelection=(IStructuredSelection)selection;
+			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 			Iterator<?> elements = structuredSelection.iterator();
 			while (elements.hasNext()) {
 				Object adapter = getAdapter(elements.next(), c);
@@ -114,8 +154,8 @@ public abstract class BaseActionDelegate implements IWorkbenchWindowActionDelega
 		return selectedResources;
 	}
 
-	protected ISelection getSelection(){
+	protected ISelection getSelection() {
 		return selection;
 	}
-	
+
 }

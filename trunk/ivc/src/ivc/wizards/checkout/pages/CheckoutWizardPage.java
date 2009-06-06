@@ -29,7 +29,7 @@ public class CheckoutWizardPage extends BaseWizardPage {
 		validator = new Validator() {
 			@Override
 			public void setError(String error) {
-				updateStatus(getValidatorErrorMessage());
+				updateStatus(error);
 			}
 		};
 	}
@@ -111,6 +111,8 @@ public class CheckoutWizardPage extends BaseWizardPage {
 
 	
 	private void updateStatus(String message) {
-		setErrorMessage(message);	
+		setErrorMessage(message);
+		if (message == null)
+			setMessage("Click Next to continue");
 	}
 }

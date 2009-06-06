@@ -21,6 +21,7 @@ public class IVCException extends Exception {
 			stackStraceStr += "\n" + stackTraceElement.toString();
 		}
 		// HTMLLogger.error(stackStraceStr);
+		printStackTrace();
 	}
 
 	public IVCException(Exception e) {
