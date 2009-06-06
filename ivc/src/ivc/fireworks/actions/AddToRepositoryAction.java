@@ -3,6 +3,8 @@ package ivc.fireworks.actions;
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.HandleOperationCommand;
 import ivc.data.operation.Operation;
+import ivc.data.operation.OperationHistory;
+import ivc.data.operation.OperationHistoryList;
 import ivc.manager.ProjectsManager;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
@@ -52,9 +54,11 @@ public class AddToRepositoryAction extends BaseActionDelegate {
 				operation.setFilePath(resource.getProjectRelativePath().toOSString());
 				operation.setFileVersion(1);
 				operation.setDate(new Date());
+				OperationHistory oh = new OperationHistory();
+				oh.addOperation(operation);
 				HandleOperationCommand command = new HandleOperationCommand();
 				CommandArgs args = new CommandArgs();
-				args.putArgument(Constants.OPERATION, operation);
+				args.putArgument(Constants.OPERATION_HIST, oh);
 				args.putArgument(Constants.IPROJECT, resource.getProject());
 				command.execute(args);
 				
