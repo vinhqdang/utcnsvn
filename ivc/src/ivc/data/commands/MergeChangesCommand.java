@@ -62,9 +62,9 @@ public class MergeChangesCommand implements CommandIntf {
 				newThl1.appendOperation(th1.getTransformations().getFirst());
 			} else
 			// if both lists have transformations for the same file
-			if (thl2.getTransformationsForFile(filePath) != null) {
-				LinkedList<Operation> trs1 = thl1.getTransformationsForFile(filePath);
-				LinkedList<Operation> trs2 = thl2.getTransformationsForFile(filePath);
+			if (thl2.getOperationsForFile(filePath) != null) {
+				LinkedList<Operation> trs1 = thl1.getOperationsForFile(filePath);
+				LinkedList<Operation> trs2 = thl2.getOperationsForFile(filePath);
 				if (trs2.getFirst().getOperationType() == Operation.REMOVE_FILE || trs2.getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
 					newThl2.appendOperation(trs2.getFirst());
 				} else {
@@ -97,9 +97,9 @@ public class MergeChangesCommand implements CommandIntf {
 				newThl2.appendOperation(th2.getTransformations().getFirst());
 			} else
 			// if both lists have transformations for the same file
-			if (thl1.getTransformationsForFile(filePath) != null) {
-				LinkedList<Operation> trs1 = thl1.getTransformationsForFile(filePath);
-				LinkedList<Operation> trs2 = thl2.getTransformationsForFile(filePath);
+			if (thl1.getOperationsForFile(filePath) != null) {
+				LinkedList<Operation> trs1 = thl1.getOperationsForFile(filePath);
+				LinkedList<Operation> trs2 = thl2.getOperationsForFile(filePath);
 				if (trs1.getFirst().getOperationType() == Operation.REMOVE_FILE || trs1.getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
 					newThl1.appendOperation(trs2.getFirst());
 				} else {

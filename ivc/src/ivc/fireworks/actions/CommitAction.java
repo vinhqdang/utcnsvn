@@ -2,7 +2,6 @@ package ivc.fireworks.actions;
 
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.CommitCommand;
-import ivc.fireworks.markers.MarkersManager;
 import ivc.manager.ProjectsManager;
 import ivc.repository.Status;
 import ivc.util.Constants;
@@ -14,8 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.swing.JTable.PrintMode;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
