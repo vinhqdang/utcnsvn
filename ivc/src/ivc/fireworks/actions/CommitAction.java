@@ -41,13 +41,14 @@ public class CommitAction extends BaseActionDelegate {
 	}
 
 	private IResource[] findAllResources() throws CoreException {
-		Vector<IResource> resourcesTo = new Vector<IResource>();
+		ArrayList<IResource> resourcesTo = new ArrayList<IResource>();
 		IResource[] resources = getSelectedResources();
 		for (IResource resource : resources) {
 			if (!resource.isTeamPrivateMember()) {
 				addResource(resourcesTo, resource);
 			}
 		}
+		resourcesTo.addAll(ProjectsManager.instance().getIVCProjectByName(resources[0].getProject().getName()).getDeleted());
 		IResource[] result = new IResource[resourcesTo.size()];
 		resourcesTo.toArray(result);
 
@@ -60,7 +61,7 @@ public class CommitAction extends BaseActionDelegate {
 			if (resource instanceof IProject) {
 				IProject proj = (IProject) resource;
 				for (IResource res : proj.members()) {
-					if (!res.isTeamPrivateMember() && (!res.getName().equals("bin"))) {
+					if (!res.isTeamPrivateMember()) {
 						addResource(resources, res);
 					}
 				}
@@ -87,9 +88,13 @@ public class CommitAction extends BaseActionDelegate {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		try {
+			for (IResource resource : resources) {
 
-		for (IResource resource : resources) {
-			statusMap.put(resource, ProjectsManager.instance().getStatus(resource));
+				statusMap.put(resource, ProjectsManager.instance().getStatus(resource));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		CommitWizardPage commitPage = new CommitWizardPage(resources, statusMap, false);
 		CommitWizard wizard = new CommitWizard(commitPage);

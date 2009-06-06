@@ -9,6 +9,7 @@ import ivc.util.FileUtils;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.eclipse.core.resources.IFile;
@@ -27,6 +28,15 @@ public class IVCProject implements Serializable {
 	private String serverAddress;
 	private String serverPath;
 	private ResourcesAnnotations annotations;
+	private ArrayList<IResource> deleted = new ArrayList<IResource>();
+
+	public ArrayList<IResource> getDeleted() {
+		return deleted;
+	}
+
+	public void addToDeleted(IResource resource) {
+		deleted.add(resource);
+	}
 
 	public IVCProject() {
 		super();

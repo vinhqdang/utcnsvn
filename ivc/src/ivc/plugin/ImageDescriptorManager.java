@@ -9,7 +9,7 @@ import org.eclipse.swt.graphics.ImageData;
 public class ImageDescriptorManager {
 	public static final String SHARE_WIZARD = "share_icon.png";
 	public static final String DCORATOR_SHARED = "shared.png";
-	public static final String DCORATOR_CHANGED = "modified.png";
+	public static final String DCORATOR_CHANGED = "modified.gif";
 	public static final String DCORATOR_ADDED = "added.gif";
 	public static final String dCORATOR_URSIONED = "unversioned.gif";
 	public static final String DCORATOR_ = "";

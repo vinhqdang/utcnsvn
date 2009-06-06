@@ -188,6 +188,7 @@ public class ProjectsManager {
 	}
 
 	public Status getStatus(IResource resource) {
+		
 		ResourceStatus rStatus = cacheManager.getResourceStatus(resource);
 		if (rStatus == null) {
 			return Status.Unversioned;
