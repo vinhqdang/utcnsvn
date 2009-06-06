@@ -177,7 +177,7 @@ public class CommitWizardPage extends WizardPage {
 				toolbarManager.add(new ControlContribution("ignoreUnversioned") { //$NON-NLS-1$
 							protected Control createControl(Composite parent) {
 								includeUnversionedButton = new Button(parent, SWT.CHECK);
-								includeUnversionedButton.setText("CommitDialog.includeUnversioned"); //$NON-NLS-1$
+								includeUnversionedButton.setText("Include unversioned"); //$NON-NLS-1$
 								includeUnversionedButton.setSelection(includeUnversioned);
 								includeUnversionedButton.addSelectionListener(new SelectionListener() {
 									public void widgetSelected(SelectionEvent e) {

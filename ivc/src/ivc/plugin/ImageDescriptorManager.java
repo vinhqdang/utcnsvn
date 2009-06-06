@@ -11,6 +11,7 @@ public class ImageDescriptorManager {
 	public static final String DCORATOR_SHARED = "shared.png";
 	public static final String DCORATOR_CHANGED = "modified.png";
 	public static final String DCORATOR_ADDED = "added.gif";
+	public static final String dCORATOR_URSIONED = "unversioned.gif";
 	public static final String DCORATOR_ = "";
 	public static final String MARKER = "shared.png";
 	public static final String TREE_FLAT = "tree_flat.png";

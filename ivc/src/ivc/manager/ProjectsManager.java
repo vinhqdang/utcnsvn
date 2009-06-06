@@ -188,7 +188,11 @@ public class ProjectsManager {
 	}
 
 	public Status getStatus(IResource resource) {
-		return cacheManager.getResourceStatus(resource).getStatus();
+		ResourceStatus rStatus = cacheManager.getResourceStatus(resource);
+		if (rStatus == null) {
+			return Status.Unversioned;
+		}
+		return rStatus.getStatus();
 	}
 
 	public ResourceStatus getResourceStatus(IResource resource) {
