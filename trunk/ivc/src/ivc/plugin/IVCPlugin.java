@@ -62,7 +62,7 @@ public class IVCPlugin extends AbstractUIPlugin {
 		startCommand.execute(new CommandArgs());
 	}
 
-	/*
+	/*7
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext )

@@ -208,11 +208,12 @@ public class ProjectsManager {
 
 	// TODO 2 use method
 	public int getFileVersion(IResource resource) {
-		if (!(RepositoryProvider.getProvider(resource.getProject()) instanceof IVCRepositoryProvider))
+		if (!IVCRepositoryProvider.isShared(resource.getProject()))
 			return 0;
 		IVCProject proj = getIVCProjectByName(resource.getProject().getName());
-		if (proj != null)
-			proj.getFileVersion(resource.getLocation().toOSString());
+		if (proj != null) {
+			return proj.getFileVersion(resource.getProjectRelativePath().toOSString());
+		}
 		return 0;
 	}
 

@@ -106,6 +106,10 @@ public class CheckoutCommand implements IRunnableWithProgress {
 			// create document directory
 			File ivcfolder = new File(project.getLocation().toOSString() + Constants.IvcFolder);
 			ivcfolder.mkdir();
+			// svr host file
+			File svrfile = new File(project.getLocation().toOSString() + Constants.IvcFolder + Constants.ServerFile);
+			svrfile.createNewFile();
+			FileUtils.writeObjectToFile(svrfile.getAbsolutePath(), serverAddress + "\\" + projectPath);
 			// local log file
 			File llfile = new File(project.getLocation().toOSString() + Constants.IvcFolder + Constants.LocalLog);
 			llfile.createNewFile();

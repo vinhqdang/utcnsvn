@@ -300,13 +300,22 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 		Iterator<String> it = hosts.iterator();
 		while (it.hasNext()) {
 			String host = it.next();
-			OperationHistoryList oldThl = (OperationHistoryList) FileUtils.readObjectFromFile(projectPath + Constants.PendingRemoteCommitedLog + "_"
-					+ host);
-			if (oldThl == null) {
-				oldThl = new OperationHistoryList();
+			File f =  new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteCommitedLog + "_"	+ host.replaceAll(".", "_"));
+			if (!f.exists()){
+				try {
+					f.createNewFile();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			OperationHistoryList oldThl =  new OperationHistoryList();
+			if (FileUtils.readObjectFromFile(f.getAbsolutePath()) != null && FileUtils.readObjectFromFile(f.getAbsolutePath()) instanceof OperationHistoryList){
+				oldThl = (OperationHistoryList) FileUtils.readObjectFromFile(f.getAbsolutePath());
+			}
+			
 			oldThl.appendOperationHistoryList(thl);
-			FileUtils.writeObjectToFile(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteCommitedLog + "_" + host, thl);
+			FileUtils.writeObjectToFile(f.getAbsolutePath(), thl);
 		}
 
 	}
@@ -330,7 +339,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	@Override
 	public OperationHistoryList returnPendingRCL(String projectPath, String hostAddress) throws RemoteException {
 		OperationHistoryList thl = null;
-		File f = new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteCommitedLog + "_" + hostAddress);
+		File f = new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteCommitedLog + "_" + hostAddress.replaceAll(".", "_"));
 		if (f.exists()) {
 			thl = (OperationHistoryList) FileUtils.readObjectFromFile(f.getAbsolutePath());
 			f.delete();
