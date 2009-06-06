@@ -1,5 +1,6 @@
 package ivc.listeners;
 
+import ivc.data.IVCProject;
 import ivc.manager.ProjectsManager;
 
 import java.util.ArrayList;
@@ -47,14 +48,16 @@ public class ResourceChangedListener implements IResourceChangeListener {
 						resource = delta.getResource();
 
 						// the removed resource is a java file
-						if (resource instanceof IFile && (resource.getFileExtension().compareTo("java") == 0)) {
-							// perform updates of the local data structures in
-							// order to
-							// reflect the deletion of the file
-							// AttachListeners.detachFileListener((IFile)resource);
-							// get the parent resources of the created resource
-							// getFileParents(resource);
-						}
+						// if (resource instanceof IFile && (resource.getFileExtension().compareTo("java") == 0)) {
+						// perform updates of the local data structures in
+						// order to
+						// reflect the deletion of the file
+						// AttachListeners.detachFileListener((IFile)resource);
+						// get the parent resources of the created resource
+						// getFileParents(resource);
+						// }
+						IVCProject project = ProjectsManager.instance().getIVCProjectByName(resource.getProject().getName());
+						project.addToDeleted(resource);
 						break;
 
 					// an existing resource was changed; we don't handle this

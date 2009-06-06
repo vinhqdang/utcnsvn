@@ -5,6 +5,7 @@ import ivc.data.commands.CommandArgs;
 import ivc.data.commands.HandleOperationCommand;
 import ivc.data.operation.OperationHistory;
 import ivc.manager.ProjectsManager;
+import ivc.repository.Status;
 import ivc.util.Constants;
 
 import java.util.ArrayList;
@@ -32,11 +33,13 @@ public class FileModificationManager implements IResourceChangeListener {
 				public boolean visit(IResourceDelta delta) throws CoreException {
 					IResource resource = delta.getResource();
 
-					if (resource.getType() == IResource.FILE) {
-						if (delta.getKind() == IResourceDelta.CHANGED && resource.exists()) {
-							if ((delta.getFlags() & WATCHED_CHANGES) != 0) {
-								modifiedResources.add(resource);
-								return true;
+					if (ProjectsManager.instance().isManaged(resource)) {
+						if (resource.getType() == IResource.FILE) {
+							if (delta.getKind() == IResourceDelta.CHANGED && resource.exists()) {
+								if ((delta.getFlags() & WATCHED_CHANGES) != 0) {
+									modifiedResources.add(resource);
+									return true;
+								}
 							}
 						}
 					}
@@ -45,13 +48,12 @@ public class FileModificationManager implements IResourceChangeListener {
 			});
 
 			for (IResource resource : modifiedResources) {
-				// if (projectsManager.isManaged(resource)) {
 				if (resource instanceof IFile) {
 					IFile file = (IFile) resource;
 					getChanges(file);
+
+					projectsManager.updateStatus(resource, Status.Modified, true);
 				}
-				// projectsManager.updateStatus(resource, Status.Modified);
-				// }
 			}
 			modifiedResources.clear();
 		} catch (CoreException ex) {
@@ -65,13 +67,12 @@ public class FileModificationManager implements IResourceChangeListener {
 			StringComparer comparer = new StringComparer(file, states[0].getContents());
 			comparer.compare();
 			OperationHistory oh = comparer.getOperationHistory();
-			HandleOperationCommand hoc =  new HandleOperationCommand();
+			HandleOperationCommand hoc = new HandleOperationCommand();
 			CommandArgs args = new CommandArgs();
 			args.putArgument(Constants.IPROJECT, file.getProject());
 			args.putArgument(Constants.OPERATION_HIST, oh);
 			hoc.execute(args);
 		}
 	}
-	
-	
+
 }

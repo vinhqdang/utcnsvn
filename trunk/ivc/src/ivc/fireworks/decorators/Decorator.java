@@ -124,28 +124,28 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 		if (enableDecoration) {
 
 			// the object passed as parameter is an IResource
-			if (object instanceof IResource) {
-				IResource objectResource = (IResource) object;
-				if (objectResource == null)
-					return null;
-
-				// if the resource to be decorated has been remotely deleted
-				// if
-				// (ResourceManager.hasDeletedResource(objectResource.getFullPath()
-				// .toString())) {
-				// get the type of the resource
-				int objectType = objectResource.getType();
-				// decorate only files
-				if (objectType == IResource.FILE) {
-					try {
-						return label + " [shared]";
-
-					} catch (Exception e) {
-						System.out.println("Error decorating image");
-					}
-					// }
-				}
-			}
+			// if (object instanceof IResource) {
+			// IResource objectResource = (IResource) object;
+			// if (objectResource == null)
+			// return null;
+			//
+			// // if the resource to be decorated has been remotely deleted
+			// // if
+			// // (ResourceManager.hasDeletedResource(objectResource.getFullPath()
+			// // .toString())) {
+			// // get the type of the resource
+			// int objectType = objectResource.getType();
+			// // decorate only files
+			// if (objectType == IResource.FILE) {
+			// try {
+			// return label + " [shared]";
+			//
+			// } catch (Exception e) {
+			// System.out.println("Error decorating image");
+			// }
+			// // }
+			// }
+			// }
 		}
 
 		return null;
@@ -245,7 +245,7 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 		// create a new Vector
 		Vector images = new Vector();
 		// add an image key to the vector
-		ImageIcon versioned=new ImageIcon(ImageDescriptorManager.DCORATOR_SHARED, Position.BOTTOM_RIGHT);
+		ImageIcon versioned = new ImageIcon(ImageDescriptorManager.DCORATOR_SHARED, Position.BOTTOM_RIGHT);
 		images.add(versioned);
 		switch (status) {
 		case Added:

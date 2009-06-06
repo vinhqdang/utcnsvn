@@ -8,6 +8,7 @@ import ivc.data.exception.IVCException;
 import ivc.data.operation.Operation;
 import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
+import ivc.repository.IVCRepositoryProvider;
 import ivc.rmi.client.ClientIntf;
 import ivc.rmi.server.ServerIntf;
 import ivc.util.Constants;
@@ -29,6 +30,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.team.core.TeamException;
 
 /**
  * @author danielan
@@ -95,6 +97,13 @@ public class CheckoutCommand implements IRunnableWithProgress {
 
 		// 5. create log files on peers
 		createPeersRemoteFiles();
+
+		try {
+			IVCRepositoryProvider.map(project, IVCRepositoryProvider.ID);
+		} catch (TeamException e) {
+			result = new Result(false, "Error", e);
+		}
+
 		result = new Result(true, "Success", null);
 	}
 
