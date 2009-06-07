@@ -25,7 +25,7 @@ public class StringComparer {
 		this.right = right;
 		this.fileVersion = ProjectsManager.instance().getFileVersion(file);
 		history = new OperationHistory();
-		history.setFilePath(file.getLocation().toOSString());
+		history.setFilePath(file.getProjectRelativePath().toOSString());
 	}
 
 	public void compare() {
