@@ -12,7 +12,6 @@ import ivc.util.FileUtils;
 import ivc.util.NetworkUtils;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.AlreadyBoundException;
@@ -31,6 +30,20 @@ import java.util.Set;
  * @author danielan
  * 
  */
+final class Users {
+	public static HashMap<String, String> users;
+	static {
+		users = new HashMap<String, String>();
+		users.put("a", "a");
+	}
+
+	public static boolean authenticate(String username, String password) {
+		if (!users.containsKey(username.toLowerCase()))
+			return false;
+		return (users.get(username) == password);
+	}
+}
+
 public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 
 	/**
@@ -227,9 +240,8 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	 * @see ivc.rmi.server.ServerIntf#authenticateHost(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public boolean authenticateHost(String userName, String password) throws RemoteException {
-		// TODO Auto-generated method stub
-		return true;
+	public boolean authenticateHost(String username, String password) throws RemoteException {
+		return Users.authenticate(username, password);
 	}
 
 	/*
@@ -302,8 +314,8 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 		Iterator<String> it = hosts.iterator();
 		while (it.hasNext()) {
 			String host = it.next();
-			File f =  new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteCommitedLog + "_"	+ host.replaceAll("\\.", "_"));
-			if (!f.exists()){
+			File f = new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteCommitedLog + "_" + host.replaceAll("\\.", "_"));
+			if (!f.exists()) {
 				try {
 					f.createNewFile();
 				} catch (IOException e) {
@@ -311,11 +323,12 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 					e.printStackTrace();
 				}
 			}
-			OperationHistoryList oldThl =  new OperationHistoryList();
-			if (FileUtils.readObjectFromFile(f.getAbsolutePath()) != null && FileUtils.readObjectFromFile(f.getAbsolutePath()) instanceof OperationHistoryList){
+			OperationHistoryList oldThl = new OperationHistoryList();
+			if (FileUtils.readObjectFromFile(f.getAbsolutePath()) != null
+					&& FileUtils.readObjectFromFile(f.getAbsolutePath()) instanceof OperationHistoryList) {
 				oldThl = (OperationHistoryList) FileUtils.readObjectFromFile(f.getAbsolutePath());
 			}
-			
+
 			oldThl.appendOperationHistoryList(thl);
 			FileUtils.writeObjectToFile(f.getAbsolutePath(), thl);
 		}
