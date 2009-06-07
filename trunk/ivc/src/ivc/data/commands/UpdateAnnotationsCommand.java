@@ -185,6 +185,7 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 			lineNumbers.add(op.getPosition());
 		}
 		ra.setAnnotations(filePath, user, lineNumbers);
+		
 		IFile file = project.getProject().getFile(filePath);
 		if (file.exists()) {
 			try {
