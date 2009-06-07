@@ -87,7 +87,7 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 				monitor.worked(1);
 
 				monitor.setTaskName("Exposing interface");
-				projectPath = projectPath.toLowerCase().replace("\\", "").replace("/", "");
+				projectPath = projectPath.toLowerCase();
 				connectionManager.exposeInterface(projectPath);
 				monitor.worked(1);
 				monitor.setTaskName("Init log files");
