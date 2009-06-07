@@ -45,7 +45,7 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(projectServerPath);
 		String projPath = project.getProject().getLocation().toOSString();
 		if (projPath != null) {
-			File rlufile = new File(projPath + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_" + host.replaceAll(".", "_"));
+			File rlufile = new File(projPath + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_" + host.replaceAll("\\.", "_"));
 			try {
 				rlufile.createNewFile();
 			} catch (IOException e) {
@@ -102,7 +102,7 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 		}
 		// if don't have rul for them ... create one
 		File f = new File(project.getProject().getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
-				+ hostAddress.replaceAll(".", "_"));
+				+ hostAddress.replaceAll("\\.", "_"));
 		if (!f.exists()) {
 			try {
 				f.createNewFile();
@@ -123,7 +123,7 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 	public void updateRUL(String projectServerPath, String sourceHost, OperationHistoryList thl) throws RemoteException {
 		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(projectServerPath);
 		File f = new File(project.getProject().getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
-				+ sourceHost.replaceAll(".", "_"));
+				+ sourceHost.replaceAll("\\.", "_"));
 		if (!f.exists()) {
 			try {
 				f.createNewFile();

@@ -300,7 +300,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 		Iterator<String> it = hosts.iterator();
 		while (it.hasNext()) {
 			String host = it.next();
-			File f =  new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteCommitedLog + "_"	+ host.replaceAll(".", "_"));
+			File f =  new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteCommitedLog + "_"	+ host.replaceAll("\\.", "_"));
 			if (!f.exists()){
 				try {
 					f.createNewFile();
@@ -339,7 +339,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	@Override
 	public OperationHistoryList returnPendingRCL(String projectPath, String hostAddress) throws RemoteException {
 		OperationHistoryList thl = null;
-		File f = new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteCommitedLog + "_" + hostAddress.replaceAll(".", "_"));
+		File f = new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteCommitedLog + "_" + hostAddress.replaceAll("\\.", "_"));
 		if (f.exists()) {
 			thl = (OperationHistoryList) FileUtils.readObjectFromFile(f.getAbsolutePath());
 			f.delete();
@@ -355,7 +355,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	@Override
 	public Map<String, OperationHistoryList> returnPendingRUL(String projectPath, String hostAddress) throws RemoteException {
 		Map<String, OperationHistoryList> thl = new HashMap<String, OperationHistoryList>();
-		File f = new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteUncommitedLog + "_" + hostAddress.replaceAll(".", "_"));
+		File f = new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteUncommitedLog + "_" + hostAddress.replaceAll("\\.", "_"));
 		if (f.exists()) {
 			Object objectFromFile = FileUtils.readObjectFromFile(f.getAbsolutePath());
 			if (objectFromFile != null && objectFromFile instanceof Map) {
@@ -380,7 +380,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 		while (it.hasNext()) {
 			String hostAddress = it.next();
 			File f = new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteUncommitedLog + "_"
-					+ hostAddress.replaceAll(".", "_"));
+					+ hostAddress.replaceAll("\\.", "_"));
 			if (!f.exists()) {
 				try {
 					f.createNewFile();

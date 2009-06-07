@@ -33,10 +33,12 @@ public class UpdateAction extends BaseActionDelegate {
 		try {
 			List<String> files = new ArrayList<String>();
 			IResource[] resources = findAllResources(false);
-			for (int i = 0; i < resources.length; i++) {
-				IResource resource = resources[i];
-				String filePath = resource.getProjectRelativePath().toOSString();
-				files.add(filePath);
+			if (resources != null) {
+				for (int i = 0; i < resources.length; i++) {
+					IResource resource = resources[i];
+					String filePath = resource.getProjectRelativePath().toOSString();
+					files.add(filePath);
+				}
 			}
 			String projName = resources[0].getProject().getName();
 			UpdateCommand uc = new UpdateCommand();
