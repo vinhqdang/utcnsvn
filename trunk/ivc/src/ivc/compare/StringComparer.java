@@ -7,13 +7,19 @@ import ivc.util.StringUtils;
 
 import java.io.InputStream;
 
-import javax.print.attribute.standard.MediaSize.Other;
-
 import org.eclipse.compare.contentmergeviewer.TokenComparator;
 import org.eclipse.compare.rangedifferencer.RangeDifference;
 import org.eclipse.compare.rangedifferencer.RangeDifferencer;
 import org.eclipse.core.resources.IFile;
 
+/**
+ * Class used to compare two contents. For now it is used to compare a file with an other input stream which is currently supplied from the file's
+ * history. The class creates as the result of the comparison a OperationHistory object which contains the operations executed to create the new
+ * contents of the file when we have the old contents
+ * 
+ * @author alexm
+ * 
+ */
 public class StringComparer {
 	private IFile file;
 	private InputStream right;
@@ -28,6 +34,9 @@ public class StringComparer {
 		history.setFilePath(file.getProjectRelativePath().toOSString());
 	}
 
+	/**
+	 * Executes the compare and creates the OperationHistoryObject given the two inputs in the constructor.
+	 */
 	public void compare() {
 
 		try {
@@ -54,14 +63,24 @@ public class StringComparer {
 		}
 	}
 
-	public void addOperations(String value, int operationType, int basePosition) {
+	/**
+	 * Adds the supplied operations for a given token to the OperationHistory
+	 * 
+	 * @param value
+	 *            The string representing the modified tokens
+	 * @param operationType
+	 *            add or delete
+	 * @param basePosition
+	 *            the position where the token starts
+	 */
+	private void addOperations(String value, int operationType, int basePosition) {
 		if (value == null)
 			return;
 		char[] chars = value.toCharArray();
 		if (operationType == Operation.CHARACTER_ADD) {
 			for (int i = 0; i < chars.length; i++) {
 				Operation operation = new Operation(chars[i], operationType);
-				operation.setFilePath(file.getProjectRelativePath().toOSString());				
+				operation.setFilePath(file.getProjectRelativePath().toOSString());
 				operation.setPosition(basePosition + i);
 				operation.setFileVersion(fileVersion);
 				history.addOperation(operation);
@@ -69,7 +88,7 @@ public class StringComparer {
 		} else {
 			for (int i = chars.length - 1; i > -1; i--) {
 				Operation operation = new Operation(chars[i], operationType);
-				operation.setFilePath(file.getProjectRelativePath().toOSString());	
+				operation.setFilePath(file.getProjectRelativePath().toOSString());
 				operation.setFileVersion(fileVersion);
 				operation.setPosition(basePosition + i);
 				history.addOperation(operation);

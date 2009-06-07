@@ -5,7 +5,6 @@ import ivc.plugin.IVCPlugin;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Vector;
 
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.IContentChangeListener;
@@ -16,7 +15,6 @@ import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.IDiffContainer;
 import org.eclipse.compare.structuremergeviewer.IDiffElement;
-import org.eclipse.core.internal.dtree.IComparator;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -25,6 +23,12 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.team.core.TeamException;
 
+/**
+ * Class used to provide input for the IVCCompareEditorInput
+ * 
+ * @author alexm
+ * 
+ */
 public class ResourceEditionNode implements ITypedElement, IStreamContentAccessor, IEncodedStreamContentAccessor, IDiffContainer,
 		IContentChangeNotifier, IEditableContent {
 	public IFile resource;
@@ -46,10 +50,12 @@ public class ResourceEditionNode implements ITypedElement, IStreamContentAccesso
 		return super.equals(other);
 	}
 
+	/*
+	 * Returns the contents of the file
+	 * 
+	 * @see org.eclipse.compare.IStreamContentAccessor#getContents()
+	 */
 	public InputStream getContents() throws CoreException {
-		// if (resource == null || resource.isContainer()) {
-		// return null;
-		// }
 		try {
 			final InputStream[] holder = new InputStream[1];
 			IVCPlugin.plugin.runWithProgress(null, true, new IRunnableWithProgress() {
@@ -87,7 +93,7 @@ public class ResourceEditionNode implements ITypedElement, IStreamContentAccesso
 	 * @see org.eclipse.compare.ITypedElement#getName()
 	 */
 	public String getName() {
-		return resource == null ? "" : resource.getName(); //$NON-NLS-1$
+		return resource == null ? "" : resource.getName();
 	}
 
 	/**
@@ -111,49 +117,43 @@ public class ResourceEditionNode implements ITypedElement, IStreamContentAccesso
 		this.charset = charset;
 	}
 
+	/**
+	 * the following methods are only implemented to support a simple compare between two IFiles
+	 */
 	@Override
 	public void add(IDiffElement arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public IDiffElement[] getChildren() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean hasChildren() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void removeToRoot(IDiffElement arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public int getKind() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public IDiffContainer getParent() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void setParent(IDiffContainer arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
-	// TODO DE AICI
 	@Override
 	public void addContentChangeListener(IContentChangeListener contentChangeListener) {
 
