@@ -71,6 +71,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		// 1.establish connections: connect to server; expose intf; connect to
 		// other peers
 		try {
+			projectPath = projectPath.toLowerCase().replace("\\", "").replace("/", "");
 			connectionManager.initiateConnections(serverAddress, projectPath);
 		} catch (IVCException e) {
 			e.printStackTrace();
