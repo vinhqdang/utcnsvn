@@ -142,7 +142,7 @@ public class OperationHistoryList implements Serializable {
 			// the most recent transformation
 			Operation firstTransf = th.getTransformations().getFirst();
 			if (firstTransf.getOperationType() == Operation.REMOVE_FILE || firstTransf.getOperationType() == Operation.REMOVE_FOLDER) {
-				firstTransf.applyStructureTransformation();
+				firstTransf.applyStructureTransformation(project);
 				return;
 			}
 			String filePath = th.getFilePath();
@@ -159,7 +159,7 @@ public class OperationHistoryList implements Serializable {
 					if (operation.getOperationType() == Operation.CHARACTER_ADD || operation.getOperationType() == Operation.CHARACTER_DELETE) {
 						baseContent = operation.applyContentTransformation(baseContent);
 					} else {
-						operation.applyStructureTransformation();
+						operation.applyStructureTransformation(project);
 						break;
 					}
 				}

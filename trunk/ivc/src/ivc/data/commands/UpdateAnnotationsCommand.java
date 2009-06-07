@@ -174,6 +174,7 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 		Iterator<Operation> it = oh.getTransformations().descendingIterator();
 		while (it.hasNext()) {
 			Operation op = it.next();
+			Integer position = op.getPosition();
 			lineNumbers.add(op.getPosition());
 		}
 		ra.setAnnotations(filePath, user, lineNumbers);
