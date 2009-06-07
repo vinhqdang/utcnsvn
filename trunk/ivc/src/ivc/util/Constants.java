@@ -55,6 +55,7 @@ public class Constants {
 	public static final String OPERATION_HIST_LIST1 = "operation_hist1";
 	public static final String OPERATION_HIST_LIST2 = "operation_hist2";
 	public static final String HOST_ADDRESS = "hostAddress";
+	public static final String ISCOMMIT = "isCommit";
 	
 	
 	
