@@ -47,10 +47,12 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
+@SuppressWarnings("unchecked")
 public class ResourceSelectionTree extends Composite {
 	private Tree tree;
 	private int mode;
 	private IResource[] resources;
+
 	private ArrayList resourceList;
 	private Set unversionedResourceList;
 	private IContainer[] compressedFolders;
@@ -61,8 +63,6 @@ public class ResourceSelectionTree extends Composite {
 	private TreeViewer treeViewer;
 	private LabelProvider labelProvider;
 	private String label;
-	// private Button selectAllButton;
-	// private Button deselectAllButton;
 	private Action treeAction;
 	private Action flatAction;
 	private Action compressedAction;
@@ -141,39 +141,12 @@ public class ResourceSelectionTree extends Composite {
 		ViewForm viewerPane = new ViewForm(this, SWT.BORDER | SWT.FLAT);
 		viewerPane.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
-		// Composite treeGroup = new Composite(viewerPane, SWT.NONE);
-		//		
-		// GridLayout treeLayout = new GridLayout();
-		// treeLayout.marginWidth = 0;
-		// treeLayout.verticalSpacing = 1;
-		// treeLayout.horizontalSpacing = 0;
-		// treeLayout.numColumns = 1;
-		// treeLayout.marginHeight = 0;
-		// treeGroup.setLayout(treeLayout);
-		// gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
-		// treeGroup.setLayoutData(gridData);
-
-		// Composite toolbarGroup = new Composite(treeGroup, SWT.NONE);
-		// GridLayout toolbarGroupLayout = new GridLayout();
-		// toolbarGroupLayout.numColumns = 2;
-		// toolbarGroupLayout.marginWidth = 0;
-		// toolbarGroupLayout.marginHeight = 0;
-		// toolbarGroup.setLayout(toolbarGroupLayout);
-		// gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
-		// toolbarGroup.setLayoutData(gridData);
-
 		CLabel toolbarLabel = new CLabel(viewerPane, SWT.NONE) {
 			public Point computeSize(int wHint, int hHint, boolean changed) {
 				return super.computeSize(wHint, Math.max(24, hHint), changed);
 			}
 		};
 
-		// Label toolbarLabel = new Label(viewerPane, SWT.NONE);
-		// gridData = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
-		// gridData.horizontalIndent = 3;
-		// gridData.horizontalAlignment = SWT.BEGINNING;
-		// gridData.verticalAlignment = SWT.CENTER;
-		// toolbarLabel.setLayoutData(gridData);
 		if (label != null) {
 			toolbarLabel.setText(label);
 		}
@@ -184,20 +157,7 @@ public class ResourceSelectionTree extends Composite {
 			buttonGroupColumns = buttonGroupColumns + toolbarControlCreator.getControlCount();
 		}
 
-		// Composite buttonGroup = new Composite(toolbarGroup, SWT.NONE);
-		// GridLayout buttonLayout = new GridLayout();
-		// buttonLayout.numColumns = buttonGroupColumns;
-		// buttonLayout.marginHeight = 0;
-		// buttonLayout.marginWidth = 0;
-		// buttonGroup.setLayout(buttonLayout);
-		// gridData = new GridData(GridData.HORIZONTAL_ALIGN_END);
-		// buttonGroup.setLayoutData(gridData);
-
 		ToolBar toolbar = new ToolBar(viewerPane, SWT.FLAT);
-		// GridLayout toolbarLayout = new GridLayout();
-		// toolbarLayout.numColumns = 3;
-		// toolbar.setLayout(toolbarLayout);
-		// toolbar.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		viewerPane.setTopCenter(toolbar);
 
@@ -208,7 +168,7 @@ public class ResourceSelectionTree extends Composite {
 			toolbarManager.add(new Separator());
 		}
 
-		flatAction = new Action("Flat list", Action.AS_CHECK_BOX) { //$NON-NLS-1$
+		flatAction = new Action("Flat list", Action.AS_CHECK_BOX) {
 			public void run() {
 				mode = MODE_FLAT;
 				settings.put(MODE_SETTING, MODE_FLAT);
@@ -220,7 +180,7 @@ public class ResourceSelectionTree extends Composite {
 		flatAction.setImageDescriptor(ImageDescriptorManager.getImageDescriptor(ImageDescriptorManager.TREE_FLAT));
 		toolbarManager.add(flatAction);
 
-		treeAction = new Action("Tree", Action.AS_CHECK_BOX) { //$NON-NLS-1$
+		treeAction = new Action("Tree", Action.AS_CHECK_BOX) {
 			public void run() {
 				mode = MODE_TREE;
 				settings.put(MODE_SETTING, MODE_TREE);
@@ -232,7 +192,7 @@ public class ResourceSelectionTree extends Composite {
 		treeAction.setImageDescriptor(ImageDescriptorManager.getImageDescriptor(ImageDescriptorManager.TREE_AFFECTED_PATHS));
 		toolbarManager.add(treeAction);
 
-		compressedAction = new Action("Compressed", Action.AS_CHECK_BOX) { //$NON-NLS-1$
+		compressedAction = new Action("Compressed", Action.AS_CHECK_BOX) {
 			public void run() {
 				mode = MODE_COMPRESSED_FOLDERS;
 				settings.put(MODE_SETTING, MODE_COMPRESSED_FOLDERS);
@@ -310,19 +270,20 @@ public class ResourceSelectionTree extends Composite {
 		treeViewer.getTree().setMenu(menu);
 	}
 
+	@SuppressWarnings("deprecation")
 	void setAllChecked(boolean state) {
 		((CheckboxTreeViewer) treeViewer).setAllChecked(state);
 	}
 
 	protected void fillTreeMenu(IMenuManager menuMgr) {
 		if (checkbox) {
-			Action selectAllAction = new Action("ResourceSelectionTree.SelectAll") { //$NON-NLS-1$
+			Action selectAllAction = new Action("Select All") {
 				public void run() {
 					setAllChecked(true);
 				}
 			};
 			menuMgr.add(selectAllAction);
-			Action deselectAllAction = new Action("ResourceSelectionTree.DeselectAll") { //$NON-NLS-1$
+			Action deselectAllAction = new Action("Deselect All") {
 				public void run() {
 					setAllChecked(false);
 				}
@@ -330,13 +291,13 @@ public class ResourceSelectionTree extends Composite {
 			menuMgr.add(deselectAllAction);
 			if (showIncludeUnversionedButton() && includeUnversioned) {
 				menuMgr.add(new Separator());
-				Action selectUnversionedAction = new Action("ResourceSelectionTree.SelectUnversioned") { //$NON-NLS-1$
+				Action selectUnversionedAction = new Action("Select Unversioned") {
 					public void run() {
 						checkUnversioned(tree.getItems(), true);
 					}
 				};
 				menuMgr.add(selectUnversionedAction);
-				Action deselectUnversionedAction = new Action("ResourceSelectionTree.DeselectUnversioned") { //$NON-NLS-1$
+				Action deselectUnversionedAction = new Action("Deselect Unversioned") {
 					public void run() {
 						checkUnversioned(tree.getItems(), false);
 					}
@@ -346,7 +307,7 @@ public class ResourceSelectionTree extends Composite {
 		}
 		menuMgr.add(new Separator());
 		if (mode != MODE_FLAT) {
-			Action expandAllAction = new Action("SyncAction.expandAll") { //$NON-NLS-1$
+			Action expandAllAction = new Action("Expand All") {
 				public void run() {
 					treeViewer.expandAll();
 				}
@@ -354,7 +315,7 @@ public class ResourceSelectionTree extends Composite {
 			menuMgr.add(expandAllAction);
 		}
 		if (showRemoveFromViewAction && !checkbox && !treeViewer.getSelection().isEmpty()) {
-			Action removeAction = new Action("ResourceSelectionTree.remove") { //$NON-NLS-1$
+			Action removeAction = new Action("Remove") {
 				public void run() {
 					removeFromView();
 				}
@@ -368,7 +329,7 @@ public class ResourceSelectionTree extends Composite {
 		if (removeFromViewValidator != null) {
 			if (!removeFromViewValidator.canRemove(resourceList, selection)) {
 				if (removeFromViewValidator.getErrorMessage() != null) {
-					MessageDialog.openError(getShell(), "ResourceSelectionTree.remove", removeFromViewValidator.getErrorMessage()); //$NON-NLS-1$
+					MessageDialog.openError(getShell(), "ResourceSelectionTree.remove", removeFromViewValidator.getErrorMessage());
 				}
 				return;
 			}
@@ -638,108 +599,18 @@ public class ResourceSelectionTree extends Composite {
 					image = Decorator.getImage(image, statusMap.get(element));
 				}
 				return image;
-				// } else {
-				// Image image = workbenchLabelProvider.getImage(element);
-				// return compareConfiguration.getImage(image, Differencer.NO_CHANGE);
-				// }
+
 			} else {
 				image = workbenchLabelProvider.getImage(element);
 			}
-			// }
+
 			return image;
 		}
 	}
 
-	// public String getText(Object element) {
-	// // if (statusMap == null)
-	// // return workbenchLabelProvider.getText(element);
-	// String text = null;
-	// IResource resource = (IResource) element;
-	// if (mode == MODE_FLAT)
-	//				text = resource.getName() + " - " + resource.getFullPath().toString(); //$NON-NLS-1$
-	// else if (mode == MODE_COMPRESSED_FOLDERS) {
-	// if (element instanceof IContainer) {
-	// IContainer container = (IContainer) element;
-	// text = container.getFullPath().makeRelative().toString();
-	// } else
-	// text = resource.getName();
-	// } else {
-	// text = resource.getName();
-	// }
-	// return text;
-	// }
-	//
-	// }
+	private class ResourceComparator implements Comparator<IResource> {
+		public int compare(IResource resource0, IResource resource1) {
 
-	// private class ResourceSelectionDiff implements IThreeWayDiff {
-	// private IResource resource;
-	//
-	// public ResourceSelectionDiff(IResource resource) {
-	// this.resource = resource;
-	// }
-	//
-	// public int getDirection() {
-	// return IThreeWayDiff.OUTGOING;
-	// }
-	//
-	// public ITwoWayDiff getLocalChange() {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
-	//
-	// public ITwoWayDiff getRemoteChange() {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
-	//
-	// public int getKind() {
-	// int kind = IDiff.NO_CHANGE;
-	// if (syncInfoSet != null) {
-	// SyncInfo syncInfo = syncInfoSet.getSyncInfo(resource);
-	// if (syncInfo != null) {
-	// int change = SyncInfo.getChange(syncInfo.getKind());
-	// if (change == SyncInfo.CONFLICTING)
-	// kind = IThreeWayDiff.CONFLICTING;
-	// else if (change == SyncInfo.CHANGE)
-	// kind = IDiff.CHANGE;
-	// else if (change == SyncInfo.ADDITION)
-	// kind = IDiff.ADD;
-	// else if (change == SyncInfo.DELETION)
-	// kind = IDiff.REMOVE;
-	// }
-	// } else {
-	// Status statusKind = (Status) statusMap.get(resource);
-	// if (statusKind == null)
-	// kind = IDiff.NO_CHANGE;
-	// else if (statusKind.equals(Status.Conflicted))
-	// kind = IThreeWayDiff.CONFLICTING;
-	// else if (statusKind.equals(Status.Modified))
-	// kind = IDiff.CHANGE;
-	// else if (statusKind.equals(Status.Added))
-	// kind = IDiff.ADD;
-	// else if (statusKind.equals(Status.Deleted))
-	// kind = IDiff.REMOVE;
-	// }
-	// if (resource instanceof IContainer)
-	// return IDiff.REMOVE;
-	// return kind;
-	// }
-	//
-	// public IPath getPath() {
-	// return resource.getFullPath();
-	// }
-	//
-	// public String toDiffString() {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
-	//
-	// }
-
-	private class ResourceComparator implements Comparator {
-		public int compare(Object obj0, Object obj1) {
-			IResource resource0 = (IResource) obj0;
-			IResource resource1 = (IResource) obj1;
 			return resource0.getFullPath().toOSString().compareTo(resource1.getFullPath().toOSString());
 		}
 	}
@@ -751,7 +622,7 @@ public class ResourceSelectionTree extends Composite {
 	}
 
 	public static interface IRemoveFromViewValidator {
-		public boolean canRemove(ArrayList resourceList, IStructuredSelection selection);
+		public boolean canRemove(ArrayList<IResource> resourceList, IStructuredSelection selection);
 
 		public String getErrorMessage();
 	}
