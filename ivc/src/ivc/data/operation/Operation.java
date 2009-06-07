@@ -1,63 +1,68 @@
 package ivc.data.operation;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.Reader;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.UUID;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+
 public class Operation implements Serializable {
-	
+
 	/**
 	 * used for serialization
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	public static final int CHARACTER_DELETE = -1;
 	public static final int CHARACTER_ADD = 1;
-	
+
 	public static final int ADD_FILE = 2;
 	public static final int ADD_FOLDER = 3;
-	
+
 	public static final int REMOVE_FILE = -2;
 	public static final int REMOVE_FOLDER = -3;
-	
-	
+
 	private String userID;
-	
+
 	private String filePath;
-	
+
 	/*
-	 * Version of file on which this transformation took place 
-	 * Mandatory to be set for each transformation
+	 * Version of file on which this transformation took place Mandatory to be set for each transformation
 	 */
 	private Integer fileVersion;
-	
+
 	private Date date;
-	
+
 	private Integer position;
-	
+
 	private Character chr;
-	
+
 	private Boolean commited;
-	
+
 	private Integer sid;
-	
+
 	/**
-	 *  DELETE / INSERT
+	 * DELETE / INSERT
 	 */
 	private Integer operationType;
-	
-	public Operation(){
+
+	public Operation() {
 		date = new Date();
 	}
-	public Operation(Character chr,int type)  {
+
+	public Operation(Character chr, int type) {
 		date = new Date();
-		this.chr=chr;
-		this.operationType=type;
+		this.chr = chr;
+		this.operationType = type;
 	}
-	
 
 	/**
 	 * @return the userID
@@ -67,7 +72,8 @@ public class Operation implements Serializable {
 	}
 
 	/**
-	 * @param userID the userID to set
+	 * @param userID
+	 *            the userID to set
 	 */
 	public void setUserID(String userID) {
 		this.userID = userID;
@@ -81,13 +87,13 @@ public class Operation implements Serializable {
 	}
 
 	/**
-	 * @param filePath the filePath to set
+	 * @param filePath
+	 *            the filePath to set
 	 */
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
-	
-	
+
 	/**
 	 * @return the commited
 	 */
@@ -96,7 +102,8 @@ public class Operation implements Serializable {
 	}
 
 	/**
-	 * @param commited the commited to set
+	 * @param commited
+	 *            the commited to set
 	 */
 	public void setCommited(Boolean commited) {
 		this.commited = commited;
@@ -110,7 +117,8 @@ public class Operation implements Serializable {
 	}
 
 	/**
-	 * @param fileVersion the fileVersion to set
+	 * @param fileVersion
+	 *            the fileVersion to set
 	 */
 	public void setFileVersion(Integer fileVersion) {
 		this.fileVersion = fileVersion;
@@ -124,7 +132,8 @@ public class Operation implements Serializable {
 	}
 
 	/**
-	 * @param date the date to set
+	 * @param date
+	 *            the date to set
 	 */
 	public void setDate(Date date) {
 		this.date = date;
@@ -138,7 +147,8 @@ public class Operation implements Serializable {
 	}
 
 	/**
-	 * @param position the position to set
+	 * @param position
+	 *            the position to set
 	 */
 	public void setPosition(Integer position) {
 		this.position = position;
@@ -152,7 +162,8 @@ public class Operation implements Serializable {
 	}
 
 	/**
-	 * @param text the text to set
+	 * @param text
+	 *            the text to set
 	 */
 	public void setText(Character chr) {
 		this.chr = chr;
@@ -166,15 +177,13 @@ public class Operation implements Serializable {
 	}
 
 	/**
-	 * @param operationType the operationType to set
+	 * @param operationType
+	 *            the operationType to set
 	 */
 	public void setOperationType(Integer operationType) {
 		this.operationType = operationType;
 	}
-	
-	
-	
-	
+
 	/**
 	 * @return the sid
 	 */
@@ -182,43 +191,81 @@ public class Operation implements Serializable {
 		return sid;
 	}
 
-
 	/**
-	 * @param sid the sid to set
+	 * @param sid
+	 *            the sid to set
 	 */
 	public void setSid(Integer sid) {
 		this.sid = sid;
 	}
 
-
-	public void applyStructureTransformation(){
-		
+	public void applyStructureTransformation(IProject project) {
+		switch (operationType) {
+		case ADD_FILE:
+			IFile addfile = project.getFile(filePath);
+			if (!addfile.exists()){
+				try {
+					addfile.create(new ByteArrayInputStream(new byte[0]), IResource.FORCE, null);
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			break;
+		case ADD_FOLDER:
+			IFolder addfolder = project.getFolder(filePath);
+			if (!addfolder.exists()){
+				try {
+					addfolder.create(IResource.FORCE,true,null);
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			break;
+		case REMOVE_FILE:
+			IFile remfile = project.getFile(filePath);
+			if (remfile.exists()){
+				try {
+					remfile.delete(IResource.FORCE, null);
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			break;
+		case REMOVE_FOLDER:
+			IFolder remfolder = project.getFolder(filePath);
+			if (remfolder.exists()){
+				try {
+					remfolder.delete(IResource.FORCE, null);
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			break;
+		default:
+			break;
+		}
 	}
-	
-	public StringBuffer applyContentTransformation(StringBuffer content){
-		//TODO 1. apply transformation
-//		String[] lines = content.toString().split("\n");		
-//		if (lines.length > 0 && lines.length > line){
-//			StringBuffer lineStr = new StringBuffer(lines[line]);
-//			switch (operationType) {
-//			case CHARACTER_ADD:
-//				lineStr.insert(position.intValue(), text);
-//				break;
-//			case CHARACTER_DELETE:
-//				lineStr.deleteCharAt(position);
-//				break;
-//			default:
-//				break;
-//			}
-//			lines[line] = lineStr.toString();
-//		}
-//		return new StringBuffer(lines.toString());
+
+	public StringBuffer applyContentTransformation(StringBuffer content) {
+		switch (operationType) {
+		case CHARACTER_ADD:
+			content = content.insert(position.intValue(), chr);
+			break;
+		case CHARACTER_DELETE:
+			content.deleteCharAt(position);
+			break;
+		default:
+			break;
+		}
 		return content;
 	}
 
-
-	public Operation includeOperation(Operation op){
-		Operation newOp = new Operation();		
+	public Operation includeOperation(Operation op) {
+		Operation newOp = new Operation();
 		newOp.setCommited(op.getCommited());
 		newOp.setDate(op.getDate());
 		newOp.setFilePath(op.getFilePath());
@@ -264,9 +311,8 @@ public class Operation implements Serializable {
 		return newOp;
 	}
 
-		
-	public Operation excludeOperation(Operation op){
-		Operation newOp = new Operation();		
+	public Operation excludeOperation(Operation op) {
+		Operation newOp = new Operation();
 		newOp.setCommited(op.getCommited());
 		newOp.setDate(op.getDate());
 		newOp.setFilePath(op.getFilePath());
@@ -275,7 +321,7 @@ public class Operation implements Serializable {
 		newOp.setText(op.getChr());
 		newOp.setUserID(op.getUserID());
 		newOp.setSid(op.getSid());
-		
+
 		// the positions of the operations
 		int posOther = op.getPosition();
 
@@ -309,12 +355,8 @@ public class Operation implements Serializable {
 				newOp.setPosition(position + 1);
 			}
 		}
-		
-		
+
 		return newOp;
 	}
-	
-	
-	
 
 }

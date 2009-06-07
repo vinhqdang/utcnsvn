@@ -103,7 +103,7 @@ public class UpdateCommand implements CommandIntf {
 								}
 							} else {
 								// handle project structure modifications
-								tr.applyStructureTransformation();
+								tr.applyStructureTransformation(project);
 							}
 						}
 						// update file version
