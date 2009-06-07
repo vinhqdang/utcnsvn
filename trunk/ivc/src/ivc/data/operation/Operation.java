@@ -274,6 +274,7 @@ public class Operation implements Serializable {
 		newOp.setText(op.getChr());
 		newOp.setUserID(op.getUserID());
 		newOp.setSid(op.getSid());
+		newOp.setPosition(position);
 
 		// the positions of the operations
 		int posOther = op.getPosition();
@@ -321,6 +322,7 @@ public class Operation implements Serializable {
 		newOp.setText(op.getChr());
 		newOp.setUserID(op.getUserID());
 		newOp.setSid(op.getSid());
+		newOp.setPosition(position);
 
 		// the positions of the operations
 		int posOther = op.getPosition();
