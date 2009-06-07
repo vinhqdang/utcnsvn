@@ -92,14 +92,18 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 			return L0;
 		}
 		L0 = L;
-		int size = L0.getTransformations().size();
-		for (int i = 0; i < size; i++) {
-			for (int j = i+1; j < size; j++) {
-				Operation opi = L0.getTransformations().get(i);
-				Operation opj = L0.getTransformations().get(j);
-				Operation et = opi.excludeOperation(opj);
-				L0.setOperation(i, et);
+		try {
+			int size = L0.getTransformations().size();
+			for (int i = 0; i < size; i++) {
+				for (int j = i + 1; j < size; j++) {
+					Operation opi = L0.getTransformations().get(i);
+					Operation opj = L0.getTransformations().get(j);
+					Operation et = opi.excludeOperation(opj);
+					L0.setOperation(i, et);
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return L0;
 	}
@@ -149,15 +153,15 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 	 * @param hostAddress
 	 */
 	private void computeUncommitedAnnotations(OperationHistory rl, String hostAddress) {
- 		OperationHistory arl = new OperationHistory();
+		OperationHistory arl = new OperationHistory();
 		String filePath = rl.getFilePath();
 		OperationHistory rulOh = rul.getOperationHistForFile(filePath);
 		if (causallyReady(rl)) {
 			arl = rl.excludeOperations(rulOh);
 			if (rulOh != null && !rulOh.getTransformations().isEmpty()) {
-				if (rl.getTransformations().getLast().getFileVersion() != rulOh.getTransformations().getLast().getFileVersion()) {
+				if (rl.getTransformations().getLast().getFileVersion().intValue() != rulOh.getTransformations().getLast().getFileVersion().intValue()) {
 					OperationHistory diff = getVersionDiffs(rl, rulOh);
-					if (rl.getTransformations().getLast().getFileVersion() < rulOh.getTransformations().getLast().getFileVersion()) {
+					if (rl.getTransformations().getLast().getFileVersion().intValue() < rulOh.getTransformations().getLast().getFileVersion().intValue()) {
 						arl = arl.includeOperations(diff);
 					} else {
 						arl = arl.excludeOperations(diff);
@@ -195,8 +199,8 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 	private OperationHistory getVersionDiffs(OperationHistory oh1, OperationHistory oh2) {
 		OperationHistory newOh = new OperationHistory();
 		newOh.setFilePath(oh1.getFilePath());
-		int min = oh1.getTransformations().getLast().getFileVersion();
-		int max = oh2.getTransformations().getLast().getFileVersion();
+		int min = oh1.getTransformations().getLast().getFileVersion().intValue();
+		int max = oh2.getTransformations().getLast().getFileVersion().intValue();
 		Iterator<Operation> it = oh1.getTransformations().descendingIterator();
 		if (min > max) {
 			int aux = min;
