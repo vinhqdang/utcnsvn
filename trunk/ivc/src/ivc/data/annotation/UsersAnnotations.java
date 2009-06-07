@@ -18,10 +18,34 @@ public class UsersAnnotations {
 		annotations.put(user, lineNumbers);
 	}
 
+	public void addAnnotation(String user, Integer lineNumber) {
+		if (!annotations.containsKey(user)) {
+			ArrayList<Integer> lines = new ArrayList<Integer>();
+			lines.add(lineNumber);
+			annotations.put(user, lines);
+		} else {
+			if (!annotations.get(user).contains(lineNumber)) {
+				annotations.get(user).add(lineNumber);
+			}
+		}
+	}
+
 	public void clearAnnotations(String user) {
 		if (annotations.containsKey(user)) {
 			annotations.remove(user);
 		}
+	}
+
+	public List<Integer> getPositions() {
+		ArrayList<Integer> lines = new ArrayList<Integer>();
+		for (String user : annotations.keySet()) {
+			for (int line : annotations.get(user)) {
+				if (!lines.contains(line)) {
+					lines.add(line);
+				}
+			}
+		}
+		return lines;
 	}
 
 	public HashMap<Integer, ArrayList<String>> getAnnotationsUsersForAllLines() {

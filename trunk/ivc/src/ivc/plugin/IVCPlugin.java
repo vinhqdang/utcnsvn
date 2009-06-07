@@ -6,7 +6,6 @@ import ivc.data.commands.StopCommand;
 import ivc.fireworks.decorators.Decorator;
 import ivc.listeners.FileModificationManager;
 import ivc.listeners.ResourceChangedListener;
-import ivc.manager.ProjectsManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -14,7 +13,6 @@ import java.net.URL;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -55,6 +53,7 @@ public class IVCPlugin extends AbstractUIPlugin {
 		FileModificationManager modifications = new FileModificationManager();
 		workspace.addResourceChangeListener(changeListener, IResourceChangeEvent.PRE_BUILD);
 		workspace.addResourceChangeListener(modifications, IResourceChangeEvent.PRE_BUILD);
+
 		Decorator.enableDecoration = true;
 
 		// call start command for establishing connections with the other peers

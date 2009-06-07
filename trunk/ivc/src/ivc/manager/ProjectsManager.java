@@ -123,7 +123,7 @@ public class ProjectsManager {
 		}
 		return null;
 	}
-
+	
 	public IVCProject getIVCProjectByServerPath(String projectServerPath) {
 		Iterator<String> it = projects.keySet().iterator();
 		while (it.hasNext()) {
