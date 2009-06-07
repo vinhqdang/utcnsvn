@@ -18,15 +18,15 @@ public class IVCRepositoryProvider extends RepositoryProvider {
 	public void configureProject() throws CoreException {
 		System.out.println("Starting project configuration");
 		IProject project = getProject();
-		ProjectsManager.instance().tryAddProject(project);
 		configureTeamPrivateResource(project);
+		ProjectsManager.instance().tryAddProject(project);
 	}
 
 	private void configureTeamPrivateResource(IProject project) {
 		try {
 			project.accept(new IResourceVisitor() {
 				public boolean visit(IResource resource) throws CoreException {
-					if ((resource.getType() == IResource.FOLDER) && (resource.getName().equals("bin")) && (!resource.isTeamPrivateMember())) {
+					if ((resource.getType() == IResource.FOLDER) && ((resource.getName().equals("bin")) || (resource.getName().equals(".ivc")))) {
 						resource.setTeamPrivateMember(true);
 						return true;
 						// TODO setdefault values

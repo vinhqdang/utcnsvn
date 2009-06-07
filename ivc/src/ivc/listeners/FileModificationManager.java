@@ -56,7 +56,7 @@ public class FileModificationManager implements IResourceChangeListener {
 				}
 			}
 			modifiedResources.clear();
-		} catch (CoreException ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
