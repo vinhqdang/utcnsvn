@@ -3,6 +3,7 @@ package ivc.data.annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class UsersAnnotations {
 	private HashMap<String, List<Integer>> annotations;
@@ -64,7 +65,7 @@ public class UsersAnnotations {
 		return result;
 	}
 
-	public String[] getUsers() {
-		return (String[]) annotations.keySet().toArray();
+	public Set<String> getUsers() {
+		return annotations.keySet();
 	}
 }

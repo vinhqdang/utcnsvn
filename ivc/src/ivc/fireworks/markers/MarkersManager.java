@@ -38,15 +38,15 @@ public class MarkersManager {
 
 	public static void updateMarkers(IFile file) throws CoreException {
 		file.deleteMarkers(IVC_MARKER, true, 1);
-		
-			if (ProjectsManager.instance().getStatus(file).compareTo(Status.Added) > 0) {
-				try {
-					for (int line : getLines(file)) {
-						addMarker(file, line);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				
+
+		if (ProjectsManager.instance().getStatus(file).compareTo(Status.Added) > 0) {
+			try {
+				for (int line : getLines(file)) {
+					addMarker(file, line);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+
 			}
 		}
 	}
@@ -54,8 +54,13 @@ public class MarkersManager {
 	private static List<Integer> getLines(IFile file) throws CoreException {
 		StringBuffer sBuffer = FileUtils.InputStreamToStringBuffer(file.getContents());
 		List<Integer> lines = new ArrayList<Integer>();
-		for (int i : getPositions(file)) {
-			int line = sBuffer.substring(0, i).lastIndexOf("\n");
+		List<Integer> positions = getPositions(file);
+		for (int i : positions) {
+			int line = 0;
+			if (i >= positions.size())
+				line = sBuffer.lastIndexOf("\n");
+			else
+				line = sBuffer.substring(0, i).lastIndexOf("\n");
 			if (!lines.contains(line)) {
 				lines.add(line);
 			}
