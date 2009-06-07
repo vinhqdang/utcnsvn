@@ -12,6 +12,7 @@ import java.util.LinkedList;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 
 /**
@@ -64,7 +65,6 @@ public class OperationHistoryList implements Serializable {
 		return null;
 	}
 
-	
 	public OperationHistoryList appendOperationHistory(OperationHistory oh) {
 		boolean isnew = true;
 		Iterator<OperationHistory> it = this.operations.iterator();
@@ -170,6 +170,12 @@ public class OperationHistoryList implements Serializable {
 			}
 
 		}
+		try {
+			project.refreshLocal(IResource.DEPTH_INFINITE, null);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public OperationHistoryList includeOperationHistoryList(OperationHistoryList ohl) {
