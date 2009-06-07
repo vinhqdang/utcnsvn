@@ -5,6 +5,7 @@ import ivc.data.BaseVersion;
 import ivc.data.exception.Exceptions;
 import ivc.data.exception.IVCException;
 import ivc.manager.ProjectsManager;
+import ivc.repository.IVCRepositoryProvider;
 import ivc.rmi.server.ServerIntf;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
@@ -26,6 +27,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.team.core.RepositoryProvider;
+import org.eclipse.team.core.TeamException;
 
 public class ShareProjectCommand implements IRunnableWithProgress {
 	private IProject project;
@@ -103,8 +106,11 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 
 				// 5.update gui
 				// TODO 2.update intf on sharing project
-				ProjectsManager.instance().tryAddProject(project);
-
+				try {
+					RepositoryProvider.map(project, IVCRepositoryProvider.ID);
+				} catch (TeamException e) {
+					throw new IVCException(e);
+				}
 				monitor.worked(1);
 				monitor.setTaskName("Finished");
 				monitor.done();

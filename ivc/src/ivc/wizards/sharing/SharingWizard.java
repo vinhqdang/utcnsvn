@@ -61,7 +61,7 @@ public class SharingWizard extends Wizard implements IConfigurationWizard {
 		args.putArgument("password", sharingWizardPage.getPassword());
 		ShareProjectCommand command = new ShareProjectCommand(args);
 		try {
-			//fork, cancelable, process
+			// fork, cancelable, process
 			this.getContainer().run(false, true, command);
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
@@ -72,13 +72,7 @@ public class SharingWizard extends Wizard implements IConfigurationWizard {
 			setErrorMessage(e.getMessage());
 			return false;
 		}
-
 		if (command.getResult().isSuccess()) {
-			try {
-				RepositoryProvider.map(project, IVCRepositoryProvider.ID);
-			} catch (TeamException e) {
-				e.printStackTrace();
-			}
 			return true;
 		} else {
 			setErrorMessage(command.getResult().getMessage());

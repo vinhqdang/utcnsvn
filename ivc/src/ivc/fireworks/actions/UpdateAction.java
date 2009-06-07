@@ -52,10 +52,6 @@ public class UpdateAction extends BaseActionDelegate {
 		System.out.println("Update successfull.");
 	}
 
-	@Override
-	public void selectionChanged(IAction arg0, ISelection arg1) {
-		// TODO Auto-generated method stub
-	}
 
 	/*
 	 * (non-Javadoc)

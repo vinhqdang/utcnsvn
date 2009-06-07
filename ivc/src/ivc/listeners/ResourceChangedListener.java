@@ -39,8 +39,11 @@ public class ResourceChangedListener implements IResourceChangeListener {
 					case IResourceDelta.ADDED: {
 						resource = delta.getResource();
 						if (IVCRepositoryProvider.isShared(resource.getProject())) {
-
-							// toBeRefreshed.add(resource.getParent());
+							if (projectsManager.isManaged(resource)) {
+								if (projectsManager.getStatus(resource).equals(Status.Commited))
+									return true;
+							}
+							toBeRefreshed.add(resource.getParent());
 							if (projectsManager.getFileVersion(resource) != 0) {
 								projectsManager.setDefaultStatus(resource);
 							}
@@ -86,7 +89,11 @@ public class ResourceChangedListener implements IResourceChangeListener {
 
 	private void refreshResources(ArrayList<IResource> resources) {
 		for (IResource resource : resources) {
-			projectsManager.updateStatus(resource, Status.Modified, true);
+			try {
+				projectsManager.updateStatus(resource, Status.Modified, true);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
