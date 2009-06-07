@@ -9,6 +9,7 @@ import ivc.data.Peer;
 import ivc.data.operation.Operation;
 import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
+import ivc.listeners.FileModificationManager;
 import ivc.rmi.client.ClientIntf;
 import ivc.rmi.server.ServerIntf;
 import ivc.util.Constants;
@@ -118,9 +119,12 @@ public class UpdateCommand implements CommandIntf {
 			}
 			ivcProject.setCurrentVersion(currentLocalVersion);
 			try {
+				FileModificationManager.ignoreModifications = true;
 				project.refreshLocal(IResource.DEPTH_INFINITE, null);
-			} catch (CoreException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
+			} finally {
+				FileModificationManager.ignoreModifications = false;
 			}
 		} catch (RemoteException e1) {
 			// TODO Auto-generated catch block

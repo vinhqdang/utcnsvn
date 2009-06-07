@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 
 public class FileModificationManager implements IResourceChangeListener {
+	public static boolean ignoreModifications = false;
 	private ProjectsManager projectsManager = ProjectsManager.instance();
 	private List<IResource> modifiedResources = new ArrayList<IResource>();
 	private int WATCHED_CHANGES = IResourceDelta.CONTENT;
@@ -37,7 +38,9 @@ public class FileModificationManager implements IResourceChangeListener {
 						if (resource.getType() == IResource.FILE) {
 							if (delta.getKind() == IResourceDelta.CHANGED && resource.exists()) {
 								if ((delta.getFlags() & WATCHED_CHANGES) != 0) {
-									modifiedResources.add(resource);
+									if (!ignoreModifications) {
+										modifiedResources.add(resource);
+									}
 									return true;
 								}
 							}
