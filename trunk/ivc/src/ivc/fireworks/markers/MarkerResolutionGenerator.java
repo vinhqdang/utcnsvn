@@ -1,6 +1,7 @@
 package ivc.fireworks.markers;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import ivc.data.IVCProject;
 import ivc.manager.ProjectsManager;
@@ -16,7 +17,7 @@ public class MarkerResolutionGenerator implements IMarkerResolutionGenerator {
 	public IMarkerResolution[] getResolutions(IMarker marker) {
 		IFile file = (IFile) marker.getResource();
 		IVCProject proj = ProjectsManager.instance().getIVCProjectByName(file.getProject().getName());
-		String[] users = proj.getUsersAnnotations(file).getUsers();
+		Set<String> users = proj.getUsersAnnotations(file).getUsers();
 		ArrayList<QuickFix> fixes = new ArrayList<QuickFix>();
 		for (String user : users) {
 			fixes.add(new QuickFix("Merge with " + user, "Open a difference window to show the differences in the file.", user));
