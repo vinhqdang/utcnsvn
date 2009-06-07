@@ -97,9 +97,12 @@ public class CheckoutCommand implements IRunnableWithProgress {
 
 		// 5. create log files on peers
 		createPeersRemoteFiles();
-		
-		
-
+		//6. refresh project
+		try {
+			project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
 		
 		try {
 			IVCRepositoryProvider.map(project, IVCRepositoryProvider.ID);
@@ -192,12 +195,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 				}
 			}
 			thl.applyOperationHistoryList(project);
-			// refresh project
-			try {
-				project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
+		
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}

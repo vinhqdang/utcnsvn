@@ -104,8 +104,12 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 					e.printStackTrace();
 				}
 
-				// 5.update gui
-				// TODO 2.update intf on sharing project
+				// 5. refresh project
+				try {
+					project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+				} catch (CoreException e) {
+					e.printStackTrace();
+				}
 				try {
 					RepositoryProvider.map(project, IVCRepositoryProvider.ID);
 				} catch (TeamException e) {
