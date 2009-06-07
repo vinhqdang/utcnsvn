@@ -75,6 +75,8 @@ public class CommitCommand implements CommandIntf {
 		updatePendingRUL();
 		// clean local log as the operations in it are now commited
 		cleanLL();
+		//refreshing the decorations
+		
 		return new Result(true, "Success", null);
 	}
 
