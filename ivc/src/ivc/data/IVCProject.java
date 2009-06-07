@@ -139,7 +139,7 @@ public class IVCProject implements Serializable {
 	}
 
 	public void setRemoteCommitedLog(OperationHistoryList rcl) {
-		FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.LocalLog, rcl);
+		FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteCommitedLog, rcl);
 	}
 
 	public void setRemoteUncommitedLog(OperationHistoryList rul, String hostAddress) {
