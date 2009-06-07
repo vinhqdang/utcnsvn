@@ -93,8 +93,8 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 		}
 		L0 = L;
 		int size = L0.getTransformations().size();
-		for (int i = 1; i < size; i++) {
-			for (int j = 0; j < i; j++) {
+		for (int i = 0; i < size; i++) {
+			for (int j = i+1; j < size; j++) {
 				Operation opi = L0.getTransformations().get(i);
 				Operation opj = L0.getTransformations().get(j);
 				Operation et = opi.excludeOperation(opj);
@@ -149,7 +149,7 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 	 * @param hostAddress
 	 */
 	private void computeUncommitedAnnotations(OperationHistory rl, String hostAddress) {
-		OperationHistory arl = new OperationHistory();
+ 		OperationHistory arl = new OperationHistory();
 		String filePath = rl.getFilePath();
 		OperationHistory rulOh = rul.getOperationHistForFile(filePath);
 		if (causallyReady(rl)) {
@@ -185,7 +185,7 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 		if (file.exists()) {
 			try {
 				MarkersManager.updateMarkers(file);
-			} catch (CoreException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
