@@ -64,7 +64,6 @@ public abstract class BaseActionDelegate implements IWorkbenchWindowActionDelega
 				IProject proj = (IProject) resource;
 				for (IResource res : proj.members(true)) {
 					if (!res.getName().equals("bin") && !res.getName().equals(".ivc")) {
-
 						addResource(resources, res, forCommit);
 					}
 				}
