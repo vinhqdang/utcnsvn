@@ -92,21 +92,22 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 			if (peers == null) {
 				peers = new ArrayList<Peer>();
 			}
+			String project = projectPath.toLowerCase().replace("\\", "").replace("/", "");
 			Iterator<Peer> it = peers.iterator();
 			boolean contains = false;
 			while (it.hasNext()) {
 				Peer peer = it.next();
 				if (peer.getHostAddress().equalsIgnoreCase(hostAddress)) {
 					contains = true;
-					if (!peer.getProjectPaths().contains(projectPath)) {
-						peer.getProjectPaths().add(projectPath);
+					if (!peer.getProjectPaths().contains(project)) {
+						peer.getProjectPaths().add(project);
 						peer.setConnectionStatus(Constants.CONNECTED);
 					}
 				}
 			}
 			if (!contains) {
 				List<String> projectPaths = new ArrayList<String>();
-				projectPaths.add(projectPath);
+				projectPaths.add(project);
 				peers.add(new Peer(hostAddress, projectPaths, Constants.CONNECTED));
 			}
 			FileUtils.writeObjectToFile(peerFilePath, peers);
@@ -165,13 +166,14 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	 */
 	@Override
 	public List<Peer> getAllClientHosts(String projectPath) throws RemoteException {
+		String project = projectPath.toLowerCase().replace("\\", "").replace("/", "");
 		List<Peer> hosts = new ArrayList<Peer>();
 		List<Peer> allHosts = (List<Peer>) FileUtils.readObjectFromFile(Constants.RepositoryFolder + Constants.Peers);
 		if (allHosts != null) {
 			Iterator<Peer> it = allHosts.iterator();
 			while (it.hasNext()) {
 				Peer peer = it.next();
-				if (peer.getProjectPaths().contains(projectPath)) {
+				if (peer.getProjectPaths().contains(project)) {
 					hosts.add(peer);
 				}
 			}
