@@ -38,11 +38,11 @@ public class MarkersManager {
 
 	public static void updateMarkers(IFile file) throws CoreException {
 		file.deleteMarkers(IVC_MARKER, true, 1);
-		if (file == WorkspaceUtils.getCurrentFile()) {
+		
 			if (ProjectsManager.instance().getStatus(file).compareTo(Status.Added) > 0) {
 				for (int line : getLines(file)) {
 					addMarker(file, line);
-				}
+				
 			}
 		}
 	}
