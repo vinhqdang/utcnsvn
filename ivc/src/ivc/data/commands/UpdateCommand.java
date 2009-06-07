@@ -86,7 +86,18 @@ public class UpdateCommand implements CommandIntf {
 				OperationHistory th = it.next();
 				String filePath = th.getFilePath();
 				if (filesToUpdate == null || filesToUpdate.contains(filePath)) {
+					IFile file = (IFile) project.findMember(filePath);
+					InputStream contentStream;
 					StringBuffer content = new StringBuffer();
+					if (file.exists()){
+						try {
+							contentStream = file.getContents(true);
+							content = FileUtils.InputStreamToStringBuffer(contentStream);
+						} catch (CoreException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 					LinkedList<Operation> operations = th.getTransformations();
 					if (operations != null) {
 						Iterator<Operation> itt = operations.descendingIterator();
@@ -94,11 +105,7 @@ public class UpdateCommand implements CommandIntf {
 							Operation tr = itt.next();
 							if (tr.getOperationType() == Operation.CHARACTER_ADD || tr.getOperationType() == Operation.CHARACTER_DELETE) {
 								// handle file content modifications
-								IFile file = (IFile) project.findMember(filePath);
-								InputStream contentStream;
 								try {
-									contentStream = file.getContents(true);
-									content = FileUtils.InputStreamToStringBuffer(contentStream);
 									content = tr.applyContentTransformation(content);
 								} catch (Exception e) {
 									// TODO Auto-generated catch block
