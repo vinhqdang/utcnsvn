@@ -13,10 +13,12 @@ import org.eclipse.ui.IMarkerResolution2;
 public class QuickFix implements IMarkerResolution2 {
 	private String label;
 	private String description;
+	private String user;
 
-	public QuickFix(String label, String description) {
+	public QuickFix(String label, String description, String user) {
 		this.label = label;
 		this.description = description;
+		this.user = user;
 	}
 
 	@Override

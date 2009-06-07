@@ -131,7 +131,7 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 		String filePath = rl.getFilePath();
 		Integer localVersion = project.getCurrentVersion().get(filePath);
 		Integer remoteVersion = rl.getTransformations().getLast().getFileVersion();
-		return (localVersion == remoteVersion);
+		return (localVersion.equals(remoteVersion));
 	}
 
 	/**

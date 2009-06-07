@@ -35,7 +35,7 @@ public class CacheManager implements IResourceChangeListener {
 	}
 
 	public void setStatus(IResource resource, ResourceStatus status) {
-		statusCache.addStatus(resource, status);
+		statusCache.setStatus(resource, status);
 		Decorator.getDecorator().refresh(resource);
 	}
 	
