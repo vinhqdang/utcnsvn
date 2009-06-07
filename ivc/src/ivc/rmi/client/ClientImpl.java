@@ -70,6 +70,7 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 		CommandArgs args = new CommandArgs();
 		args.putArgument(Constants.IVCPROJECT, project);
 		args.putArgument(Constants.HOST_ADDRESS, sourceHost);
+		args.putArgument(Constants.ISCOMMIT, Boolean.TRUE);
 		Iterator<OperationHistory> it = ohl.iterator();
 		while (it.hasNext()) {
 			OperationHistory oh = it.next();
@@ -79,9 +80,9 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 		// OperationHistoryList oldThl = project.getRemoteCommitedLog();
 		// OperationHistoryList newThl = oldThl.appendOperationHistoryList(thl);
 		// project.setRemoteCommitedLog(newThl);
-		// OperationHistoryList rul = project.getRemoteUncommitedLog(sourceHost);
-		// OperationHistoryList newrul = rul.removeOperationHistList(thl);
-		// project.setRemoteUncommitedLog(newrul, sourceHost);
+		 OperationHistoryList rul = project.getRemoteUncommitedLog(sourceHost);
+		 OperationHistoryList newrul = rul.removeOperationHistList(ohl);
+		 project.setRemoteUncommitedLog(newrul, sourceHost);
 	}
 
 	/*
@@ -127,29 +128,30 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 		CommandArgs args = new CommandArgs();
 		args.putArgument(Constants.IVCPROJECT, project);
 		args.putArgument(Constants.HOST_ADDRESS, sourceHost);
+		args.putArgument(Constants.ISCOMMIT, Boolean.FALSE);
 		Iterator<OperationHistory> it = thl.iterator();
 		while (it.hasNext()) {
 			OperationHistory oh = it.next();
 			args.putArgument(Constants.OPERATION_HIST, oh);
 			command.execute(args);
 		}
-		File f = new File(project.getProject().getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
-				+ sourceHost.replaceAll("\\.", "_"));
-		if (!f.exists()) {
-			try {
-				f.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		Object ofromFile = FileUtils.readObjectFromFile(f.getAbsolutePath());
-		if (ofromFile == null) {
-			ofromFile = new OperationHistoryList();
-		}
-		OperationHistoryList currentThl = (OperationHistoryList) ofromFile;
-		OperationHistoryList newThl = currentThl.appendOperationHistoryList(thl);
-		FileUtils.writeObjectToFile(f.getAbsolutePath(), newThl);
+//		File f = new File(project.getProject().getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
+//				+ sourceHost.replaceAll("\\.", "_"));
+//		if (!f.exists()) {
+//			try {
+//				f.createNewFile();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//		Object ofromFile = FileUtils.readObjectFromFile(f.getAbsolutePath());
+//		if (ofromFile == null) {
+//			ofromFile = new OperationHistoryList();
+//		}
+//		OperationHistoryList currentThl = (OperationHistoryList) ofromFile;
+//		OperationHistoryList newThl = currentThl.appendOperationHistoryList(thl);
+//		FileUtils.writeObjectToFile(f.getAbsolutePath(), newThl);
 
 	}
 
