@@ -9,6 +9,7 @@ import ivc.data.commands.ShareProjectCommand;
 import ivc.manager.ProjectsManager;
 import ivc.plugin.IVCPlugin;
 import ivc.repository.IVCRepositoryProvider;
+import ivc.util.Constants;
 import ivc.wizards.sharing.pages.SharingWizardPage;
 
 import org.eclipse.core.resources.IProject;
@@ -54,11 +55,11 @@ public class SharingWizard extends Wizard implements IConfigurationWizard {
 		if (!getPages()[0].isPageComplete())
 			return false;
 		CommandArgs args = new CommandArgs();
-		args.putArgument("serverAddress", sharingWizardPage.getServerUrl());
-		args.putArgument("projectPath", sharingWizardPage.getProjectPath());
-		args.putArgument("project", project);
-		args.putArgument("userName", sharingWizardPage.getUserName());
-		args.putArgument("password", sharingWizardPage.getPassword());
+		args.putArgument(Constants.SERVER_ADDRESS, sharingWizardPage.getServerUrl());
+		args.putArgument(Constants.PROJECT_PATH,"\\"+ sharingWizardPage.getProjectPath());
+		args.putArgument(Constants.IPROJECT, project);
+		args.putArgument(Constants.USERNAME, sharingWizardPage.getUserName());
+		args.putArgument(Constants.PASSWORD, sharingWizardPage.getPassword());
 		ShareProjectCommand command = new ShareProjectCommand(args);
 		try {
 			// fork, cancelable, process

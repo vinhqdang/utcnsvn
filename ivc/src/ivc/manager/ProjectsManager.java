@@ -78,6 +78,7 @@ public class ProjectsManager {
 						+ Constants.ServerFile);
 				String serverAddress = fullserverPath.substring(0, fullserverPath.indexOf('\\'));
 				String serverPath = fullserverPath.replace(serverAddress + '\\', "");
+				serverPath = serverPath.toLowerCase().replace("\\", "").replace("/", "");
 				IVCProject ivcProj = new IVCProject();
 				ivcProj.setProject(project);
 				ivcProj.setName(project.getName());

@@ -73,7 +73,9 @@ public class HandleOperationCommand implements CommandIntf {
 						clientIntf.updateRUL(ivcProject.getServerPath(), NetworkUtils.getHostAddress(), thl);
 					}
 				} else {
-					disconnected.add(peer.getHostAddress());
+					if (!peer.getHostAddress().equalsIgnoreCase(NetworkUtils.getHostAddress())) {
+						disconnected.add(peer.getHostAddress());
+					}
 				}
 			}
 			connMan.getServer().updatePendingRUL(ivcProject.getServerPath(), NetworkUtils.getHostAddress(), disconnected, thl);
