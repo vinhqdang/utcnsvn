@@ -63,7 +63,7 @@ public class ProjectsManager {
 			// } catch (Exception e) {
 			// e.printStackTrace();
 			// }
-			
+
 			tryAddProject(project);
 		}
 	}
@@ -123,7 +123,7 @@ public class ProjectsManager {
 		}
 		return null;
 	}
-	
+
 	public IVCProject getIVCProjectByServerPath(String projectServerPath) {
 		Iterator<String> it = projects.keySet().iterator();
 		while (it.hasNext()) {
@@ -170,6 +170,17 @@ public class ProjectsManager {
 
 	public void setDefaultStatus(IResource resource) {
 		cacheManager.setStatus(resource, getDefaultStatus());
+	}
+
+	public void setCommitedStatus(IResource resource) {
+		if (cacheManager.getResourceStatus(resource) == null) {
+			cacheManager.setStatus(resource, getDefaultStatus());
+		} else {
+			ResourceStatus status = cacheManager.getResourceStatus(resource);
+			status.setStatus(Status.Commited);
+			cacheManager.setStatus(resource, status);
+		}
+
 	}
 
 	private void setAddedStatusToParents(IResource resource) {

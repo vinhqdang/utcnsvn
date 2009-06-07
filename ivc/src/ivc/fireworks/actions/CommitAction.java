@@ -77,6 +77,7 @@ public class CommitAction extends BaseActionDelegate {
 					break;
 				} else {
 					filePaths.add(resource.getProjectRelativePath().toOSString());
+					ProjectsManager.instance().setCommitedStatus(resource);
 				}
 				// boolean result = MarkersManager.updateMarkers(resource);
 				// action.setChecked(result);
@@ -85,6 +86,7 @@ public class CommitAction extends BaseActionDelegate {
 			CommandArgs args = new CommandArgs();
 			args.putArgument(Constants.PROJECT_NAME, commitedResources[0].getProject().getName());
 			args.putArgument(Constants.FILE_PATHS, filePaths);
+
 			commitCommand.execute(args);
 		}
 	}
