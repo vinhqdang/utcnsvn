@@ -1,5 +1,5 @@
 package ivc.repository;
 
 public enum Status {
-	Unversioned,Added, Commited, Modified,Conflicted, Deleted
+	Unversioned, Added, Deleted, Modified, Commited, Conflicted
 }

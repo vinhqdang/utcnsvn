@@ -32,7 +32,7 @@ public class UpdateAction extends BaseActionDelegate {
 	public void run(IAction arg0) {
 		try {
 			List<String> files = new ArrayList<String>();
-			IResource[] resources = findAllResources();
+			IResource[] resources = findAllResources(false);
 			for (int i = 0; i < resources.length; i++) {
 				IResource resource = resources[i];
 				String filePath = resource.getProjectRelativePath().toOSString();

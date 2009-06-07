@@ -40,15 +40,13 @@ public class CommitAction extends BaseActionDelegate {
 
 	}
 
-	
-
 	@Override
 	public void run(IAction action) {
 
 		Map<IResource, Status> statusMap = new HashMap<IResource, Status>();
 		IResource[] resources = null;
 		try {
-			resources = findAllResources();
+			resources = findAllResources(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
