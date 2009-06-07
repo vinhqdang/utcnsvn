@@ -5,15 +5,18 @@ package ivc.data.commands;
 
 import ivc.data.IVCProject;
 import ivc.data.annotation.ResourcesAnnotations;
-import ivc.data.annotation.UsersAnnotations;
 import ivc.data.operation.Operation;
 import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
+import ivc.fireworks.markers.MarkersManager;
 import ivc.util.Constants;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 
 /**
  * @author danielan
@@ -179,6 +182,15 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 			lineNumbers.add(op.getPosition());
 		}
 		ra.setAnnotations(filePath, user, lineNumbers);
+		IFile file = project.getProject().getFile(filePath);
+		if (file.exists()){
+			try {
+				MarkersManager.updateMarkers(file);
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private OperationHistory getVersionDiffs(OperationHistory oh1, OperationHistory oh2) {
