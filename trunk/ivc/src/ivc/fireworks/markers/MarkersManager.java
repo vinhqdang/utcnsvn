@@ -51,16 +51,26 @@ public class MarkersManager {
 		}
 	}
 
+	private static int getCount(String buff) {
+		int count = 1;
+		for (Character c : buff.toCharArray()) {
+			if (c.equals('\n'))
+				count++;
+		}
+		return count;
+	}
+
 	private static List<Integer> getLines(IFile file) throws CoreException {
 		StringBuffer sBuffer = FileUtils.InputStreamToStringBuffer(file.getContents());
+		String values = sBuffer.toString();
 		List<Integer> lines = new ArrayList<Integer>();
 		List<Integer> positions = getPositions(file);
 		for (int i : positions) {
 			int line = 0;
 			if (i >= positions.size())
-				line = sBuffer.lastIndexOf("\n");
+				line = getCount(values);
 			else
-				line = sBuffer.substring(0, i).lastIndexOf("\n");
+				line = getCount(values.substring(0, i));
 			if (!lines.contains(line)) {
 				lines.add(line);
 			}
