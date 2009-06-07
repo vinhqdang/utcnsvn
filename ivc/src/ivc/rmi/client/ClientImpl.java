@@ -62,26 +62,26 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 	 */
 	@Override
 	public void updateRCL(String projectServerPath, String sourceHost, OperationHistoryList ohl) throws RemoteException {
-		if (ohl == null || ohl.getTransformationHist() == null){
+		if (ohl == null || ohl.getTransformationHist() == null) {
 			return;
-		}		
+		}
 		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(projectServerPath);
 		UpdateAnnotationsCommand command = new UpdateAnnotationsCommand();
-		CommandArgs args =  new CommandArgs();
+		CommandArgs args = new CommandArgs();
 		args.putArgument(Constants.IVCPROJECT, project);
 		args.putArgument(Constants.HOST_ADDRESS, sourceHost);
 		Iterator<OperationHistory> it = ohl.iterator();
-		while(it.hasNext()){
+		while (it.hasNext()) {
 			OperationHistory oh = it.next();
 			args.putArgument(Constants.OPERATION_HIST, oh);
 			command.execute(args);
 		}
-//		OperationHistoryList oldThl = project.getRemoteCommitedLog();
-//		OperationHistoryList newThl = oldThl.appendOperationHistoryList(thl);
-//		project.setRemoteCommitedLog(newThl);
-//		OperationHistoryList rul = project.getRemoteUncommitedLog(sourceHost);
-//		OperationHistoryList newrul = rul.removeOperationHistList(thl);
-//		project.setRemoteUncommitedLog(newrul, sourceHost);
+		// OperationHistoryList oldThl = project.getRemoteCommitedLog();
+		// OperationHistoryList newThl = oldThl.appendOperationHistoryList(thl);
+		// project.setRemoteCommitedLog(newThl);
+		// OperationHistoryList rul = project.getRemoteUncommitedLog(sourceHost);
+		// OperationHistoryList newrul = rul.removeOperationHistList(thl);
+		// project.setRemoteUncommitedLog(newrul, sourceHost);
 	}
 
 	/*
@@ -122,6 +122,17 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 	@Override
 	public void updateRUL(String projectServerPath, String sourceHost, OperationHistoryList thl) throws RemoteException {
 		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(projectServerPath);
+
+		UpdateAnnotationsCommand command = new UpdateAnnotationsCommand();
+		CommandArgs args = new CommandArgs();
+		args.putArgument(Constants.IVCPROJECT, project);
+		args.putArgument(Constants.HOST_ADDRESS, sourceHost);
+		Iterator<OperationHistory> it = thl.iterator();
+		while (it.hasNext()) {
+			OperationHistory oh = it.next();
+			args.putArgument(Constants.OPERATION_HIST, oh);
+			command.execute(args);
+		}
 		File f = new File(project.getProject().getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
 				+ sourceHost.replaceAll("\\.", "_"));
 		if (!f.exists()) {
