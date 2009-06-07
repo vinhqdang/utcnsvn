@@ -99,7 +99,7 @@ public class UpdateCommand implements CommandIntf {
 									contentStream = file.getContents(true);
 									content = FileUtils.InputStreamToStringBuffer(contentStream);
 									content = tr.applyContentTransformation(content);
-								} catch (CoreException e) {
+								} catch (Exception e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}

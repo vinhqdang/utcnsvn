@@ -49,14 +49,13 @@ public class StringComparer {
 			RangeDifference[] diff = RangeDifferencer.findDifferences(CL, CR);
 			System.out.println("Changes to file: " + diff.length);
 			for (int i = 0; i < diff.length; i++) {
-				String addedText = SL.substring(CL.getTokenStart(diff[i].leftStart()), CL.getTokenStart(diff[i].leftEnd()));
-				System.out.println("+|" + addedText + "|");
-				addOperations(addedText, Operation.CHARACTER_ADD, CL.getTokenStart(diff[i].leftStart()));
-
 				String removedText = SR.substring(CR.getTokenStart(diff[i].rightStart()), CR.getTokenStart(diff[i].rightEnd()));
 				System.out.println("-|" + removedText + "|");
 				addOperations(removedText, Operation.CHARACTER_DELETE, CR.getTokenStart(diff[i].rightStart()));
 
+				String addedText = SL.substring(CL.getTokenStart(diff[i].leftStart()), CL.getTokenStart(diff[i].leftEnd()));
+				System.out.println("+|" + addedText + "|");
+				addOperations(addedText, Operation.CHARACTER_ADD, CL.getTokenStart(diff[i].leftStart()));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -77,7 +76,7 @@ public class StringComparer {
 		if (value == null)
 			return;
 		char[] chars = value.toCharArray();
-		if (operationType == Operation.CHARACTER_DELETE) {
+		if (operationType == Operation.CHARACTER_ADD) {
 			for (int i = 0; i < chars.length; i++) {
 				Operation operation = new Operation(chars[i], operationType);
 				operation.setFilePath(file.getProjectRelativePath().toOSString());
