@@ -67,7 +67,7 @@ public class MarkersManager {
 		List<Integer> positions = getPositions(file);
 		for (int i : positions) {
 			int line = 0;
-			if (i >= positions.size())
+			if (i >= values.length())
 				line = getCount(values);
 			else
 				line = getCount(values.substring(0, i));
