@@ -80,9 +80,7 @@ public class CommitAction extends BaseActionDelegate {
 		IResource[] commitedResources = commitPage.getSelectedResources();
 		if (commitedResources != null && commitedResources.length > 0) {
 			for (IResource resource : commitedResources) {
-				if (resource.getType() == IResource.PROJECT) {
-					break;
-				} else {
+				if (resource.getType() != IResource.PROJECT) {
 					filePaths.add(resource.getProjectRelativePath().toOSString());
 				}
 				// boolean result = MarkersManager.updateMarkers(resource);

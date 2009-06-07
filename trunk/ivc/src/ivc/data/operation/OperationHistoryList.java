@@ -53,6 +53,7 @@ public class OperationHistoryList implements Serializable {
 	public Iterator<OperationHistory> iterator() {
 		return (Iterator<OperationHistory>) operations.iterator();
 	}
+	
 
 	public LinkedList<Operation> getOperationsForFile(String filePath) {
 		Iterator<OperationHistory> it = this.operations.iterator();
@@ -168,10 +169,9 @@ public class OperationHistoryList implements Serializable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		}
 		try {
-			project.refreshLocal(IResource.DEPTH_INFINITE, null);
+			project.refreshLocal(IResource.DEPTH_INFINITE, null);			
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
