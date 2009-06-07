@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -84,6 +85,7 @@ public class UpdateCommand implements CommandIntf {
 				OperationHistory th = it.next();
 				String filePath = th.getFilePath();
 				if (filesToUpdate == null || filesToUpdate.contains(filePath)) {
+					StringBuffer content = new StringBuffer();
 					LinkedList<Operation> operations = th.getTransformations();
 					if (operations != null) {
 						Iterator<Operation> itt = operations.descendingIterator();
@@ -95,8 +97,8 @@ public class UpdateCommand implements CommandIntf {
 								InputStream contentStream;
 								try {
 									contentStream = file.getContents(true);
-									StringBuffer content = FileUtils.InputStreamToStringBuffer(contentStream);
-									tr.applyContentTransformation(content);
+									content = FileUtils.InputStreamToStringBuffer(contentStream);
+									content = tr.applyContentTransformation(content);
 								} catch (CoreException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -106,6 +108,8 @@ public class UpdateCommand implements CommandIntf {
 								tr.applyStructureTransformation(project);
 							}
 						}
+						// update file content
+						FileUtils.writeStringBufferToFile(project.getLocation().toOSString() + "\\" + filePath, content);
 						// update file version
 						Integer serverVersion = currentCommitedVersion.get(filePath);
 						currentLocalVersion.put(filePath, serverVersion);
@@ -113,6 +117,11 @@ public class UpdateCommand implements CommandIntf {
 				}
 			}
 			ivcProject.setCurrentVersion(currentLocalVersion);
+			try {
+				project.refreshLocal(IResource.DEPTH_INFINITE, null);
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
 		} catch (RemoteException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -149,7 +158,7 @@ public class UpdateCommand implements CommandIntf {
 				} else {
 					ClientIntf client = connectionManager.getPeerByAddress(peer.getHostAddress());
 					client.updateRUL(ivcProject.getServerPath(), NetworkUtils.getHostAddress(), ll);
- 				}
+				}
 			}
 			connectionManager.getServer().updatePendingRUL(projectPath, NetworkUtils.getHostAddress(), disconnected, ll);
 		} catch (RemoteException e) {
