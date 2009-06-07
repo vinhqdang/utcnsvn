@@ -6,6 +6,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IPageListener;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * Workspace utilities.
@@ -26,5 +28,4 @@ public class WorkspaceUtils {
 		}
 		return file;
 	}
-
 }
