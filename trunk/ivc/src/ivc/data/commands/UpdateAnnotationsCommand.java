@@ -154,12 +154,14 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 		OperationHistory rulOh = rul.getOperationHistForFile(filePath);
 		if (causallyReady(rl)) {
 			arl = rl.excludeOperations(rulOh);
-			if (rl.getTransformations().getLast().getFileVersion() != rulOh.getTransformations().getLast().getFileVersion()) {
-				OperationHistory diff = getVersionDiffs(rl, rulOh);
-				if (rl.getTransformations().getLast().getFileVersion() < rulOh.getTransformations().getLast().getFileVersion()) {
-					arl = arl.includeOperations(diff);
-				} else {
-					arl = arl.excludeOperations(diff);
+			if (rulOh != null && !rulOh.getTransformations().isEmpty()) {
+				if (rl.getTransformations().getLast().getFileVersion() != rulOh.getTransformations().getLast().getFileVersion()) {
+					OperationHistory diff = getVersionDiffs(rl, rulOh);
+					if (rl.getTransformations().getLast().getFileVersion() < rulOh.getTransformations().getLast().getFileVersion()) {
+						arl = arl.includeOperations(diff);
+					} else {
+						arl = arl.excludeOperations(diff);
+					}
 				}
 			}
 			arl = transformIntoConc(arl);
