@@ -52,18 +52,19 @@ public abstract class BaseActionDelegate implements IWorkbenchWindowActionDelega
 
 	private void addResource(List<IResource> resources, IResource resource, boolean forCommit) throws CoreException {
 		if (!resources.contains(resource)) {
+			if (forCommit) {
+				if ((ProjectsManager.instance().isManaged(resource))) {
+					if (ProjectsManager.instance().getStatus(resource).compareTo(Status.Modified) > 0) {
+						return;
+					}
+				}
+			}
 			resources.add(resource);
 			if (resource instanceof IProject) {
 				IProject proj = (IProject) resource;
 				for (IResource res : proj.members(true)) {
 					if (!res.getName().equals("bin") && !res.getName().equals(".ivc")) {
-						if (forCommit) {
-							if ((ProjectsManager.instance().isManaged(resource))) {
-								if (ProjectsManager.instance().getStatus(resource).compareTo(Status.Modified) > 0) {
-									continue;
-								}
-							}
-						}
+
 						addResource(resources, res, forCommit);
 					}
 				}
@@ -71,15 +72,7 @@ public abstract class BaseActionDelegate implements IWorkbenchWindowActionDelega
 				if (resource instanceof IFolder) {
 					IFolder fold = (IFolder) resource;
 					for (IResource res : fold.members(true)) {
-
-						if (forCommit) {
-							if ((ProjectsManager.instance().isManaged(resource))) {
-								if (ProjectsManager.instance().getStatus(resource).compareTo(Status.Modified) > 0) {
-									continue;
-								}
-							}
-							addResource(resources, res, forCommit);
-						}
+						addResource(resources, res, forCommit);
 					}
 				}
 			}

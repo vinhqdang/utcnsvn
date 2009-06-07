@@ -16,9 +16,10 @@ public class IVCRepositoryProvider extends RepositoryProvider {
 
 	@Override
 	public void configureProject() throws CoreException {
-		IProject project = getProject();
-		configureTeamPrivateResource(project);
 		System.out.println("Starting project configuration");
+		IProject project = getProject();
+		ProjectsManager.instance().tryAddProject(project);
+		configureTeamPrivateResource(project);
 	}
 
 	private void configureTeamPrivateResource(IProject project) {

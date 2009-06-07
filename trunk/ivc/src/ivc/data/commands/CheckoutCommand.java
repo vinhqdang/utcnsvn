@@ -98,6 +98,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		// 5. create log files on peers
 		createPeersRemoteFiles();
 
+		
 		try {
 			IVCRepositoryProvider.map(project, IVCRepositoryProvider.ID);
 		} catch (TeamException e) {
