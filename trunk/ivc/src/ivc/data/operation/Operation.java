@@ -319,7 +319,7 @@ public class Operation implements Serializable {
 		newOp.setFilePath(op.getFilePath());
 		newOp.setFileVersion(op.getFileVersion());
 		newOp.setOperationType(op.getOperationType());
-		newOp.setText(op.getChr());
+		newOp.setText(chr);
 		newOp.setUserID(op.getUserID());
 		newOp.setSid(op.getSid());
 		newOp.setPosition(position);
