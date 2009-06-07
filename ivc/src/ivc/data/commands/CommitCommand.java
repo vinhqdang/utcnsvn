@@ -171,7 +171,7 @@ public class CommitCommand implements CommandIntf {
 			// save new changes
 			ivcProject.setCurrentVersion(localVersion);
 			connectionManager.getServer().updateVersionNumber(ivcProject.getServerPath(), currentCommitedVersion);
-		} catch (RemoteException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

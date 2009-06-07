@@ -22,6 +22,7 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -146,6 +147,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 			File cvFile = new File(project.getLocation().toOSString() + Constants.IvcFolder + Constants.CurrentVersionFile);
 			cvFile.createNewFile();
 			HashMap<String, Integer> cv = (HashMap<String, Integer>) connectionManager.getServer().getVersionNumber(projectPath);
+			cv.put(projectName, cv.get(projectPath));
 			FileUtils.writeObjectToFile(cvFile.getAbsolutePath(), cv);
 		} catch (IOException e) {
 			e.printStackTrace();
