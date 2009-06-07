@@ -203,7 +203,7 @@ public class Operation implements Serializable {
 		switch (operationType) {
 		case ADD_FILE:
 			IFile addfile = project.getFile(filePath);
-			if (!addfile.exists()){
+			if (!addfile.exists()) {
 				try {
 					addfile.create(new ByteArrayInputStream(new byte[0]), IResource.FORCE, null);
 				} catch (CoreException e) {
@@ -214,9 +214,9 @@ public class Operation implements Serializable {
 			break;
 		case ADD_FOLDER:
 			IFolder addfolder = project.getFolder(filePath);
-			if (!addfolder.exists()){
+			if (!addfolder.exists()) {
 				try {
-					addfolder.create(IResource.FORCE,true,null);
+					addfolder.create(IResource.FORCE, true, null);
 				} catch (CoreException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -225,7 +225,7 @@ public class Operation implements Serializable {
 			break;
 		case REMOVE_FILE:
 			IFile remfile = project.getFile(filePath);
-			if (remfile.exists()){
+			if (remfile.exists()) {
 				try {
 					remfile.delete(IResource.FORCE, null);
 				} catch (CoreException e) {
@@ -236,7 +236,7 @@ public class Operation implements Serializable {
 			break;
 		case REMOVE_FOLDER:
 			IFolder remfolder = project.getFolder(filePath);
-			if (remfolder.exists()){
+			if (remfolder.exists()) {
 				try {
 					remfolder.delete(IResource.FORCE, null);
 				} catch (CoreException e) {
@@ -359,4 +359,8 @@ public class Operation implements Serializable {
 		return newOp;
 	}
 
+	@Override
+	public String toString() {
+		return chr + "|" + position + "|";
+	}
 }
