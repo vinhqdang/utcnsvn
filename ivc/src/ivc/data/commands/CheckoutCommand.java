@@ -138,7 +138,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 				Iterator<String> it = peerHosts.iterator();
 				while (it.hasNext()) {
 					String peerHost = it.next();
-					File rlufile = new File(project.getLocation().toOSString() + Constants.RemoteUnCommitedLog + "_"
+					File rlufile = new File(project.getLocation().toOSString() +Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
 							+ peerHost.replaceAll("\\.", "_"));
 					rlufile.createNewFile();
 				}
