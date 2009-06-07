@@ -2,6 +2,7 @@ package ivc.fireworks.actions;
 
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.CommitCommand;
+import ivc.data.commands.Result;
 import ivc.fireworks.markers.MarkersManager;
 import ivc.manager.ProjectsManager;
 import ivc.repository.Status;
@@ -10,6 +11,7 @@ import ivc.wizards.commit.CommitWizard;
 import ivc.wizards.commit.CommitWizardDialog;
 import ivc.wizards.commit.pages.CommitWizardPage;
 
+import java.awt.Dialog;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +25,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 
@@ -49,6 +52,10 @@ public class CommitAction extends BaseActionDelegate {
 			resources = findAllResources(true);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		if (resources.length == 0) {
+			MessageDialog.openInformation(getShell(), "Cannot commit", "No files were changed");
+			return;
 		}
 		try {
 			for (IResource resource : resources) {
@@ -86,8 +93,11 @@ public class CommitAction extends BaseActionDelegate {
 			args.putArgument(Constants.PROJECT_NAME, commitedResources[0].getProject().getName());
 			args.putArgument(Constants.FILE_PATHS, filePaths);
 
-			commitCommand.execute(args);
-
+			Result result = commitCommand.execute(args);
+			if (!result.isSuccess()) {
+				MessageDialog.openInformation(getShell(), "Commit failed", result.getMessage());
+				return;
+			}
 			for (IResource resource : commitedResources) {
 				try {
 					ProjectsManager.instance().setCommitedStatus(resource);
