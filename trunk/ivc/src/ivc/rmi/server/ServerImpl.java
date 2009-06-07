@@ -40,7 +40,7 @@ final class Users {
 	public static boolean authenticate(String username, String password) {
 		if (!users.containsKey(username.toLowerCase()))
 			return false;
-		return (users.get(username) == password);
+		return (users.get(username).equals(password));
 	}
 }
 

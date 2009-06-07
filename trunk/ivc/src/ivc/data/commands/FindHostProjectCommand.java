@@ -37,7 +37,7 @@ public class FindHostProjectCommand implements IRunnableWithProgress {
 			monitor.worked(1);
 			monitor.setTaskName("Getting project information");
 			
-			boolean isOK = server.checkProjectPath(pPath);
+			boolean isOK = server.checkProjectPath("\\"+pPath);
 			if (! isOK){
 				result = new Result(false, Exceptions.SERVER_PROJ_PATH_INVALID, null);
 			}
