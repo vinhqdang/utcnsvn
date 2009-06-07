@@ -39,9 +39,9 @@ public class CheckoutWizard extends Wizard implements INewWizard, IImportWizard 
 			return false;
 
 		CommandArgs args = new CommandArgs();
-		args.putArgument(Constants.PROJECT_NAME,projectPage.getProjectName());
-		args.putArgument(Constants.SERVER_ADDRESS,mainPage.getTxtServerURL().getText());
-		args.putArgument(Constants.PROJECT_PATH, "\\"+mainPage.getTxtPath().getText());
+		args.putArgument(Constants.PROJECT_NAME, projectPage.getProjectName());
+		args.putArgument(Constants.SERVER_ADDRESS, mainPage.getTxtServerURL().getText());
+		args.putArgument(Constants.PROJECT_PATH, "\\" + mainPage.getTxtPath().getText());
 		CheckoutCommand command = new CheckoutCommand(args);
 		try {
 			this.getContainer().run(false, true, command);

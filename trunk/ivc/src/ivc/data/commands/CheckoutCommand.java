@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -98,13 +99,13 @@ public class CheckoutCommand implements IRunnableWithProgress {
 
 		// 5. create log files on peers
 		createPeersRemoteFiles();
-		//6. refresh project
+		// 6. refresh project
 		try {
 			project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
 			IVCRepositoryProvider.map(project, IVCRepositoryProvider.ID);
 		} catch (TeamException e) {
@@ -137,7 +138,8 @@ public class CheckoutCommand implements IRunnableWithProgress {
 				Iterator<String> it = peerHosts.iterator();
 				while (it.hasNext()) {
 					String peerHost = it.next();
-					File rlufile = new File(project.getLocation().toOSString() + Constants.RemoteUnCommitedLog + "_" + peerHost.replaceAll("\\.", "_"));
+					File rlufile = new File(project.getLocation().toOSString() + Constants.RemoteUnCommitedLog + "_"
+							+ peerHost.replaceAll("\\.", "_"));
 					rlufile.createNewFile();
 				}
 			}
@@ -177,6 +179,14 @@ public class CheckoutCommand implements IRunnableWithProgress {
 			BaseVersion bv = server.returnBaseVersion(projectPath);
 			OperationHistoryList thl = server.returnHeadVersion(projectPath);
 			// create folder structure
+			try {
+				IFile pfile = project.getFile(".project");
+
+				pfile.delete(true, monitor);
+			} catch (CoreException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			Iterator<String> itfld = bv.getFolders().iterator();
 			while (itfld.hasNext()) {
 				File f = new File(project.getLocation().toOSString() + "\\" + itfld.next());
@@ -196,7 +206,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 				}
 			}
 			thl.applyOperationHistoryList(project);
-		
+
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}

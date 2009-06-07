@@ -77,7 +77,6 @@ public class CommitAction extends BaseActionDelegate {
 					break;
 				} else {
 					filePaths.add(resource.getProjectRelativePath().toOSString());
-					ProjectsManager.instance().setCommitedStatus(resource);
 				}
 				// boolean result = MarkersManager.updateMarkers(resource);
 				// action.setChecked(result);
@@ -88,6 +87,15 @@ public class CommitAction extends BaseActionDelegate {
 			args.putArgument(Constants.FILE_PATHS, filePaths);
 
 			commitCommand.execute(args);
+
+			for (IResource resource : commitedResources) {
+				try {
+					ProjectsManager.instance().setCommitedStatus(resource);
+				} catch (Exception e) {
+					// TODO 2 delete
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 

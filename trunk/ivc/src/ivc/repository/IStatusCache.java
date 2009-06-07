@@ -26,7 +26,7 @@ public interface IStatusCache {
 	 * @param status
 	 * @return
 	 */
-	IResource addStatus(IResource resource, ResourceStatus status);
+	IResource setStatus(IResource resource, ResourceStatus status);
 
 	/**
 	 * removes the status for a given resource

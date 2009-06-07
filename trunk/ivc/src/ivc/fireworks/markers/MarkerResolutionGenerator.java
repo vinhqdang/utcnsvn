@@ -1,5 +1,11 @@
 package ivc.fireworks.markers;
 
+import java.util.ArrayList;
+
+import ivc.data.IVCProject;
+import ivc.manager.ProjectsManager;
+
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.IMarkerResolutionGenerator;
@@ -8,9 +14,15 @@ public class MarkerResolutionGenerator implements IMarkerResolutionGenerator {
 
 	@Override
 	public IMarkerResolution[] getResolutions(IMarker marker) {
-		
-		return new IMarkerResolution[] { new QuickFix("Fixme ", "try to fix this"), new QuickFix("Second possibility", "fix the problem"), };
-
+		IFile file = (IFile) marker.getResource();
+		IVCProject proj = ProjectsManager.instance().getIVCProjectByName(file.getProject().getName());
+		String[] users = proj.getUsersAnnotations(file).getUsers();
+		ArrayList<QuickFix> fixes = new ArrayList<QuickFix>();
+		for (String user : users) {
+			fixes.add(new QuickFix("Merge with " + user, "Open a difference window to show the differences in the file.", user));
+		}
+		IMarkerResolution[] result = new QuickFix[fixes.size()];
+		fixes.toArray(result);
+		return result;
 	}
-
 }

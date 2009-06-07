@@ -15,7 +15,7 @@ public class StatusCache implements IStatusCache {
 	}
 
 	@Override
-	public IResource addStatus(IResource resource, ResourceStatus status) {
+	public IResource setStatus(IResource resource, ResourceStatus status) {
 		byte[] statusBytes = status.getBytes();
 
 		try {
