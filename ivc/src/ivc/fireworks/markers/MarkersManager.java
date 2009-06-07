@@ -40,8 +40,12 @@ public class MarkersManager {
 		file.deleteMarkers(IVC_MARKER, true, 1);
 		
 			if (ProjectsManager.instance().getStatus(file).compareTo(Status.Added) > 0) {
-				for (int line : getLines(file)) {
-					addMarker(file, line);
+				try {
+					for (int line : getLines(file)) {
+						addMarker(file, line);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				
 			}
 		}

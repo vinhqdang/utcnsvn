@@ -77,7 +77,7 @@ public class StringComparer {
 		if (value == null)
 			return;
 		char[] chars = value.toCharArray();
-		if (operationType == Operation.CHARACTER_ADD) {
+		if (operationType == Operation.CHARACTER_DELETE) {
 			for (int i = 0; i < chars.length; i++) {
 				Operation operation = new Operation(chars[i], operationType);
 				operation.setFilePath(file.getProjectRelativePath().toOSString());
@@ -96,6 +96,11 @@ public class StringComparer {
 		}
 	}
 
+	/**
+	 * Returns the resulted OperationHistory
+	 * 
+	 * @return a OperationHistory object
+	 */
 	public OperationHistory getOperationHistory() {
 		return history;
 	}
