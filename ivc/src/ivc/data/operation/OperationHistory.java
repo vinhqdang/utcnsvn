@@ -69,6 +69,9 @@ public class OperationHistory implements Serializable {
 	}
 
 	public OperationHistory excludeOperations(OperationHistory oh) {
+		if (oh == null || oh.getTransformations().isEmpty()){
+			return this;
+		}
 		OperationHistory newOh = new OperationHistory();
 		newOh.setFilePath(oh.getFilePath());
 		Iterator<Operation> itoOwn = operations.descendingIterator();
@@ -86,6 +89,9 @@ public class OperationHistory implements Serializable {
 	}
 
 	public OperationHistory includeOperations(OperationHistory oh) {
+		if (oh == null || oh.getTransformations().isEmpty()){
+			return this;
+		}
 		OperationHistory newOh = new OperationHistory();
 		newOh.setFilePath(oh.getFilePath());
 		Iterator<Operation> itoOwn = operations.descendingIterator();
