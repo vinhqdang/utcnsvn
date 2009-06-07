@@ -2,6 +2,7 @@ package ivc.fireworks.actions;
 
 import ivc.manager.ProjectsManager;
 import ivc.plugin.IVCPlugin;
+import ivc.repository.Status;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -27,12 +28,19 @@ public abstract class BaseActionDelegate implements IWorkbenchWindowActionDelega
 	private ISelection selection;
 	private Shell shell;
 
-	public IResource[] findAllResources() throws CoreException {
+	public IResource[] findAllResources(boolean forCommit) throws CoreException {
 		ArrayList<IResource> resourcesTo = new ArrayList<IResource>();
 		IResource[] resources = getSelectedResources();
 		for (IResource resource : resources) {
 			if (!resource.isTeamPrivateMember()) {
-				addResource(resourcesTo, resource);
+				if (forCommit) {
+					if ((ProjectsManager.instance().isManaged(resource))) {
+						if (ProjectsManager.instance().getStatus(resource).compareTo(Status.Modified) > 0) {
+							continue;
+						}
+					}
+				}
+				addResource(resourcesTo, resource, forCommit);
 			}
 		}
 		// resourcesTo.addAll(ProjectsManager.instance().getIVCProjectByName(resources[0].getProject().getName()).getDeleted());
@@ -42,22 +50,35 @@ public abstract class BaseActionDelegate implements IWorkbenchWindowActionDelega
 		return result;
 	}
 
-	private void addResource(List<IResource> resources, IResource resource) throws CoreException {
+	private void addResource(List<IResource> resources, IResource resource, boolean forCommit) throws CoreException {
 		if (!resources.contains(resource)) {
 			resources.add(resource);
 			if (resource instanceof IProject) {
 				IProject proj = (IProject) resource;
 				for (IResource res : proj.members(true)) {
-					if (!res.isTeamPrivateMember() && !resource.getName().equals("bin")) {
-						addResource(resources, res);
+					if (!res.getName().equals("bin") && !res.getName().equals(".ivc")) {
+						if (forCommit) {
+							if ((ProjectsManager.instance().isManaged(resource))) {
+								if (ProjectsManager.instance().getStatus(resource).compareTo(Status.Modified) > 0) {
+									continue;
+								}
+							}
+						}
+						addResource(resources, res, forCommit);
 					}
 				}
 			} else {
 				if (resource instanceof IFolder) {
 					IFolder fold = (IFolder) resource;
 					for (IResource res : fold.members(true)) {
-						if (!res.isTeamPrivateMember()) {
-							addResource(resources, res);
+
+						if (forCommit) {
+							if ((ProjectsManager.instance().isManaged(resource))) {
+								if (ProjectsManager.instance().getStatus(resource).compareTo(Status.Modified) > 0) {
+									continue;
+								}
+							}
+							addResource(resources, res, forCommit);
 						}
 					}
 				}
