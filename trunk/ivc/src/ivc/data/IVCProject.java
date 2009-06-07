@@ -123,10 +123,10 @@ public class IVCProject implements Serializable {
 
 	public OperationHistoryList getRemoteUncommitedLog(String hostAddress) {
 		File f = new File(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
-				+ hostAddress.replaceAll(".", "_"));
+				+ hostAddress.replaceAll("\\.", "_"));
 		if (f.exists()) {
 			Object obj = FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
-					+ hostAddress.replaceAll(".", "_"));
+					+ hostAddress.replaceAll("\\.", "_"));
 			if (obj != null && obj instanceof OperationHistoryList) {
 				return (OperationHistoryList) obj;
 			}
@@ -144,7 +144,7 @@ public class IVCProject implements Serializable {
 
 	public void setRemoteUncommitedLog(OperationHistoryList rul, String hostAddress) {
 		FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
-				+ hostAddress.replaceAll(".", "_"), rul);
+				+ hostAddress.replaceAll("\\.", "_"), rul);
 	}
 
 	public HashMap<String, Integer> getCurrentVersion() {

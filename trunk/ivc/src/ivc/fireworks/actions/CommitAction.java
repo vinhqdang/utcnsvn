@@ -71,20 +71,22 @@ public class CommitAction extends BaseActionDelegate {
 		}
 		List<String> filePaths = new ArrayList<String>();
 		IResource[] commitedResources = commitPage.getSelectedResources();
-		for (IResource resource : commitedResources) {
-			if (resource.getType() == IResource.PROJECT) {
-				break;
-			} else {
-				filePaths.add(resource.getProjectRelativePath().toOSString());
+		if (commitedResources != null && commitedResources.length > 0) {
+			for (IResource resource : commitedResources) {
+				if (resource.getType() == IResource.PROJECT) {
+					break;
+				} else {
+					filePaths.add(resource.getProjectRelativePath().toOSString());
+				}
+				// boolean result = MarkersManager.updateMarkers(resource);
+				// action.setChecked(result);
 			}
-			// boolean result = MarkersManager.updateMarkers(resource);
-			// action.setChecked(result);
+			CommitCommand commitCommand = new CommitCommand();
+			CommandArgs args = new CommandArgs();
+			args.putArgument(Constants.PROJECT_NAME, commitedResources[0].getProject().getName());
+			args.putArgument(Constants.FILE_PATHS, filePaths);
+			commitCommand.execute(args);
 		}
-		CommitCommand commitCommand = new CommitCommand();
-		CommandArgs args = new CommandArgs();
-		args.putArgument(Constants.PROJECT_NAME, commitedResources[0].getProject().getName());
-		args.putArgument(Constants.FILE_PATHS, filePaths);
-		commitCommand.execute(args);
 	}
 
 	@Override

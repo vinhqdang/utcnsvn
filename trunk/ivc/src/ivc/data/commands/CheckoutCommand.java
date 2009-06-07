@@ -97,6 +97,8 @@ public class CheckoutCommand implements IRunnableWithProgress {
 
 		// 5. create log files on peers
 		createPeersRemoteFiles();
+		
+		
 
 		
 		try {
@@ -131,7 +133,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 				Iterator<String> it = peerHosts.iterator();
 				while (it.hasNext()) {
 					String peerHost = it.next();
-					File rlufile = new File(project.getLocation().toOSString() + Constants.RemoteUnCommitedLog + "_" + peerHost);
+					File rlufile = new File(project.getLocation().toOSString() + Constants.RemoteUnCommitedLog + "_" + peerHost.replaceAll("\\.", "_"));
 					rlufile.createNewFile();
 				}
 			}

@@ -137,7 +137,8 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 	 * Procedure computeUncommittedAnnotations generates annotations from the list of uncommitted operations RL received directly from Useri. List RL
 	 * contains contextually preceding remote operations having the same base version. If list RL is causally ready, it has to exclude all operations
 	 * stored in RUL previously sent by Useri. ARL denotes the result of the transformation of RL. If Useri worked on an older version of the document
-	 * than the local base version, ARL has to be transformed to include the list of operations representing their difference. If Useri worked on a
+	 * than the local base version, ARL has to be transformed to include ms
+	 * the list of operations representing their difference. If Useri worked on a
 	 * more recent version of the document than the local base version, ARL has to be transformed to exclude their difference. In this way ARL and LL
 	 * are defined on the same document state. Procedure transformIntoConc is then called to transform operations in ARL to be all defined on the
 	 * generation context of the local log LL. Operations obtained as result of transformation are applied then to annotate positions of the local
