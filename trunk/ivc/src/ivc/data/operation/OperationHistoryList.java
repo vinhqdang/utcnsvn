@@ -116,7 +116,7 @@ public class OperationHistoryList implements Serializable {
 		Iterator<OperationHistory> it = this.operations.iterator();
 		while (it.hasNext()) {
 			OperationHistory th = it.next();
-			if (th.getFilePath().equalsIgnoreCase(th.getFilePath())) {
+			if (th.getFilePath().equalsIgnoreCase(filePath)) {
 				return th;
 			}
 		}

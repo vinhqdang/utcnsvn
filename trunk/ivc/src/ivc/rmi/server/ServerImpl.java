@@ -372,7 +372,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	@Override
 	public void disconnectHost(String hostAddress) throws RemoteException {
 		RMIUtils.disconnectHost(hostAddress);
-		List<Peer> allHosts = (List<Peer>) FileUtils.readObjectFromFile(Constants.RepositoryFolder + Constants.Peers);
+		ArrayList<Peer> allHosts = (ArrayList<Peer>) FileUtils.readObjectFromFile(Constants.RepositoryFolder + Constants.Peers);
 		if (allHosts != null) {
 			Iterator<Peer> it = allHosts.iterator();
 			while (it.hasNext()) {
@@ -382,6 +382,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 				}
 			}
 		}
+		FileUtils.writeObjectToFile(Constants.RepositoryFolder + Constants.Peers, allHosts);
 	}
 
 }
