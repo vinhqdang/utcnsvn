@@ -1,7 +1,7 @@
 package ivc.wizards.commit.pages;
 
+import ivc.managers.ImageDescriptorManager;
 import ivc.managers.ProjectsManager;
-import ivc.plugin.ImageDescriptorManager;
 import ivc.repository.Status;
 import ivc.util.ResourceSelectionTree;
 import ivc.wizards.commit.CommitWizardDialog;

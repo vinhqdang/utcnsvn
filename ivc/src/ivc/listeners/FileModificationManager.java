@@ -54,7 +54,6 @@ public class FileModificationManager implements IResourceChangeListener {
 				if (resource instanceof IFile) {
 					IFile file = (IFile) resource;
 					getChanges(file);
-
 					projectsManager.updateStatus(resource, Status.Modified, true);
 				}
 			}

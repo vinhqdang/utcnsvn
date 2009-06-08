@@ -3,7 +3,7 @@ package ivc.wizards.checkout.pages;
 import java.lang.reflect.InvocationTargetException;
 
 import ivc.data.commands.FindHostProjectCommand;
-import ivc.plugin.ImageDescriptorManager;
+import ivc.managers.ImageDescriptorManager;
 import ivc.wizards.BaseWizardPage;
 import ivc.wizards.checkout.CheckoutWizard;
 import ivc.wizards.validation.Validator;

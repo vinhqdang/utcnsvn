@@ -1,6 +1,6 @@
 package ivc.fireworks.markers;
 
-import ivc.plugin.ImageDescriptorManager;
+import ivc.managers.ImageDescriptorManager;
 
 import java.util.Map;
 

@@ -1,9 +1,10 @@
 package ivc.util;
 
 import ivc.fireworks.decorators.Decorator;
+
+import ivc.managers.ImageDescriptorManager;
 import ivc.managers.ProjectsManager;
 import ivc.plugin.IVCPlugin;
-import ivc.plugin.ImageDescriptorManager;
 import ivc.repository.Status;
 
 import java.util.ArrayList;
