@@ -28,7 +28,7 @@
 		point="org.eclipse.team.ui.configurationWizards">
 		<wizard
 			name="IVC"
-			icon="share_icon.png"	
+			icon="img/share_icon.png"	
 			class="ivc.wizards.sharing.SharingWizard"
 			id="ivc.wizards.sharing.SharingWizard">
 		</wizard>
