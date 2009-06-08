@@ -1,6 +1,6 @@
 package ivc.fireworks.decorators;
 
-import ivc.manager.ProjectsManager;
+import ivc.managers.ProjectsManager;
 import ivc.plugin.IVCPlugin;
 import ivc.plugin.ImageDescriptorManager;
 import ivc.repository.IVCRepositoryProvider;

@@ -1,6 +1,5 @@
 package ivc.rmi.client;
 
-import ivc.connection.ConnectionManager;
 import ivc.data.IVCProject;
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.UpdateAnnotationsCommand;
@@ -8,7 +7,8 @@ import ivc.data.exception.IVCException;
 import ivc.data.operation.Operation;
 import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
-import ivc.manager.ProjectsManager;
+import ivc.managers.ConnectionManager;
+import ivc.managers.ProjectsManager;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
 
@@ -62,7 +62,7 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 	 */
 	@Override
 	public void updateRCL(String projectServerPath, String sourceHost, OperationHistoryList ohl) throws RemoteException {
-		if (ohl == null || ohl.getTransformationHist() == null) {
+		if (ohl == null || ohl.getOperationHist() == null) {
 			return;
 		}
 		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(projectServerPath);

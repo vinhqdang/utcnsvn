@@ -2,7 +2,7 @@ package ivc.compare;
 
 import ivc.data.operation.Operation;
 import ivc.data.operation.OperationHistory;
-import ivc.manager.ProjectsManager;
+import ivc.managers.ProjectsManager;
 import ivc.util.StringUtils;
 
 import java.io.InputStream;

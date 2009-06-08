@@ -3,13 +3,13 @@
  */
 package ivc.data.commands;
 
-import ivc.connection.ConnectionManager;
 import ivc.data.IVCProject;
 import ivc.data.Peer;
 import ivc.data.exception.Exceptions;
 import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
-import ivc.manager.ProjectsManager;
+import ivc.managers.ConnectionManager;
+import ivc.managers.ProjectsManager;
 import ivc.rmi.client.ClientIntf;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
@@ -54,7 +54,7 @@ public class CommitCommand implements CommandIntf {
 
 		// if the user tries to commit the entire project must get only the changed files
 		getChangedFiles();
-		if (changedFiles == null || changedFiles.getTransformationHist().isEmpty()) {
+		if (changedFiles == null || changedFiles.getOperationHist().isEmpty()) {
 			return new Result(true, Exceptions.COMMIT_NOFILE_CHANGED, null);
 		}
 		// we must check if what the user commits contains latest commited changes
@@ -84,7 +84,7 @@ public class CommitCommand implements CommandIntf {
 		changedFiles = new OperationHistoryList();
 		// added files, folders; removed files, folders, modified files
 		OperationHistoryList ll = ivcProject.getLocalLog();
-		if (!ll.getTransformationHist().isEmpty() && filePaths != null && !filePaths.isEmpty()) {
+		if (!ll.getOperationHist().isEmpty() && filePaths != null && !filePaths.isEmpty()) {
 			Iterator<String> it = filePaths.iterator();
 			while (it.hasNext()) {
 				String filePath = it.next();
@@ -103,14 +103,14 @@ public class CommitCommand implements CommandIntf {
 		// rcl must be empty and also version on server same as local version of
 		// the file
 		OperationHistoryList rcl = ivcProject.getRemoteCommitedLog();
-		if (rcl != null && !rcl.getTransformationHist().isEmpty()) {
+		if (rcl != null && !rcl.getOperationHist().isEmpty()) {
 			if (filePaths == null || filePaths.isEmpty()) {
 				return false;
 			}
 			Iterator<String> it = filePaths.iterator();
 			while (it.hasNext()) {
 				String filePath = it.next();
-				if (rcl.getOperationHistForFile(filePath) != null && !rcl.getOperationHistForFile(filePath).getTransformations().isEmpty()) {
+				if (rcl.getOperationHistForFile(filePath) != null && !rcl.getOperationHistForFile(filePath).getOperations().isEmpty()) {
 					return false;
 				}
 			}
@@ -121,8 +121,8 @@ public class CommitCommand implements CommandIntf {
 			while (it.hasNext()) {
 				OperationHistory oh = it.next();
 				String filePath = oh.getFilePath();
-				if (!oh.getTransformations().isEmpty()) {
-					Integer localVersion = oh.getTransformations().getLast().getFileVersion();
+				if (!oh.getOperations().isEmpty()) {
+					Integer localVersion = oh.getOperations().getLast().getFileVersion();
 					Integer commitedVersion = currentCommitedVersion.get(filePath);
 					if (commitedVersion != null) {
 						if (localVersion < commitedVersion) {

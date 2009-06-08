@@ -1,7 +1,7 @@
 package ivc.listeners;
 
 import ivc.data.IVCProject;
-import ivc.manager.ProjectsManager;
+import ivc.managers.ProjectsManager;
 import ivc.repository.IVCRepositoryProvider;
 import ivc.repository.Status;
 

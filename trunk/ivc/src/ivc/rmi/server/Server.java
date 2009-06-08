@@ -36,32 +36,11 @@ public class Server {
 	 * @throws RemoteException
 	 */
 	public static void main(String[] args) throws RemoteException {
-		exposeServerInterface(NetworkUtils.getHostAddress());
+		RMIUtils.exposeServerInterface(NetworkUtils.getHostAddress());
 		System.out.println("Server started at "+ NetworkUtils.getHostAddress());
 	}
 
-	private static void exposeServerInterface(String hostAddress) {
-		try {
-			ServerImpl server = new ServerImpl();
-			// create registry
-			// Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-			// System.setSecurityManager(new IVCSecurityManager());
-			LocateRegistry.createRegistry(1099);
-			try {
-				Naming.rebind("rmi://" + hostAddress + ":" + 1099 + "/"	+ Constants.BIND_SERVER, server);
-			} catch (Exception e) {
-				if (e instanceof AlreadyBoundException) {
-					e.printStackTrace();
-				} else {
-					String msg = e.getMessage();
-					e.printStackTrace();
-					throw new IVCException(e.getMessage());
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	
 
 	
 	

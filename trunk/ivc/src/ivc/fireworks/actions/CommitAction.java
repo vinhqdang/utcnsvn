@@ -4,7 +4,7 @@ import ivc.data.commands.CommandArgs;
 import ivc.data.commands.CommitCommand;
 import ivc.data.commands.Result;
 import ivc.fireworks.markers.MarkersManager;
-import ivc.manager.ProjectsManager;
+import ivc.managers.ProjectsManager;
 import ivc.repository.Status;
 import ivc.util.Constants;
 import ivc.wizards.commit.CommitWizard;

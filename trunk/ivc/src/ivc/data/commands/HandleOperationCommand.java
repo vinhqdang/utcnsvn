@@ -3,13 +3,13 @@
  */
 package ivc.data.commands;
 
-import ivc.connection.ConnectionManager;
 import ivc.data.IVCProject;
 import ivc.data.Peer;
 import ivc.data.operation.Operation;
 import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
-import ivc.manager.ProjectsManager;
+import ivc.managers.ConnectionManager;
+import ivc.managers.ProjectsManager;
 import ivc.rmi.client.ClientIntf;
 import ivc.util.Constants;
 import ivc.util.FileUtils;

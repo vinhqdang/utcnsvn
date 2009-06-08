@@ -1,6 +1,5 @@
 package ivc.data.commands;
 
-import ivc.connection.ConnectionManager;
 import ivc.data.BaseVersion;
 import ivc.data.Peer;
 import ivc.data.exception.Exceptions;
@@ -8,6 +7,7 @@ import ivc.data.exception.IVCException;
 import ivc.data.operation.Operation;
 import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
+import ivc.managers.ConnectionManager;
 import ivc.repository.IVCRepositoryProvider;
 import ivc.rmi.client.ClientIntf;
 import ivc.rmi.server.ServerIntf;

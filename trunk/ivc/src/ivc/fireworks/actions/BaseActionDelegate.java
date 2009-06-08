@@ -1,6 +1,6 @@
 package ivc.fireworks.actions;
 
-import ivc.manager.ProjectsManager;
+import ivc.managers.ProjectsManager;
 import ivc.plugin.IVCPlugin;
 import ivc.repository.Status;
 

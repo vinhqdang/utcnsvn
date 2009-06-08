@@ -5,7 +5,7 @@ import ivc.data.commands.HandleOperationCommand;
 import ivc.data.operation.Operation;
 import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
-import ivc.manager.ProjectsManager;
+import ivc.managers.ProjectsManager;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
 

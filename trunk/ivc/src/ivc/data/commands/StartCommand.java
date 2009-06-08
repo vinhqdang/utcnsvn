@@ -3,12 +3,13 @@
  */
 package ivc.data.commands;
 
-import ivc.connection.ConnectionManager;
 import ivc.data.IVCProject;
 import ivc.data.exception.Exceptions;
 import ivc.data.exception.IVCException;
+import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
-import ivc.manager.ProjectsManager;
+import ivc.managers.ConnectionManager;
+import ivc.managers.ProjectsManager;
 import ivc.rmi.client.ClientIntf;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
@@ -72,8 +73,17 @@ public class StartCommand implements CommandIntf {
 		try {
 			OperationHistoryList pendingRCL = connectionManager.getServer().returnPendingRCL(ivcProject.getServerPath(), NetworkUtils.getHostAddress());
 			OperationHistoryList RCL = ivcProject.getRemoteCommitedLog();
-			RCL.appendOperationHistoryList(pendingRCL);
-			ivcProject.setRemoteCommitedLog(RCL);
+			UpdateAnnotationsCommand command = new UpdateAnnotationsCommand();
+			CommandArgs args = new CommandArgs();
+			args.putArgument(Constants.IVCPROJECT, ivcProject);
+			args.putArgument(Constants.HOST_ADDRESS, "commited");
+			args.putArgument(Constants.ISCOMMIT, Boolean.TRUE);
+			Iterator<OperationHistory> it = pendingRCL.iterator();
+			while (it.hasNext()) {
+				OperationHistory oh = it.next();
+				args.putArgument(Constants.OPERATION_HIST, oh);
+				command.execute(args);
+			}			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -116,8 +126,17 @@ public class StartCommand implements CommandIntf {
 				}else{
 					rul =  ivcProject.getRemoteUncommitedLog(host);
 				}
-				rul.appendOperationHistoryList(pendingRUL);
-				ivcProject.setRemoteUncommitedLog(rul, host);				
+				UpdateAnnotationsCommand command = new UpdateAnnotationsCommand();
+				CommandArgs args = new CommandArgs();
+				args.putArgument(Constants.IVCPROJECT, ivcProject);
+				args.putArgument(Constants.HOST_ADDRESS, host);
+				args.putArgument(Constants.ISCOMMIT, Boolean.FALSE);
+				Iterator<OperationHistory> itt = rul.iterator();
+				while (itt.hasNext()) {
+					OperationHistory oh = itt.next();
+					args.putArgument(Constants.OPERATION_HIST, oh);
+					command.execute(args);
+				}				
 			}
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block

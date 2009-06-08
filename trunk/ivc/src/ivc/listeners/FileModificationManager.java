@@ -4,7 +4,7 @@ import ivc.compare.StringComparer;
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.HandleOperationCommand;
 import ivc.data.operation.OperationHistory;
-import ivc.manager.ProjectsManager;
+import ivc.managers.ProjectsManager;
 import ivc.repository.Status;
 import ivc.util.Constants;
 
