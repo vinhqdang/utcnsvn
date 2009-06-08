@@ -1,6 +1,6 @@
 package ivc.wizards.sharing.pages;
 
-import ivc.plugin.ImageDescriptorManager;
+import ivc.managers.ImageDescriptorManager;
 import ivc.wizards.BaseWizardPage;
 import ivc.wizards.validation.Validator;
 

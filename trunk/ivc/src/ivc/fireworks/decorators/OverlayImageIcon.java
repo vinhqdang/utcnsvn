@@ -1,6 +1,6 @@
 package ivc.fireworks.decorators;
 
-import ivc.plugin.ImageDescriptorManager;
+import ivc.managers.ImageDescriptorManager;
 
 import java.util.Vector;
 

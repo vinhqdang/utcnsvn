@@ -1,4 +1,6 @@
-package ivc.plugin;
+package ivc.managers;
+
+import ivc.plugin.IVCPlugin;
 
 import java.net.MalformedURLException;
 import java.net.URL;

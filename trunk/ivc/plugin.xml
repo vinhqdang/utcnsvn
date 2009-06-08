@@ -46,7 +46,7 @@
 		   class="ivc.wizards.checkout.CheckoutWizard"
 		   
 		   project="true"
-		   icon="share_icon.png">
+		   icon="img/share_icon.png">
 	    	   <description>Checkout a new IVC project</description>
 		</wizard>
 	</extension>
@@ -176,7 +176,7 @@
          point="org.eclipse.ui.editors.markerAnnotationSpecification">
 		<specification
             annotationType="ivc.MarkerAnnotation"
-            icon="marker.gif"
+            icon="img/marker.gif"
             textPreferenceKey="myAppIndication"
             textPreferenceValue="true"
             overviewRulerPreferenceKey="myAppIndicationInOverviewRuler"

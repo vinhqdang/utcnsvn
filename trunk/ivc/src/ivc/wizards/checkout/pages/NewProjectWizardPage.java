@@ -1,6 +1,6 @@
 package ivc.wizards.checkout.pages;
 
-import ivc.plugin.ImageDescriptorManager;
+import ivc.managers.ImageDescriptorManager;
 import ivc.wizards.BaseWizardPage;
 
 import org.eclipse.core.resources.IProject;
