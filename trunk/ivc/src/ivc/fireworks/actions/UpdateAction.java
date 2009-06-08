@@ -12,6 +12,7 @@ import java.util.List;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
@@ -41,19 +42,20 @@ public class UpdateAction extends BaseActionDelegate {
 				}
 			}
 			String projName = resources[0].getProject().getName();
-			UpdateCommand uc = new UpdateCommand();
 			CommandArgs args = new CommandArgs();
 			IVCProject project = ProjectsManager.instance().getIVCProjectByName(projName);
 			args.putArgument(Constants.IVCPROJECT, project);
 			args.putArgument(Constants.FILE_PATHS, files);
-			uc.execute(args);
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("Update successfull.");
-	}
+			UpdateCommand uc = new UpdateCommand(null, args);
+			uc.run();
 
+		} catch (Exception e) {
+			e.printStackTrace();
+			MessageDialog.openError(getShell(), "Failed", "Update failed");
+			return;
+		}
+		MessageDialog.openInformation(getShell(), "Success", "Update Successful");
+	}
 
 	/*
 	 * (non-Javadoc)

@@ -17,6 +17,7 @@ import ivc.util.FileUtils;
 import ivc.util.NetworkUtils;
 
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,46 +32,30 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.team.ui.TeamOperation;
+import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * @author danielan
  * 
  */
-public class UpdateCommand implements CommandIntf {
-
+public class UpdateCommand extends TeamOperation {
 	private String projectPath;
 	private IVCProject ivcProject;
 	private List<String> filesToUpdate;
-
+	private Result result;
 	private boolean updateAll;
 	private OperationHistoryList rcl;
+	private CommandArgs commandArgs;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see command.CommandIntf#execute(data.CommandArgs)
-	 */
-	@Override
-	public Result execute(CommandArgs args) {
+	public UpdateCommand(IWorkbenchPart part, CommandArgs args) {
+		super(part);
+		commandArgs = args;
+	}
 
-		// init local variables
-		ivcProject = (IVCProject) args.getArgumentValue(Constants.IVCPROJECT);
-		projectPath = ivcProject.getServerPath();
-		if (args.getArgumentValue(Constants.FILE_PATHS) != null) {
-			filesToUpdate = (List<String>) args.getArgumentValue(Constants.FILE_PATHS);
-		}
-		if (filesToUpdate == null) {
-			updateAll = true;
-		}
-
-		// 1. apply rcl and update version
-		applyRCL();
-		// 2. update ll to include effects of rcl & update rul of others to contain modified version of ll
-		updateLL();
-		// 3. clean rcl
-		cleanRCL();
-
-		return new Result(true, "Success", null);
+	public Result getResult() {
+		return result;
 	}
 
 	private void applyRCL() {
@@ -89,13 +74,14 @@ public class UpdateCommand implements CommandIntf {
 					IFile file = (IFile) project.findMember(filePath);
 					InputStream contentStream;
 					StringBuffer content = new StringBuffer();
-					if (file.exists()){
+					if (file.exists()) {
 						try {
 							contentStream = file.getContents(true);
 							content = FileUtils.InputStreamToStringBuffer(contentStream);
 						} catch (CoreException e) {
-							// TODO Auto-generated catch block
+							result = new Result(false, e.getMessage(), e);
 							e.printStackTrace();
+							return;
 						}
 					}
 					LinkedList<Operation> operations = th.getOperations();
@@ -108,8 +94,9 @@ public class UpdateCommand implements CommandIntf {
 								try {
 									content = tr.applyContentTransformation(content);
 								} catch (Exception e) {
-									// TODO Auto-generated catch block
+									result = new Result(false, e.getMessage(), e);
 									e.printStackTrace();
+									return;
 								}
 							} else {
 								// handle project structure modifications
@@ -130,12 +117,14 @@ public class UpdateCommand implements CommandIntf {
 				project.refreshLocal(IResource.DEPTH_INFINITE, null);
 			} catch (Exception e) {
 				e.printStackTrace();
+				result = new Result(false, e.getMessage(), e);
 			} finally {
 				FileModificationManager.ignoreModifications = false;
 			}
 		} catch (RemoteException e1) {
-			// TODO Auto-generated catch block
+			result = new Result(false, e1.getMessage(), e1);
 			e1.printStackTrace();
+			return;
 		}
 	}
 
@@ -176,6 +165,32 @@ public class UpdateCommand implements CommandIntf {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void run(IProgressMonitor arg0) throws InvocationTargetException, InterruptedException {
+		// init local variables
+		arg0.beginTask("Yuuuhuuu", 2);
+		ivcProject = (IVCProject) commandArgs.getArgumentValue(Constants.IVCPROJECT);
+		arg0.subTask("husd");
+		arg0.worked(1);
+		projectPath = ivcProject.getServerPath();
+		if (commandArgs.getArgumentValue(Constants.FILE_PATHS) != null) {
+			filesToUpdate = (List<String>) commandArgs.getArgumentValue(Constants.FILE_PATHS);
+		}
+		if (filesToUpdate == null) {
+			updateAll = true;
+		}
+
+		// 1. apply rcl and update version
+		applyRCL();
+		// 2. update ll to include effects of rcl & update rul of others to contain modified version of ll
+		updateLL();
+		// 3. clean rcl
+		cleanRCL();
+
+		result = new Result(true, "Success", null);
+
 	}
 
 }
