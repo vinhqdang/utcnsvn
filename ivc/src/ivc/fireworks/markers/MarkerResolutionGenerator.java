@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import ivc.data.IVCProject;
-import ivc.manager.ProjectsManager;
+import ivc.managers.ProjectsManager;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;

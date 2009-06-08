@@ -44,7 +44,7 @@ public class OperationHistory implements Serializable {
 	/**
 	 * @return the operations
 	 */
-	public LinkedList<Operation> getTransformations() {
+	public LinkedList<Operation> getOperations() {
 		return operations;
 	}
 
@@ -69,7 +69,7 @@ public class OperationHistory implements Serializable {
 	}
 
 	public OperationHistory excludeOperations(OperationHistory oh) {
-		if (oh == null || oh.getTransformations().isEmpty()){
+		if (oh == null || oh.getOperations().isEmpty()){
 			return this;
 		}
 		OperationHistory newOh = new OperationHistory();
@@ -78,7 +78,7 @@ public class OperationHistory implements Serializable {
 		while (itoOwn.hasNext()) {
 			Operation ownOp = itoOwn.next();
 			Operation newOp = ownOp;
-			Iterator<Operation> itoOther = oh.getTransformations().descendingIterator();
+			Iterator<Operation> itoOther = oh.getOperations().descendingIterator();
 			while (itoOther.hasNext()) {
 				Operation op = itoOther.next();
 				newOp = newOp.excludeOperation(op);
@@ -89,16 +89,13 @@ public class OperationHistory implements Serializable {
 	}
 
 	public OperationHistory includeOperations(OperationHistory oh) {
-		if (oh == null || oh.getTransformations().isEmpty()){
-			return this;
-		}
 		OperationHistory newOh = new OperationHistory();
 		newOh.setFilePath(oh.getFilePath());
 		Iterator<Operation> itoOwn = operations.descendingIterator();
 		while (itoOwn.hasNext()) {
 			Operation ownOp = itoOwn.next();
 			Operation newOp = ownOp;
-			Iterator<Operation> itoOther = oh.getTransformations().descendingIterator();
+			Iterator<Operation> itoOther = oh.getOperations().descendingIterator();
 			while (itoOther.hasNext()) {
 				Operation op = itoOther.next();
 				newOp = newOp.includeOperation(op);

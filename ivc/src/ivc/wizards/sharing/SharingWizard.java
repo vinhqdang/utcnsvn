@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.Result;
 import ivc.data.commands.ShareProjectCommand;
-import ivc.manager.ProjectsManager;
+import ivc.managers.ProjectsManager;
 import ivc.plugin.IVCPlugin;
 import ivc.repository.IVCRepositoryProvider;
 import ivc.util.Constants;

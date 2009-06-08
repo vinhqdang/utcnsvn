@@ -2,7 +2,7 @@ package ivc.fireworks.markers;
 
 import ivc.data.IVCProject;
 import ivc.data.annotation.UsersAnnotations;
-import ivc.manager.ProjectsManager;
+import ivc.managers.ProjectsManager;
 import ivc.plugin.IVCPlugin;
 import ivc.repository.Status;
 import ivc.util.FileUtils;

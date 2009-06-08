@@ -1,4 +1,4 @@
-package ivc.connection;
+package ivc.managers;
 
 import ivc.data.Peer;
 import ivc.data.exception.Exceptions;

@@ -1,6 +1,6 @@
 package ivc.fireworks.actions;
 
-import ivc.manager.ProjectsManager;
+import ivc.managers.ProjectsManager;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IWorkbenchWindow;

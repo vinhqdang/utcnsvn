@@ -1,10 +1,10 @@
 package ivc.data.commands;
 
-import ivc.connection.ConnectionManager;
 import ivc.data.BaseVersion;
 import ivc.data.exception.Exceptions;
 import ivc.data.exception.IVCException;
-import ivc.manager.ProjectsManager;
+import ivc.managers.ConnectionManager;
+import ivc.managers.ProjectsManager;
 import ivc.repository.IVCRepositoryProvider;
 import ivc.rmi.server.ServerIntf;
 import ivc.util.Constants;

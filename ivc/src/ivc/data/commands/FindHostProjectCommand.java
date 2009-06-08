@@ -1,8 +1,8 @@
 package ivc.data.commands;
 
-import ivc.connection.ConnectionManager;
 import ivc.data.exception.Exceptions;
 import ivc.data.exception.IVCException;
+import ivc.managers.ConnectionManager;
 import ivc.rmi.server.ServerIntf;
 
 import java.lang.reflect.InvocationTargetException;

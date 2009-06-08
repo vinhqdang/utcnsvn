@@ -38,7 +38,7 @@ public class OperationHistoryList implements Serializable {
 	/**
 	 * @return the operations
 	 */
-	public LinkedList<OperationHistory> getTransformationHist() {
+	public LinkedList<OperationHistory> getOperationHist() {
 		return operations;
 	}
 
@@ -60,7 +60,7 @@ public class OperationHistoryList implements Serializable {
 		while (it.hasNext()) {
 			OperationHistory th = it.next();
 			if (th.getFilePath().equalsIgnoreCase(filePath)) {
-				return th.getTransformations();
+				return th.getOperations();
 			}
 		}
 		return null;
@@ -73,7 +73,7 @@ public class OperationHistoryList implements Serializable {
 			OperationHistory cth = it.next();
 			if (oh.getFilePath().equalsIgnoreCase(oh.getFilePath())) {
 				isnew = false;
-				cth.addOperations(oh.getTransformations());
+				cth.addOperations(oh.getOperations());
 				break;
 			}
 		}
@@ -84,7 +84,7 @@ public class OperationHistoryList implements Serializable {
 	}
 
 	public OperationHistoryList appendOperationHistoryList(OperationHistoryList thl) {
-		if (thl == null || thl.getTransformationHist() == null) {
+		if (thl == null || thl.getOperationHist() == null) {
 			return this;
 		}
 		Iterator<OperationHistory> it = thl.iterator();
@@ -132,7 +132,7 @@ public class OperationHistoryList implements Serializable {
 	}
 
 	public OperationHistoryList removeOperationHistList(OperationHistoryList thl) {
-		operations.removeAll(thl.getTransformationHist());
+		operations.removeAll(thl.getOperationHist());
 		return this;
 	}
 
@@ -141,7 +141,7 @@ public class OperationHistoryList implements Serializable {
 		while (it.hasNext()) {
 			OperationHistory th = it.next();
 			// the most recent transformation
-			Operation firstTransf = th.getTransformations().getFirst();
+			Operation firstTransf = th.getOperations().getFirst();
 			if (firstTransf.getOperationType() == Operation.REMOVE_FILE || firstTransf.getOperationType() == Operation.REMOVE_FOLDER) {
 				firstTransf.applyStructureTransformation(project);
 				return;
@@ -155,7 +155,7 @@ public class OperationHistoryList implements Serializable {
 					is = file.getContents();
 					baseContent = FileUtils.InputStreamToStringBuffer(is);
 				}
-				for (Iterator<Operation> iterator = th.getTransformations().iterator(); iterator.hasNext();) {
+				for (Iterator<Operation> iterator = th.getOperations().iterator(); iterator.hasNext();) {
 					Operation operation = iterator.next();
 					if (operation.getOperationType() == Operation.CHARACTER_ADD || operation.getOperationType() == Operation.CHARACTER_DELETE) {
 						baseContent = operation.applyContentTransformation(baseContent);
@@ -189,8 +189,8 @@ public class OperationHistoryList implements Serializable {
 				OperationHistory ownOps = getOperationHistForFile(filePath);
 				OperationHistory otherOps = ohl.getOperationHistForFile(filePath);
 				// if the other list deleted the file\folder we have operations on abort operations
-				if (otherOps.getTransformations().getFirst().getOperationType() != Operation.REMOVE_FILE
-						|| otherOps.getTransformations().getFirst().getOperationType() != Operation.REMOVE_FOLDER) {
+				if (otherOps.getOperations().getFirst().getOperationType() != Operation.REMOVE_FILE
+						|| otherOps.getOperations().getFirst().getOperationType() != Operation.REMOVE_FOLDER) {
 					// merge lists of content operations
 					OperationHistory itOh = ownOps.includeOperations(otherOps);
 					newOhl.appendOperationHistory(itOh);

@@ -3,13 +3,13 @@
  */
 package ivc.data.commands;
 
-import ivc.connection.ConnectionManager;
 import ivc.data.IVCProject;
 import ivc.data.Peer;
 import ivc.data.operation.Operation;
 import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
 import ivc.listeners.FileModificationManager;
+import ivc.managers.ConnectionManager;
 import ivc.rmi.client.ClientIntf;
 import ivc.rmi.server.ServerIntf;
 import ivc.util.Constants;
@@ -98,7 +98,7 @@ public class UpdateCommand implements CommandIntf {
 							e.printStackTrace();
 						}
 					}
-					LinkedList<Operation> operations = th.getTransformations();
+					LinkedList<Operation> operations = th.getOperations();
 					if (operations != null) {
 						Iterator<Operation> itt = operations.descendingIterator();
 						while (itt.hasNext()) {

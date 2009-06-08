@@ -39,13 +39,13 @@ public class MergeChangesCommand implements CommandIntf {
 
 		newThl1 = new OperationHistoryList();
 		newThl2 = new OperationHistoryList();
-		if (thl1 == null || thl1.getTransformationHist().isEmpty()) {
+		if (thl1 == null || thl1.getOperationHist().isEmpty()) {
 			newThl2 = thl2;
 			args.putArgument(Constants.OPERATION_HIST_LIST1, newThl1);
 			args.putArgument(Constants.OPERATION_HIST_LIST2, newThl2);
 			return new Result(true, "Success", null);
 		}
-		if (thl2 == null || thl2.getTransformationHist().isEmpty()) {
+		if (thl2 == null || thl2.getOperationHist().isEmpty()) {
 			newThl1 = thl1;
 			args.putArgument(Constants.OPERATION_HIST_LIST1, newThl1);
 			args.putArgument(Constants.OPERATION_HIST_LIST2, newThl2);
@@ -57,9 +57,9 @@ public class MergeChangesCommand implements CommandIntf {
 		while (it.hasNext()) {
 			OperationHistory th1 = it.next();
 			String filePath = th1.getFilePath();
-			if (th1.getTransformations().getFirst().getOperationType() == Operation.REMOVE_FILE
-					|| th1.getTransformations().getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
-				newThl1.appendOperation(th1.getTransformations().getFirst());
+			if (th1.getOperations().getFirst().getOperationType() == Operation.REMOVE_FILE
+					|| th1.getOperations().getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
+				newThl1.appendOperation(th1.getOperations().getFirst());
 			} else
 			// if both lists have transformations for the same file
 			if (thl2.getOperationsForFile(filePath) != null) {
@@ -92,9 +92,9 @@ public class MergeChangesCommand implements CommandIntf {
 		while (it.hasNext()) {
 			OperationHistory th2 = it.next();
 			String filePath = th2.getFilePath();
-			if (th2.getTransformations().getFirst().getOperationType() == Operation.REMOVE_FILE
-					|| th2.getTransformations().getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
-				newThl2.appendOperation(th2.getTransformations().getFirst());
+			if (th2.getOperations().getFirst().getOperationType() == Operation.REMOVE_FILE
+					|| th2.getOperations().getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
+				newThl2.appendOperation(th2.getOperations().getFirst());
 			} else
 			// if both lists have transformations for the same file
 			if (thl1.getOperationsForFile(filePath) != null) {

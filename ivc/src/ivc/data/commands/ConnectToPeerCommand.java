@@ -8,8 +8,8 @@ import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.List;
 
-import ivc.connection.ConnectionManager;
 import ivc.data.exception.IVCException;
+import ivc.managers.ConnectionManager;
 import ivc.rmi.client.ClientIntf;
 
 /**

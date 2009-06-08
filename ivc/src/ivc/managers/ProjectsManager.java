@@ -1,4 +1,4 @@
-package ivc.manager;
+package ivc.managers;
 
 import ivc.data.IVCProject;
 import ivc.repository.CacheManager;

@@ -3,7 +3,7 @@ package ivc.fireworks.actions;
 import ivc.data.IVCProject;
 import ivc.data.commands.CommandArgs;
 import ivc.data.commands.UpdateCommand;
-import ivc.manager.ProjectsManager;
+import ivc.managers.ProjectsManager;
 import ivc.util.Constants;
 
 import java.util.ArrayList;
