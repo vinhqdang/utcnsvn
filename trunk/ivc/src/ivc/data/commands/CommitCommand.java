@@ -93,9 +93,10 @@ public class CommitCommand implements CommandIntf {
 					changedFiles.appendOperationHistory(oh);
 				}
 			}
-		}
+		}else{
 		// TODO: 1. handle add and remove files ca alex nu a avut chef sa faca o transformare
-		changedFiles.appendOperationHistoryList(ll);
+			changedFiles.appendOperationHistoryList(ll);
+		}
 
 	}
 
