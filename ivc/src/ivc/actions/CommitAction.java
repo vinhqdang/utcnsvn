@@ -1,4 +1,4 @@
-package ivc.fireworks.actions;
+package ivc.actions;
 
 import ivc.commands.CommandArgs;
 import ivc.commands.CommitCommand;
