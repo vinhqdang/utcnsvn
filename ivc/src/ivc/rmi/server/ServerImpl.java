@@ -385,4 +385,19 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 		FileUtils.writeObjectToFile(Constants.RepositoryFolder + Constants.Peers, allHosts);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ivc.rmi.server.ServerIntf#getBaseVersionForFile(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public StringBuffer getBaseVersionForFile(String projectPath, String filePath) throws RemoteException {
+		Object obj = FileUtils.readObjectFromFile(Constants.RepositoryFolder + projectPath + Constants.BaseVersionFile);
+		if (obj != null) {
+			BaseVersion bv = (BaseVersion) FileUtils.readObjectFromFile(Constants.RepositoryFolder + projectPath + Constants.BaseVersionFile);
+			return bv.getFileContent(filePath);
+		}
+		return null;
+	}
+
 }

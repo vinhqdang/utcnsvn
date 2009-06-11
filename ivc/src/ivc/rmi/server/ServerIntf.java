@@ -28,6 +28,8 @@ public interface ServerIntf extends Remote {
 	
 	public void receiveBaseVersion(String projectPath, BaseVersion bv) throws RemoteException;
 	
+	public StringBuffer getBaseVersionForFile(String projectPath, String filePath)throws RemoteException;
+	
 	//head version
 	
 	public OperationHistoryList returnHeadVersion(String projectPath) throws RemoteException;
