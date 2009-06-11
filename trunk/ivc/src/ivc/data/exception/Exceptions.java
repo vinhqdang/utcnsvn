@@ -25,5 +25,9 @@ public class Exceptions {
 	
 	// stop command
 	public static final String COULD_NOT_DISCONNECT_FROM_HOST = "COULD_NOT_DISCONNECT_FROM_HOST";
+	
+	// get user copy command
+	public static final String COULD_NOT_GET_BASEVERSION_FORFILE = "COULD_NOT_GET_BASEVERSION_FORFILE";
+	public static final String COULD_NOT_GET_COMMITEDLOG= "COULD_NOT_GET_COMMITEDLOG";
  
 }
