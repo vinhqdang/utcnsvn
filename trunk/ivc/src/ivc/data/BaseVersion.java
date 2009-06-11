@@ -69,6 +69,14 @@ public class BaseVersion implements Serializable{
 		folders.add(folderPath);
 	}
 	
+	public StringBuffer getFileContent(String filePath){
+		if (files.containsKey(filePath)){
+			StringBuffer sb = files.get(filePath);
+			return sb;
+		}
+		return null;
+	}
+	
 	
 
 }
