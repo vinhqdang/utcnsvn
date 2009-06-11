@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ivc.data.commands;
+package ivc.commands;
 
 import ivc.data.IVCProject;
 import ivc.data.Peer;
@@ -63,6 +63,7 @@ public class CommitCommand implements CommandIntf {
 		}
 		try {
 			// send commited changes to the server
+			//TODO 1. add newly added files to base version 
 			connectionManager.getServer().updateHeadVersion(ivcProject.getServerPath(), changedFiles);
 		} catch (Exception e) {
 			return new Result(false, Exceptions.SERVER_UPDATE_HEADVERSION_FAILED, e);

@@ -1,8 +1,8 @@
 package ivc.plugin;
 
-import ivc.data.commands.CommandArgs;
-import ivc.data.commands.StartCommand;
-import ivc.data.commands.StopCommand;
+import ivc.commands.CommandArgs;
+import ivc.commands.StartCommand;
+import ivc.commands.StopCommand;
 import ivc.fireworks.decorators.Decorator;
 import ivc.listeners.FileModificationManager;
 import ivc.listeners.ResourceChangedListener;

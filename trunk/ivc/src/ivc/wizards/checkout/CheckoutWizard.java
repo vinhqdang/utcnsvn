@@ -2,9 +2,9 @@ package ivc.wizards.checkout;
 
 import java.lang.reflect.InvocationTargetException;
 
-import ivc.data.commands.CheckoutCommand;
-import ivc.data.commands.CommandArgs;
-import ivc.data.commands.ShareProjectCommand;
+import ivc.commands.CheckoutCommand;
+import ivc.commands.CommandArgs;
+import ivc.commands.ShareProjectCommand;
 import ivc.util.Constants;
 import ivc.wizards.checkout.pages.CheckoutWizardPage;
 import ivc.wizards.checkout.pages.NewProjectWizardPage;

@@ -1,7 +1,7 @@
 package ivc.fireworks.actions;
 
-import ivc.data.commands.CommandArgs;
-import ivc.data.commands.HandleOperationCommand;
+import ivc.commands.CommandArgs;
+import ivc.commands.HandleOperationCommand;
 import ivc.data.operation.Operation;
 import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;

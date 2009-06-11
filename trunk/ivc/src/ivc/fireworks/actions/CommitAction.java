@@ -1,8 +1,8 @@
 package ivc.fireworks.actions;
 
-import ivc.data.commands.CommandArgs;
-import ivc.data.commands.CommitCommand;
-import ivc.data.commands.Result;
+import ivc.commands.CommandArgs;
+import ivc.commands.CommitCommand;
+import ivc.commands.Result;
 import ivc.fireworks.markers.MarkersManager;
 import ivc.managers.ProjectsManager;
 import ivc.repository.Status;

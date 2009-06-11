@@ -1,8 +1,8 @@
 package ivc.rmi.client;
 
+import ivc.commands.CommandArgs;
+import ivc.commands.UpdateAnnotationsCommand;
 import ivc.data.IVCProject;
-import ivc.data.commands.CommandArgs;
-import ivc.data.commands.UpdateAnnotationsCommand;
 import ivc.data.exception.IVCException;
 import ivc.data.operation.Operation;
 import ivc.data.operation.OperationHistory;

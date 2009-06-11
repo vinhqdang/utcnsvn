@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ivc.data.commands;
+package ivc.commands;
 
 import ivc.data.IVCProject;
 import ivc.data.Peer;

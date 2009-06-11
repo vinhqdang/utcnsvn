@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ivc.data.commands;
+package ivc.commands;
 
 import ivc.data.operation.Operation;
 import ivc.data.operation.OperationHistory;
