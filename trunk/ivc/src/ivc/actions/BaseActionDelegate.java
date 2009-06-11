@@ -1,4 +1,4 @@
-package ivc.fireworks.actions;
+package ivc.actions;
 
 import ivc.managers.ProjectsManager;
 import ivc.plugin.IVCPlugin;

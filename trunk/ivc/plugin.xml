@@ -50,23 +50,6 @@
 	    	   <description>Checkout a new IVC project</description>
 		</wizard>
 	</extension>
-	
-	<extension point="org.eclipse.ui.actionSets">
-	    <actionSet
-	            id="ivc.actionSets"
-	            label="cacats"
-	            visible="true">
-	        
-	         
-	         <action
-	               class="ivc.fireworks.actions.TestAction"
-	               id="ivc.fireworks.actions.test"
-	               label="Test"
-	               menubarPath="visible">
-	         </action>
-	      
-	      </actionSet>    
-    </extension>
 
 	 <extension point="org.eclipse.ui.decorators">
       
@@ -75,7 +58,7 @@
             class="ivc.fireworks.decorators.Decorator"
             id="ivc.fireworks.decorators.Decorator"
             label="IVC Decorator"
-            state="false">
+            state="true">
       </decorator> 	
       
       <decorator
@@ -93,20 +76,20 @@
 	          id="ivc.contribution.versionedFiles"
 	          objectClass="org.eclipse.core.resources.mapping.ResourceMapping"
 	          adaptable="true">
-			<action class="ivc.fireworks.actions.CompareEditorAction"
-	               id="ivc.fireworks.actions.compare"
+			<action class="ivc.actions.CompareEditorAction"
+	               id="ivc.actions.compare"
 	               label="Compare"
 	               menubarPath="visible">
 	         </action>
 		
-			<action class="ivc.fireworks.actions.RefreshAction"
-	               id="ivc.fireworks.actions.marker.refresh"
+			<action class="ivc.actions.RefreshAction"
+	               id="ivc.actions.marker.refresh"
 	               label="Refresh"
 	               menubarPath="visible">
 	         </action>
 	         
-	         <action class="ivc.fireworks.actions.ClearCacheAction"
-	               id="ivc.fireworks.actions.marker.clear"
+	         <action class="ivc.actions.ClearCacheAction"
+	               id="ivc.actions.marker.clear"
 	               label="ClearCache"
 	               menubarPath="visible">
 	         </action>
@@ -127,21 +110,21 @@
          </enablement>    
 	          
 	       <action
-	             class="ivc.fireworks.actions.AddToRepositoryAction"             
+	             class="ivc.actions.AddToRepositoryAction"             
 	             id="ivc.actions.AddToRepository"
 	             label="Add to repository"
 	             menubarPath="team.main/group1">
 	       </action>
 	       
 	       <action
-	             class="ivc.fireworks.actions.CommitAction"             
+	             class="ivc.actions.CommitAction"             
 	             id="ivc.actions.Commit"
 	             label="Commit"
 	             menubarPath="team.main/group1">
 	       </action>
 	       
 	       <action
-	             class="ivc.fireworks.actions.UpdateAction"             
+	             class="ivc.actions.UpdateAction"             
 	             id="ivc.actions.Update"
 	             label="Update"
 	             menubarPath="team.main/group1">

@@ -1,11 +1,11 @@
-package ivc.fireworks.actions;
+package ivc.actions;
 
 import ivc.managers.ProjectsManager;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IWorkbenchWindow;
 
-public class ClearCacheAction extends BaseActionDelegate {
+public class RefreshAction extends BaseActionDelegate {
 
 	@Override
 	public boolean menuItemEnabled() {
@@ -28,7 +28,7 @@ public class ClearCacheAction extends BaseActionDelegate {
 	@Override
 	public void run(IAction arg0) {
 		ProjectsManager.instance().removeStatus(getSelectedResources()[0]);
-
+		ProjectsManager.instance().setDefaultStatus(getSelectedResources()[0]);
 	}
 
 }
