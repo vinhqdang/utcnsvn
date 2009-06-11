@@ -1,4 +1,4 @@
-package ivc.data.commands;
+package ivc.commands;
 
 
 public interface CommandIntf {

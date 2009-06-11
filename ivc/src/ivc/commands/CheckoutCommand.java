@@ -1,4 +1,4 @@
-package ivc.data.commands;
+package ivc.commands;
 
 import ivc.data.BaseVersion;
 import ivc.data.Peer;

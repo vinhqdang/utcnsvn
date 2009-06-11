@@ -1,8 +1,8 @@
 package ivc.listeners;
 
+import ivc.commands.CommandArgs;
+import ivc.commands.HandleOperationCommand;
 import ivc.compare.StringComparer;
-import ivc.data.commands.CommandArgs;
-import ivc.data.commands.HandleOperationCommand;
 import ivc.data.operation.OperationHistory;
 import ivc.managers.ProjectsManager;
 import ivc.repository.Status;

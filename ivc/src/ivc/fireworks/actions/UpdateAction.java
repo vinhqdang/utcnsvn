@@ -1,8 +1,8 @@
 package ivc.fireworks.actions;
 
+import ivc.commands.CommandArgs;
+import ivc.commands.UpdateCommand;
 import ivc.data.IVCProject;
-import ivc.data.commands.CommandArgs;
-import ivc.data.commands.UpdateCommand;
 import ivc.managers.ProjectsManager;
 import ivc.util.Constants;
 

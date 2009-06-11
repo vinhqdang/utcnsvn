@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ivc.data.commands;
+package ivc.commands;
 
 import ivc.data.IVCProject;
 import ivc.data.exception.Exceptions;
@@ -29,7 +29,7 @@ public class StopCommand implements CommandIntf {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ivc.data.commands.CommandIntf#execute(ivc.data.commands.CommandArgs)
+	 * @see ivc.commands.CommandIntf#execute(ivc.commands.CommandArgs)
 	 */
 	@Override
 	public Result execute(CommandArgs args) {
