@@ -7,7 +7,6 @@ import ivc.rmi.server.ServerIntf;
 
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
-import java.rmi.ServerException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -17,7 +16,6 @@ public class FindHostProjectCommand implements IRunnableWithProgress {
 	String pPath;
 	Result result;
 	
-	private ConnectionManager connectionManager;
 
 
 	public FindHostProjectCommand(String serverAddress, String path) {

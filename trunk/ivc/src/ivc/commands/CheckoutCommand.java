@@ -1,11 +1,8 @@
 package ivc.commands;
 
 import ivc.data.BaseVersion;
-import ivc.data.Peer;
 import ivc.data.exception.Exceptions;
 import ivc.data.exception.IVCException;
-import ivc.data.operation.Operation;
-import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
 import ivc.managers.ConnectionManager;
 import ivc.repository.IVCRepositoryProvider;
@@ -22,7 +19,6 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;

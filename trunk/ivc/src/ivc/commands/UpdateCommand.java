@@ -28,9 +28,6 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.team.ui.TeamOperation;
@@ -45,7 +42,8 @@ public class UpdateCommand extends TeamOperation {
 	private IVCProject ivcProject;
 	private List<String> filesToUpdate;
 	private Result result;
-	private boolean updateAll;
+	// TODO 1 remove update all
+	// private boolean updateAll;
 	private OperationHistoryList rcl;
 	private CommandArgs commandArgs;
 
@@ -167,6 +165,7 @@ public class UpdateCommand extends TeamOperation {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void run(IProgressMonitor arg0) throws InvocationTargetException, InterruptedException {
 		// init local variables
@@ -178,9 +177,9 @@ public class UpdateCommand extends TeamOperation {
 		if (commandArgs.getArgumentValue(Constants.FILE_PATHS) != null) {
 			filesToUpdate = (List<String>) commandArgs.getArgumentValue(Constants.FILE_PATHS);
 		}
-		if (filesToUpdate == null) {
-			updateAll = true;
-		}
+		// if (filesToUpdate == null) {
+		// updateAll = true;
+		// }
 
 		// 1. apply rcl and update version
 		applyRCL();

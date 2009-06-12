@@ -4,17 +4,12 @@ import ivc.commands.CommandArgs;
 import ivc.commands.HandleOperationCommand;
 import ivc.data.operation.Operation;
 import ivc.data.operation.OperationHistory;
-import ivc.data.operation.OperationHistoryList;
 import ivc.managers.ProjectsManager;
 import ivc.util.Constants;
-import ivc.util.FileUtils;
 
-import java.io.InputStream;
 import java.util.Date;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IWorkbenchWindow;
 
@@ -39,15 +34,15 @@ public class AddToRepositoryAction extends BaseActionDelegate {
 				Operation operation = new Operation();
 				if (resource.getType() == IResource.FILE) {
 					operation.setOperationType(Operation.ADD_FILE);
-					InputStream is;
-					try {
-						is = ((IFile) resource).getContents();
-						// TODO 1 add entire file to subversion
-						// operation.setChar(FileUtils.InputStreamToStringBuffer(is).toString());
-					} catch (CoreException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+//					InputStream is;
+//					try {
+//						is = ((IFile) resource).getContents();
+//						// TODO 1 add entire file to subversion
+//						// operation.setChar(FileUtils.InputStreamToStringBuffer(is).toString());
+//					} catch (CoreException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
 				} else {
 					operation.setOperationType(Operation.ADD_FOLDER);
 				}

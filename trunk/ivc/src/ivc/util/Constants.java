@@ -3,7 +3,6 @@
  */
 package ivc.util;
 
-import java.io.File;
 
 /**
  * @author danielan

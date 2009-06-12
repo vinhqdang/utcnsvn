@@ -1,16 +1,14 @@
 package ivc.wizards.checkout;
 
-import java.lang.reflect.InvocationTargetException;
-
 import ivc.commands.CheckoutCommand;
 import ivc.commands.CommandArgs;
-import ivc.commands.ShareProjectCommand;
 import ivc.util.Constants;
 import ivc.wizards.checkout.pages.CheckoutWizardPage;
 import ivc.wizards.checkout.pages.NewProjectWizardPage;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.INewWizard;

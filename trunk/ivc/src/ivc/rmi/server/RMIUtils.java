@@ -34,7 +34,6 @@ public class RMIUtils {
 				if (e instanceof AlreadyBoundException) {
 					e.printStackTrace();
 				} else {
-					String msg = e.getMessage();
 					e.printStackTrace();
 					throw new IVCException(e.getMessage());
 				}

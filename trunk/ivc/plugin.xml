@@ -137,7 +137,7 @@
          id="ivc.Marker"
          name="IVC">
       <persistent
-            value="false">
+            value="true">
       </persistent>
       <super type="org.eclipse.core.resources.problemmarker"/>
    </extension>

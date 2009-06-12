@@ -1,26 +1,14 @@
 package ivc.wizards.sharing;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-
 import ivc.commands.CommandArgs;
-import ivc.commands.Result;
 import ivc.commands.ShareProjectCommand;
-import ivc.managers.ProjectsManager;
-import ivc.plugin.IVCPlugin;
-import ivc.repository.IVCRepositoryProvider;
 import ivc.util.Constants;
 import ivc.wizards.sharing.pages.SharingWizardPage;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.team.core.RepositoryProvider;
-import org.eclipse.team.core.TeamException;
 import org.eclipse.team.ui.IConfigurationWizard;
 import org.eclipse.ui.IWorkbench;
 

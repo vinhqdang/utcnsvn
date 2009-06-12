@@ -1,14 +1,10 @@
 package ivc.rmi.client;
 
-import ivc.commands.CommandArgs;
-import ivc.commands.Result;
 import ivc.data.operation.Operation;
-import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.List;
 
 public interface ClientIntf extends Remote {
 	

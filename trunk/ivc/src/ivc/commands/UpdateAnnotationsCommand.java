@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
+
 
 /**
  * @author danielan
@@ -182,7 +182,7 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 		while (it.hasNext()) {
 			Operation op = it.next();
 			Integer position = op.getPosition();
-			lineNumbers.add(op.getPosition());
+			lineNumbers.add(position);
 		}
 		ra.setAnnotations(filePath, user, lineNumbers);
 		

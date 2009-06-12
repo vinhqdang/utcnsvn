@@ -182,7 +182,7 @@ public class ConnectionManager implements Serializable {
 		if (!managers.keySet().contains(projectName)) {
 			ConnectionManager manager = new ConnectionManager();
 			manager.peers = new HashMap<String, ClientIntf>();
-			manager.peersHosts = new ArrayList<String>();
+			peersHosts = new ArrayList<String>();
 			managers.put(projectName, manager);
 		}
 		return managers.get(projectName);

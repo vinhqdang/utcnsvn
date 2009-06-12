@@ -1,13 +1,11 @@
 package ivc.listeners;
 
-import ivc.data.IVCProject;
 import ivc.managers.ProjectsManager;
 import ivc.repository.IVCRepositoryProvider;
 import ivc.repository.Status;
 
 import java.util.ArrayList;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;

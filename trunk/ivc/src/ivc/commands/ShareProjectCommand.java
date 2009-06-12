@@ -67,7 +67,7 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 		// 1. connect to server
 
 		try {
-			ServerIntf server = connectionManager.connectToServer(serverAddress);
+			ServerIntf server = ConnectionManager.connectToServer(serverAddress);
 
 			// continue if connection succedded
 			if (server != null) {
