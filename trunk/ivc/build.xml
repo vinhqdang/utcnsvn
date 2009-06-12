@@ -1,6 +1,6 @@
 <?xml version="1.0" ?> 
 
-<project name="utcnsvn" default="build-client" basedir=".">
+<project name="utcnsvn" default="run" basedir=".">
 <!--   The directories 
   --> 
   <property name="root" value="${basedir}/.." /> 
