@@ -20,7 +20,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 
-public class FileModificationManager implements IResourceChangeListener {
+public class FileModificationListener implements IResourceChangeListener {
 
 	private ProjectsManager projectsManager = ProjectsManager.instance();
 

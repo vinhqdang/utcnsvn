@@ -55,6 +55,9 @@ public class ResourceChangedListener implements IResourceChangeListener {
 							if (!(resource instanceof IProject)) {
 								toBeRefreshed.add(resource.getParent());
 							}
+							if (projectsManager.isManaged(resource)) {
+								projectsManager.updateStatus(resource, Status.Deleted, false);
+							}
 						}
 						break;
 					default:

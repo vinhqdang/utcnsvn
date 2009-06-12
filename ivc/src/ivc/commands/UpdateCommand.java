@@ -8,7 +8,7 @@ import ivc.data.Peer;
 import ivc.data.operation.Operation;
 import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
-import ivc.listeners.FileModificationManager;
+import ivc.listeners.FileModificationListener;
 import ivc.managers.ConnectionManager;
 import ivc.rmi.client.ClientIntf;
 import ivc.rmi.server.ServerIntf;
@@ -42,10 +42,9 @@ public class UpdateCommand extends TeamOperation {
 	private IVCProject ivcProject;
 	private List<String> filesToUpdate;
 	private Result result;
-	// TODO 1 remove update all
-	// private boolean updateAll;
 	private OperationHistoryList rcl;
 	private CommandArgs commandArgs;
+	private IProgressMonitor monitor;
 
 	public UpdateCommand(IWorkbenchPart part, CommandArgs args) {
 		super(part);
@@ -68,6 +67,7 @@ public class UpdateCommand extends TeamOperation {
 			while (it.hasNext()) {
 				OperationHistory th = it.next();
 				String filePath = th.getFilePath();
+				monitor.subTask(filePath);
 				if (filesToUpdate == null || filesToUpdate.contains(filePath)) {
 					IFile file = (IFile) project.findMember(filePath);
 					InputStream contentStream;
@@ -111,13 +111,13 @@ public class UpdateCommand extends TeamOperation {
 			}
 			ivcProject.setCurrentVersion(currentLocalVersion);
 			try {
-				FileModificationManager.ignoreModifications = true;
+				FileModificationListener.ignoreModifications = true;
 				project.refreshLocal(IResource.DEPTH_INFINITE, null);
 			} catch (Exception e) {
 				e.printStackTrace();
 				result = new Result(false, e.getMessage(), e);
 			} finally {
-				FileModificationManager.ignoreModifications = false;
+				FileModificationListener.ignoreModifications = false;
 			}
 		} catch (RemoteException e1) {
 			result = new Result(false, e1.getMessage(), e1);
@@ -167,27 +167,28 @@ public class UpdateCommand extends TeamOperation {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void run(IProgressMonitor arg0) throws InvocationTargetException, InterruptedException {
+	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		// init local variables
-		arg0.beginTask("Yuuuhuuu", 2);
+		this.monitor = monitor;
+		monitor.beginTask("Updating resources", 3);
 		ivcProject = (IVCProject) commandArgs.getArgumentValue(Constants.IVCPROJECT);
-		arg0.subTask("husd");
-		arg0.worked(1);
 		projectPath = ivcProject.getServerPath();
 		if (commandArgs.getArgumentValue(Constants.FILE_PATHS) != null) {
 			filesToUpdate = (List<String>) commandArgs.getArgumentValue(Constants.FILE_PATHS);
-		}
-		// if (filesToUpdate == null) {
-		// updateAll = true;
-		// }
+		}	
 
 		// 1. apply rcl and update version
+		monitor.setTaskName("Applying Remote Commited Log");
 		applyRCL();
 		// 2. update ll to include effects of rcl & update rul of others to contain modified version of ll
+		monitor.internalWorked(1);
+		monitor.setTaskName("Updating Local Log");
 		updateLL();
 		// 3. clean rcl
+		monitor.internalWorked(1);
+		monitor.setTaskName("Cleaning Remote Commited Log");
 		cleanRCL();
-
+		monitor.done();
 		result = new Result(true, "Success", null);
 
 	}

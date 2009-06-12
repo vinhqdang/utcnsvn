@@ -125,7 +125,7 @@ public class OperationHistoryList implements Serializable {
 	
 
 	public OperationHistoryList removeOperationHistForFile(String filePath) {
-		OperationHistory th = getOperationHistForFile(filePath);
+		OperationHistory th = getOperationHistForFile(filePath);		
 		if (th != null) {
 			operations.remove(th);
 		}
