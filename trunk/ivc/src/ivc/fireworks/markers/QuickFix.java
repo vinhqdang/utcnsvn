@@ -49,7 +49,7 @@ public class QuickFix implements IMarkerResolution2 {
 			args.putArgument(Constants.HOST_ADDRESS, user);
 			IVCProject project = ProjectsManager.instance().getIVCProjectByName(left.getProject().getName());
 			args.putArgument(Constants.IVCPROJECT, project);
-			args.putArgument(Constants.FILE_PATH, left.getProjectRelativePath());
+			args.putArgument(Constants.FILE_PATH, left.getProjectRelativePath().toOSString());
 			Result result = command.execute(args);
 			
 			String right = result.getResultData().toString();			
