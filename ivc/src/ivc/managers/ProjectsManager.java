@@ -41,7 +41,7 @@ public class ProjectsManager {
 		return projects.containsKey(project.getName());
 	}
 
-		public void findProjects() {
+	public void findProjects() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IProject[] wsProjects = workspace.getRoot().getProjects();
 		for (IProject project : wsProjects) {
@@ -106,6 +106,10 @@ public class ProjectsManager {
 			return ((IVCProject) projects.get(projectName)).getProject();
 		}
 		return null;
+	}
+
+	public IVCProject getIVCProjectByResource(IResource resource) {
+		return getIVCProjectByName(resource.getProject().getName());
 	}
 
 	public IVCProject getIVCProjectByName(String projectName) {
