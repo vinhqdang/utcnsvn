@@ -1,11 +1,18 @@
 package ivc.fireworks.markers;
 
+import ivc.commands.CommandArgs;
+import ivc.commands.GetUserCopyCommand;
+import ivc.commands.Result;
 import ivc.compare.DiffComparableFactory;
 import ivc.compare.IVCCompareEditorInput;
+import ivc.data.IVCProject;
 import ivc.managers.ImageDescriptorManager;
+import ivc.managers.ProjectsManager;
+import ivc.util.Constants;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IMarkerResolution2;
@@ -27,20 +34,26 @@ public class QuickFix implements IMarkerResolution2 {
 	}
 
 	@Override
-	public void run(IMarker marker) {
-		System.out.println("asdasda");
+	public void run(IMarker marker) {		
 		try {
 			CompareConfiguration config = new CompareConfiguration();
-			String left = "test";// ResourcesPlugin.getWorkspace().getRoot().getProject("Project").getFile(new Path("src\\com\\data\\Adapter.java"));
-			String right = user;// ResourcesPlugin.getWorkspace().getRoot().getProject("Project").getFile(new Path("src\\com\\data\\Added.java"));
 			config.setLeftEditable(true);
 			config.setRightEditable(true);
+			
 			IVCCompareEditorInput input = new IVCCompareEditorInput(config);
+			
+			IFile left = (IFile) marker.getResource();
 
-			//CommandArgs args = new CommandArgs();
-			// args.putArgument(Constants.IVCPROJECT, value)
-			// GetUserCopyCommand command=new GetUserCopyCommand();
-
+			GetUserCopyCommand command = new GetUserCopyCommand();
+			CommandArgs args = new CommandArgs();
+			args.putArgument(Constants.HOST_ADDRESS, user);
+			IVCProject project = ProjectsManager.instance().getIVCProjectByName(left.getProject().getName());
+			args.putArgument(Constants.IVCPROJECT, project);
+			args.putArgument(Constants.FILE_PATH, left.getProjectRelativePath());
+			Result result = command.execute(args);
+			
+			String right = result.getResultData().toString();			
+			
 			input.setLeft(DiffComparableFactory.createComparable(left));
 			input.setRight(DiffComparableFactory.createComparable(right));
 			CompareUI.openCompareDialog(input);
