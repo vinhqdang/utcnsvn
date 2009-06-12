@@ -64,7 +64,7 @@ public class GetUserCopyCommand implements CommandIntf {
 				OperationHistoryList cl = server.returnHeadVersion(ivcProject.getServerPath());
 				OperationHistory fileOps = cl.getOperationHistForFile(filePath);
 				if (fileOps != null) {
-					for (Iterator<Operation> iterator = fileOps.getOperations().iterator(); iterator.hasNext();) {
+					for (Iterator<Operation> iterator = fileOps.getOperations().descendingIterator(); iterator.hasNext();) {
 						Operation operation = iterator.next();
 						if (operation.getOperationType() == Operation.CHARACTER_ADD || operation.getOperationType() == Operation.CHARACTER_DELETE) {
 							if (operation.getFileVersion() <= version) {
@@ -81,7 +81,7 @@ public class GetUserCopyCommand implements CommandIntf {
 				if (rul != null && rul.getOperationHistForFile(filePath) != null) {
 					OperationHistory rulOps = rul.getOperationHistForFile(filePath);
 					if (rulOps != null) {
-						for (Iterator<Operation> iterator = rulOps.getOperations().iterator(); iterator.hasNext();) {
+						for (Iterator<Operation> iterator = rulOps.getOperations().descendingIterator(); iterator.hasNext();) {
 							Operation operation = iterator.next();
 							if (operation.getOperationType() == Operation.CHARACTER_ADD || operation.getOperationType() == Operation.CHARACTER_DELETE) {
 								fileContent = operation.applyContentTransformation(fileContent);

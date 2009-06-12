@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class OperationHistory implements Serializable {
+public class OperationHistory implements Serializable,Cloneable {
 
 	/**
 	 * 
@@ -69,14 +69,26 @@ public class OperationHistory implements Serializable {
 
 	public OperationHistory excludeOperations(OperationHistory oh) {
 		if (oh == null || oh.getOperations().isEmpty()){
-			return this;
+			try {
+				return (OperationHistory) clone();
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return new OperationHistory();
+			}
 		}
 		OperationHistory newOh = new OperationHistory();
 		newOh.setFilePath(oh.getFilePath());
 		Iterator<Operation> itoOwn = operations.descendingIterator();
 		while (itoOwn.hasNext()) {
 			Operation ownOp = itoOwn.next();
-			Operation newOp = ownOp;
+			Operation newOp = new Operation();
+			try {
+				newOp = (Operation)ownOp.clone();
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			Iterator<Operation> itoOther = oh.getOperations().descendingIterator();
 			while (itoOther.hasNext()) {
 				Operation op = itoOther.next();
@@ -103,4 +115,19 @@ public class OperationHistory implements Serializable {
 		}
 		return newOh;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	protected Object clone() throws CloneNotSupportedException {	
+		OperationHistory oh = (OperationHistory) super.clone();
+		oh.setOperations(new LinkedList<Operation>());
+		for(Operation op :oh.getOperations()){
+			oh.getOperations().add((Operation) op.clone());
+		}
+		return oh;
+	}
+
+	
 }
