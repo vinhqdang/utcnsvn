@@ -67,7 +67,7 @@ public class OperationHistoryList implements Serializable {
 
 	public OperationHistoryList appendOperationHistory(OperationHistory oh) {
 		boolean isnew = true;
-		Iterator<OperationHistory> it = this.operations.iterator();
+		Iterator<OperationHistory> it = this.operations.descendingIterator();
 		while (it.hasNext()) {
 			OperationHistory cth = it.next();
 			if (oh.getFilePath().equalsIgnoreCase(oh.getFilePath())) {
@@ -77,7 +77,7 @@ public class OperationHistoryList implements Serializable {
 			}
 		}
 		if (isnew) {
-			operations.add(oh);
+			operations.addFirst(oh);
 		}
 		return this;
 	}

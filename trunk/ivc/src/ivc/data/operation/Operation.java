@@ -10,7 +10,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 
-public class Operation implements Serializable {
+public class Operation implements Serializable,Cloneable {
 
 	/**
 	 * used for serialization
@@ -314,15 +314,21 @@ public class Operation implements Serializable {
 
 	public Operation excludeOperation(Operation op) {
 		Operation newOp = new Operation();
-		newOp.setCommited(op.getCommited());
-		newOp.setDate(op.getDate());
-		newOp.setFilePath(op.getFilePath());
-		newOp.setFileVersion(op.getFileVersion());
-		newOp.setOperationType(op.getOperationType());
-		newOp.setText(chr);
-		newOp.setUserID(op.getUserID());
-		newOp.setSid(op.getSid());
-		newOp.setPosition(position);
+		try {
+			newOp = (Operation) op.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		newOp.setCommited(op.getCommited());
+//		newOp.setDate(op.getDate());
+//		newOp.setFilePath(op.getFilePath());
+//		newOp.setFileVersion(op.getFileVersion());
+//		newOp.setOperationType(op.getOperationType());
+//		newOp.setText(chr);
+//		newOp.setUserID(op.getUserID());
+//		newOp.setSid(op.getSid());
+//		newOp.setPosition(position);
 
 		// the positions of the operations
 		int posOther = op.getPosition();
@@ -333,36 +339,63 @@ public class Operation implements Serializable {
 		// both local and remote operations are insertions
 		if (operationType == Operation.CHARACTER_ADD && typeOther == Operation.CHARACTER_ADD) {
 			if (position >= posOther) {
-				newOp.setPosition(position - 1);
+				newOp.setPosition(position.intValue() - 1);
 			}
 		}
 
 		// operation1 is insertion and operation2 is deletion
 		if (operationType == Operation.CHARACTER_ADD && typeOther == Operation.CHARACTER_DELETE) {
 			if (position > posOther) {
-				newOp.setPosition(position + 1);
+				newOp.setPosition(position.intValue() + 1);
 			}
 		}
 
 		// operation1 is deletion and operation2 is insertion
 		if (operationType == Operation.CHARACTER_DELETE && typeOther == Operation.CHARACTER_ADD) {
 			if (position >= posOther) {
-				newOp.setPosition(position - 1);
+				newOp.setPosition(position.intValue() - 1);
 			}
 		}
 
 		// both operations are deletions
 		if (operationType == Operation.CHARACTER_DELETE && typeOther == Operation.CHARACTER_DELETE) {
 			if (position > posOther) {
-				newOp.setPosition(position + 1);
+				newOp.setPosition(position.intValue() + 1);
 			}
 		}
 
 		return newOp;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	protected Object clone() throws CloneNotSupportedException {		
+		return super.clone();
+	}
+
 	@Override
 	public String toString() {
 		return chr + "|" + position + "|";
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+
+//	protected Object getCopy() {
+//		Operation op = new Operation();
+//		op.setCommited((commited != null)? commited.booleanValue():false);
+//		op.setDate((date != null)? new Date(date.getTime()): new Date());
+//		op.setFilePath((filePath != null)? new String(filePath): "");
+//		op.setOperationType((operationType != null) ? operationType.intValue(): 0);
+//		op.setPosition((position!= null)? position.intValue(): 0);
+//		op.setSid((sid != null )?sid.intValue() : 0);
+//		op.setText((chr!= null)?chr.charValue():' ');
+//		op.setUserID((userID!= null)? new String(userID):"");
+//		return op;
+//	}
+	
+	
 }
