@@ -30,9 +30,9 @@ public class ConnectionManager implements Serializable {
 
 	private Map<String, ClientIntf> peers;
 
-	private static List<String> peersHosts;
+	private  List<String> peersHosts;
 
-	private static ServerIntf server;
+	private  ServerIntf server;
 
 	private ConnectionManager() {
 	}
@@ -88,7 +88,7 @@ public class ConnectionManager implements Serializable {
 		return peers;
 	}
 
-	public static ServerIntf connectToServer(String serverAddress) throws IVCException {
+	public ServerIntf connectToServer(String serverAddress) throws IVCException {
 		try {
 			server = (ServerIntf) Naming.lookup(serverAddress);
 			return server;
@@ -106,6 +106,22 @@ public class ConnectionManager implements Serializable {
 			throw new IVCException(Exceptions.SERVER_CONNECTION_FAILED);
 		}
 	}
+	
+	public static ServerIntf getServer(String serverAddress){
+		try {
+			return (ServerIntf) Naming.lookup(serverAddress);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public void exposeInterface(String projectPath) {
 		try {
@@ -120,7 +136,7 @@ public class ConnectionManager implements Serializable {
 		ClientIntf client;
 		try {
 			client = server.getClientIntf(hostAddress);
-			if (client != null) {
+			if (client != null && hostAddress.equalsIgnoreCase(NetworkUtils.getHostAddress()) ) {
 				peers.put(hostAddress, client);
 				peersHosts.add(hostAddress);
 				return client;
@@ -182,7 +198,7 @@ public class ConnectionManager implements Serializable {
 		if (!managers.keySet().contains(projectName)) {
 			ConnectionManager manager = new ConnectionManager();
 			manager.peers = new HashMap<String, ClientIntf>();
-			peersHosts = new ArrayList<String>();
+			manager.peersHosts = new ArrayList<String>();
 			managers.put(projectName, manager);
 		}
 		return managers.get(projectName);
