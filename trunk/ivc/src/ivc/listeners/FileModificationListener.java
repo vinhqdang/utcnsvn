@@ -71,10 +71,14 @@ public class FileModificationListener implements IResourceChangeListener {
 			 * We go trough the list of modified resources, retrieve the changes and update the status of the resource to modiffied
 			 */
 			for (IResource resource : modifiedResources) {
-				if (resource instanceof IFile) {
-					IFile file = (IFile) resource;
-					getChanges(file);
-					projectsManager.updateStatus(resource, Status.Modified, true);
+				try {
+					if (resource instanceof IFile) {
+						IFile file = (IFile) resource;
+						getChanges(file);
+						projectsManager.updateStatus(resource, Status.Modified, true);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 			modifiedResources.clear();
