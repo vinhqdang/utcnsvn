@@ -20,19 +20,30 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.team.ui.TeamOperation;
+import org.eclipse.ui.IWorkbenchPart;
+
 /**
  * @author danielan
  * 
  */
-public class CommitCommand implements CommandIntf {
+public class CommitCommand extends TeamOperation {
 
 	private String projectName;
 	private List<String> filePaths;
 	private IVCProject ivcProject;
-
+	private CommandArgs args;
 	private OperationHistoryList changedFiles;
 	private HashMap<String, Integer> currentCommitedVersion;
 	private ConnectionManager connectionManager;
+	private Result result;
+	private IProgressMonitor monitor;
+
+	public CommitCommand(IWorkbenchPart part, CommandArgs args) {
+		super(part);
+		this.args = args;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -42,9 +53,10 @@ public class CommitCommand implements CommandIntf {
 	@SuppressWarnings("unchecked")
 	@Override
 	// add version 1; delete version remains
-	public Result execute(CommandArgs args) {
+	public void run(IProgressMonitor monitor) {
 		// init local fields
-
+		this.monitor = monitor;
+		monitor.beginTask("Commit", 4);
 		projectName = (String) args.getArgumentValue(Constants.PROJECT_NAME);
 		filePaths = (List<String>) args.getArgumentValue(Constants.FILE_PATHS);
 
@@ -54,30 +66,42 @@ public class CommitCommand implements CommandIntf {
 		// if the user tries to commit the entire project must get only the changed files
 		getChangedFiles();
 		if (changedFiles == null || changedFiles.getOperationHist().isEmpty()) {
-			return new Result(true, Exceptions.COMMIT_NOFILE_CHANGED, null);
+			result = new Result(true, Exceptions.COMMIT_NOFILE_CHANGED, null);
+			return;
 		}
 		// we must check if what the user commits contains latest commited changes
 		if (!checkVersion()) {
-			return new Result(false, Exceptions.FILE_OUT_OF_SYNC, null);
+			result = new Result(false, Exceptions.FILE_OUT_OF_SYNC, null);
+			return;
 		}
 		try {
 			// send commited changes to the server
-			//TODO 1. add newly added files to base version 
+			// TODO 1. add newly added files to base version
 			connectionManager.getServer().updateHeadVersion(ivcProject.getServerPath(), changedFiles);
+
+			// increment file versions
+			monitor.setTaskName("Updating current version");
+			updateCurrentVersion();
+			monitor.internalWorked(1);
+
+			// update RCL for all hosts interested in the project
+			monitor.setTaskName("Updating Remote Commited Log");
+			updateRCLFiles();
+			monitor.internalWorked(1);
+			// refresh uncommited changes from the pending rul files from the server
+			monitor.setTaskName("Updating Pending Remote Uncommited Log");
+			updatePendingRUL();
+			monitor.internalWorked(1);
+			// clean local log as the operations in it are now commited
+			monitor.setTaskName("Cleaning Local Log");
+			cleanLL();
+			monitor.done();
+			// refreshing the decorations
 		} catch (Exception e) {
-			return new Result(false, Exceptions.SERVER_UPDATE_HEADVERSION_FAILED, e);
+			result = new Result(false, e.getMessage(), e);
+			return;
 		}
-		// increment file versions
-		updateCurrentVersion();
-		// update RCL for all hosts interested in the project
-		updateRCLFiles();
-		// refresh uncommited changes from the pending rul files from the server
-		updatePendingRUL();
-		// clean local log as the operations in it are now commited
-		cleanLL();
-		//refreshing the decorations
-		
-		return new Result(true, "Success", null);
+		result = new Result(true, "Success", null);
 	}
 
 	private void getChangedFiles() {
@@ -93,8 +117,8 @@ public class CommitCommand implements CommandIntf {
 					changedFiles.appendOperationHistory(oh);
 				}
 			}
-		}else{
-		// TODO: 1. handle add and remove files ca alex nu a avut chef sa faca o transformare
+		} else {
+			// TODO: 1. handle add and remove files ca alex nu a avut chef sa faca o transformare
 			changedFiles.appendOperationHistoryList(ll);
 		}
 
@@ -200,7 +224,8 @@ public class CommitCommand implements CommandIntf {
 			Iterator<Peer> itp = all.iterator();
 			while (itp.hasNext()) {
 				Peer peer = itp.next();
-				if (!connectionManager.getPeerHosts().contains(peer.getHostAddress()) && !peer.getHostAddress().equalsIgnoreCase(NetworkUtils.getHostAddress())) {
+				if (!connectionManager.getPeerHosts().contains(peer.getHostAddress())
+						&& !peer.getHostAddress().equalsIgnoreCase(NetworkUtils.getHostAddress())) {
 					disconnected.add(peer.getHostAddress());
 				}
 			}
@@ -215,22 +240,24 @@ public class CommitCommand implements CommandIntf {
 		ivcProject.setLocalLog(new OperationHistoryList());
 	}
 
-	private void updatePendingRUL() {
+	private void updatePendingRUL() throws RemoteException {
 		// notify peers that are not on line
-		try {
-			List<Peer> all = connectionManager.getServer().getAllClientHosts(ivcProject.getServerPath());
-			List<String> disconnected = new ArrayList<String>();
-			Iterator<Peer> itp = all.iterator();
-			while (itp.hasNext()) {
-				Peer peer = itp.next();
-				if (!connectionManager.getPeerHosts().contains(peer.getHostAddress()) && !peer.getHostAddress().equalsIgnoreCase(NetworkUtils.getHostAddress())) {
-					disconnected.add(peer.getHostAddress());
-				}
+
+		List<Peer> all = connectionManager.getServer().getAllClientHosts(ivcProject.getServerPath());
+		List<String> disconnected = new ArrayList<String>();
+		Iterator<Peer> itp = all.iterator();
+		while (itp.hasNext()) {
+			Peer peer = itp.next();
+			if (!connectionManager.getPeerHosts().contains(peer.getHostAddress())
+					&& !peer.getHostAddress().equalsIgnoreCase(NetworkUtils.getHostAddress())) {
+				disconnected.add(peer.getHostAddress());
 			}
-			connectionManager.getServer().updatePendingRUL(ivcProject.getServerPath(), NetworkUtils.getHostAddress(), disconnected, changedFiles);
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+		connectionManager.getServer().updatePendingRUL(ivcProject.getServerPath(), NetworkUtils.getHostAddress(), disconnected, changedFiles);
+
+	}
+
+	public Result getResult() {
+		return result;
 	}
 }

@@ -5,6 +5,7 @@ package ivc.commands;
 
 import ivc.data.IVCProject;
 import ivc.data.exception.Exceptions;
+import ivc.data.exception.IVCException;
 import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
 import ivc.managers.ConnectionManager;
@@ -55,23 +56,22 @@ public class StartCommand implements CommandIntf {
 
 	private Result handleInitiateProject(IVCProject ivcProject) {
 		ConnectionManager connectionManager = ConnectionManager.getInstance(ivcProject.getName());
-		// TODO 1 peers is never used
+
 		// 1. initiate connections
-		// try {
-		// Map<String, ClientIntf> peers = connectionManager.initiateConnections(ivcProject.getServerAddress(),ivcProject.getServerPath());
-		// } catch (IVCException e) {
-		// e.printStackTrace();
-		// return new Result(false, Exceptions.SERVER_CONNECTION_FAILED, e);
-		// }
+		try {
+			connectionManager.initiateConnections(ivcProject.getServerAddress(), ivcProject.getServerPath());
+		} catch (IVCException e) {
+			e.printStackTrace();
+			return new Result(false, Exceptions.SERVER_CONNECTION_FAILED, e);
+		}
 		if (connectionManager.getServer() == null) {
 			return new Result(false, Exceptions.SERVER_CONNECTION_FAILED, null);
 		}
 		// 2. append pending rcl transformations
 		try {
 			OperationHistoryList pendingRCL = connectionManager.getServer().returnPendingRCL(ivcProject.getServerPath(),
-					NetworkUtils.getHostAddress());
-			// TODO 1 RCL is never used
-			// OperationHistoryList RCL = ivcProject.getRemoteCommitedLog();
+					NetworkUtils.getHostAddress());						
+			
 			UpdateAnnotationsCommand command = new UpdateAnnotationsCommand();
 			CommandArgs args = new CommandArgs();
 			args.putArgument(Constants.IVCPROJECT, ivcProject);
@@ -113,9 +113,8 @@ public class StartCommand implements CommandIntf {
 					NetworkUtils.getHostAddress());
 			Iterator<String> it = pendingRULs.keySet().iterator();
 			while (it.hasNext()) {
-				String host = it.next();
-				//TODO 1 this is never used
-				//OperationHistoryList pendingRUL = pendingRULs.get(host);
+				String host = it.next();				
+				
 				OperationHistoryList rul = new OperationHistoryList();
 				File rulfile = new File(ivcProject.getProject().getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog
 						+ "_" + host.replaceAll("\\.", "_"));

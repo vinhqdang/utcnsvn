@@ -80,12 +80,18 @@ public class CommitAction extends BaseActionDelegate {
 				// boolean result = MarkersManager.updateMarkers(resource);
 				// action.setChecked(result);
 			}
-			CommitCommand commitCommand = new CommitCommand();
 			CommandArgs args = new CommandArgs();
 			args.putArgument(Constants.PROJECT_NAME, commitedResources[0].getProject().getName());
 			args.putArgument(Constants.FILE_PATHS, filePaths);
 
-			Result result = commitCommand.execute(args);
+			CommitCommand commitCommand = new CommitCommand(null, args);
+			try {
+				commitCommand.run();
+			} catch (Exception e) {
+				MessageDialog.openInformation(getShell(), "Commit failed", e.getMessage());
+				return;
+			}
+			Result result = commitCommand.getResult();
 			if (!result.isSuccess()) {
 				MessageDialog.openInformation(getShell(), "Commit failed", result.getMessage());
 				return;
@@ -94,7 +100,7 @@ public class CommitAction extends BaseActionDelegate {
 				try {
 					if (resource.isPhantom()) {
 						ResourcesPlugin.getWorkspace().getSynchronizer().setSyncInfo(CacheManager.IVC_STATUS_KEY, resource, null);
-						
+
 					}
 
 					ProjectsManager.instance().setCommitedStatus(resource);

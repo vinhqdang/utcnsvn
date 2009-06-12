@@ -4,7 +4,7 @@ import ivc.commands.CommandArgs;
 import ivc.commands.StartCommand;
 import ivc.commands.StopCommand;
 import ivc.fireworks.decorators.Decorator;
-import ivc.listeners.FileModificationManager;
+import ivc.listeners.FileModificationListener;
 import ivc.listeners.ResourceChangedListener;
 
 import java.lang.reflect.InvocationTargetException;
@@ -50,7 +50,7 @@ public class IVCPlugin extends AbstractUIPlugin {
 		baseURL = context.getBundle().getEntry("/");
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		ResourceChangedListener changeListener = new ResourceChangedListener();
-		FileModificationManager modifications = new FileModificationManager();
+		FileModificationListener modifications = new FileModificationListener();
 		workspace.addResourceChangeListener(changeListener, IResourceChangeEvent.PRE_BUILD);
 		workspace.addResourceChangeListener(modifications, IResourceChangeEvent.PRE_BUILD);
 
