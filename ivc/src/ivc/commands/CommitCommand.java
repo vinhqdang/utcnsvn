@@ -231,7 +231,7 @@ public class CommitCommand extends TeamOperation {
 			}
 			connectionManager.getServer().updatePendingRCL(ivcProject.getServerPath(), disconnected, changedFiles);
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 	}
