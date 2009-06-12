@@ -64,6 +64,7 @@ public class UpdateCommand extends TeamOperation {
 			HashMap<String, Integer> currentCommitedVersion = (HashMap<String, Integer>) server.getVersionNumber(projectPath);
 			rcl = ivcProject.getRemoteCommitedLog();
 			Iterator<OperationHistory> it = rcl.iterator();
+
 			while (it.hasNext()) {
 				OperationHistory th = it.next();
 				String filePath = th.getFilePath();

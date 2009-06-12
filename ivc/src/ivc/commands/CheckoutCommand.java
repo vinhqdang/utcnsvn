@@ -203,6 +203,11 @@ public class CheckoutCommand implements IRunnableWithProgress {
 					e.printStackTrace();
 				}
 			}
+			try {
+				project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
 			thl.applyOperationHistoryList(project);
 
 		} catch (RemoteException e) {
