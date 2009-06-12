@@ -249,10 +249,14 @@ public class Operation implements Serializable {
 	public StringBuffer applyContentTransformation(StringBuffer content) {
 		switch (operationType) {
 		case CHARACTER_ADD:
-			content = content.insert(position.intValue(), chr);
+			if (content.length() > position){
+				content = content.insert(position.intValue(), chr);
+			}
 			break;
 		case CHARACTER_DELETE:
-			content.deleteCharAt(position);
+			if (content.length() > position){
+				content.deleteCharAt(position.intValue());
+			}
 			break;
 		default:
 			break;
