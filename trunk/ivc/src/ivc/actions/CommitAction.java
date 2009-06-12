@@ -1,5 +1,6 @@
 package ivc.actions;
 
+import ivc.commands.AddToRepositoryCommand;
 import ivc.commands.CommandArgs;
 import ivc.commands.CommitCommand;
 import ivc.commands.Result;
@@ -11,6 +12,7 @@ import ivc.wizards.commit.CommitWizard;
 import ivc.wizards.commit.CommitWizardDialog;
 import ivc.wizards.commit.pages.CommitWizardPage;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,10 +77,19 @@ public class CommitAction extends BaseActionDelegate {
 		if (commitedResources != null && commitedResources.length > 0) {
 			for (IResource resource : commitedResources) {
 				if (resource.getType() != IResource.PROJECT) {
+					if (ProjectsManager.instance().isManaged(resource)) {
+						AddToRepositoryCommand command = new AddToRepositoryCommand(null, resource);
+
+						try {
+							command.run();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						} catch (InvocationTargetException e) {
+							e.printStackTrace();
+						}
+					}
 					filePaths.add(resource.getProjectRelativePath().toOSString());
 				}
-				// boolean result = MarkersManager.updateMarkers(resource);
-				// action.setChecked(result);
 			}
 			CommandArgs args = new CommandArgs();
 			args.putArgument(Constants.PROJECT_NAME, commitedResources[0].getProject().getName());
@@ -109,6 +120,7 @@ public class CommitAction extends BaseActionDelegate {
 					e.printStackTrace();
 				}
 			}
+			MessageDialog.openInformation(getShell(), "Commit successful", "Commit succeded");
 		}
 	}
 
