@@ -1,8 +1,6 @@
 package ivc.repository;
 
 import ivc.managers.ProjectsManager;
-import ivc.plugin.IVCPlugin;
-import ivc.util.Constants;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;

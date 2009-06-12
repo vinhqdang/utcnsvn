@@ -3,22 +3,16 @@ package ivc.fireworks.markers;
 import ivc.data.IVCProject;
 import ivc.data.annotation.UsersAnnotations;
 import ivc.managers.ProjectsManager;
-import ivc.plugin.IVCPlugin;
 import ivc.repository.Status;
 import ivc.util.FileUtils;
-import ivc.util.WorkspaceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IFileEditorInput;
 
 public class MarkersManager {
 	public static String IVC_MARKER = "ivc.Marker";

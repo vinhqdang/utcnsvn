@@ -5,14 +5,12 @@ package ivc.commands;
 
 import ivc.data.IVCProject;
 import ivc.data.Peer;
-import ivc.data.operation.Operation;
 import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
 import ivc.managers.ConnectionManager;
 import ivc.managers.ProjectsManager;
 import ivc.rmi.client.ClientIntf;
 import ivc.util.Constants;
-import ivc.util.FileUtils;
 import ivc.util.NetworkUtils;
 
 import java.rmi.RemoteException;

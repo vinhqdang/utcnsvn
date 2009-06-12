@@ -3,27 +3,21 @@ package ivc.actions;
 import ivc.commands.CommandArgs;
 import ivc.commands.CommitCommand;
 import ivc.commands.Result;
-import ivc.fireworks.markers.MarkersManager;
 import ivc.managers.ProjectsManager;
+import ivc.repository.CacheManager;
 import ivc.repository.Status;
 import ivc.util.Constants;
 import ivc.wizards.commit.CommitWizard;
 import ivc.wizards.commit.CommitWizardDialog;
 import ivc.wizards.commit.pages.CommitWizardPage;
 
-import java.awt.Dialog;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
-import javax.swing.JTable.PrintMode;
-
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -98,7 +92,13 @@ public class CommitAction extends BaseActionDelegate {
 			}
 			for (IResource resource : commitedResources) {
 				try {
+					if (resource.isPhantom()) {
+						ResourcesPlugin.getWorkspace().getSynchronizer().setSyncInfo(CacheManager.IVC_STATUS_KEY, resource, null);
+						
+					}
+
 					ProjectsManager.instance().setCommitedStatus(resource);
+
 				} catch (Exception e) {
 					// TODO 2 delete
 					e.printStackTrace();

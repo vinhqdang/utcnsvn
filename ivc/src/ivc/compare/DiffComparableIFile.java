@@ -7,14 +7,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.compare.CompareUI;
-import org.eclipse.compare.IContentChangeListener;
-import org.eclipse.compare.IContentChangeNotifier;
-import org.eclipse.compare.IEditableContent;
-import org.eclipse.compare.IEncodedStreamContentAccessor;
-import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
-import org.eclipse.compare.structuremergeviewer.IDiffContainer;
-import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -29,8 +22,7 @@ import org.eclipse.team.core.TeamException;
  * @author alexm
  * 
  */
-public class ResourceEditionNode implements ITypedElement, IStreamContentAccessor, IEncodedStreamContentAccessor, IDiffContainer,
-		IContentChangeNotifier, IEditableContent {
+public class DiffComparableIFile implements IDiffComparable {
 	public IFile resource;
 	private String charset = null;
 
@@ -38,7 +30,7 @@ public class ResourceEditionNode implements ITypedElement, IStreamContentAccesso
 		return resource;
 	}
 
-	public ResourceEditionNode(IFile file) {
+	protected DiffComparableIFile(IFile file) {
 		resource = file;
 	}
 
@@ -120,49 +112,8 @@ public class ResourceEditionNode implements ITypedElement, IStreamContentAccesso
 	/**
 	 * the following methods are only implemented to support a simple compare between two IFiles
 	 */
-	@Override
-	public void add(IDiffElement arg0) {
+	
 
-	}
-
-	@Override
-	public IDiffElement[] getChildren() {
-		return null;
-	}
-
-	@Override
-	public boolean hasChildren() {
-		return false;
-	}
-
-	@Override
-	public void removeToRoot(IDiffElement arg0) {
-	}
-
-	@Override
-	public int getKind() {
-		return 0;
-	}
-
-	@Override
-	public IDiffContainer getParent() {
-		return null;
-	}
-
-	@Override
-	public void setParent(IDiffContainer arg0) {
-
-	}
-
-	@Override
-	public void addContentChangeListener(IContentChangeListener contentChangeListener) {
-
-	}
-
-	@Override
-	public void removeContentChangeListener(IContentChangeListener contentChangeListener) {
-
-	}
 
 	@Override
 	public boolean isEditable() {
@@ -172,7 +123,6 @@ public class ResourceEditionNode implements ITypedElement, IStreamContentAccesso
 
 	@Override
 	public ITypedElement replace(ITypedElement dest, ITypedElement src) {
-
 		return dest;
 	}
 

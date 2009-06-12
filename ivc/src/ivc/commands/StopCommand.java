@@ -5,16 +5,11 @@ package ivc.commands;
 
 import ivc.data.IVCProject;
 import ivc.data.exception.Exceptions;
-import ivc.data.operation.OperationHistoryList;
 import ivc.managers.ConnectionManager;
 import ivc.managers.ProjectsManager;
 import ivc.rmi.client.ClientIntf;
-import ivc.util.Constants;
-import ivc.util.FileUtils;
 import ivc.util.NetworkUtils;
 
-import java.io.File;
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Iterator;

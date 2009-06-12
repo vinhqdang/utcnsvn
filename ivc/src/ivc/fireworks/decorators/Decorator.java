@@ -1,9 +1,7 @@
 package ivc.fireworks.decorators;
 
 import ivc.managers.ImageDescriptorManager;
-
 import ivc.managers.ProjectsManager;
-
 import ivc.plugin.IVCPlugin;
 import ivc.repository.IVCRepositoryProvider;
 import ivc.repository.Status;
@@ -13,13 +11,11 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.team.core.RepositoryProvider;
 import org.eclipse.ui.IDecoratorManager;
 
 /**

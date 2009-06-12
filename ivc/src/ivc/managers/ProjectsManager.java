@@ -17,8 +17,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.team.core.RepositoryProvider;
 
 public class ProjectsManager {
 
@@ -43,15 +41,7 @@ public class ProjectsManager {
 		return projects.containsKey(project.getName());
 	}
 
-	private void remove(IResource resource) throws CoreException {
-		removeStatus(resource);
-		if (resource instanceof IFolder)
-			for (IResource res : ((IFolder) resource).members()) {
-				remove(res);
-			}
-	}
-
-	public void findProjects() {
+		public void findProjects() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IProject[] wsProjects = workspace.getRoot().getProjects();
 		for (IProject project : wsProjects) {

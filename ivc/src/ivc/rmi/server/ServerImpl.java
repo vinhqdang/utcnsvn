@@ -84,6 +84,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	 * 
 	 * @see ivc.rmi.ServerIntf#exposeClientIntf()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void exposeClientIntf(String hostAddress, String projectPath, ClientIntf client) throws RemoteException {
 		try {
@@ -161,6 +162,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	 * 
 	 * @see ivc.rmi.server.ServerIntf#getClientHosts()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Peer> getAllClientHosts(String projectPath) throws RemoteException {
 		List<Peer> hosts = new ArrayList<Peer>();
@@ -192,6 +194,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	 * 
 	 * @see ivc.rmi.server.ServerIntf#getVersionNumber()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public HashMap<String, Integer> getVersionNumber(String projectPath) throws RemoteException {
 		return (HashMap<String, Integer>) FileUtils.readObjectFromFile(Constants.RepositoryFolder + projectPath + Constants.CurrentVersionFile);
@@ -228,6 +231,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	 * 
 	 * @see ivc.rmi.server.ServerIntf#getConnectedClientHosts()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Peer> getConnectedClientHosts(String projectPath) throws RemoteException {
 		List<Peer> hosts = new ArrayList<Peer>();
@@ -309,6 +313,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	 * 
 	 * @see ivc.rmi.server.ServerIntf#returnPendingRUL(java.lang.String, java.lang.String)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, OperationHistoryList> returnPendingRUL(String projectPath, String hostAddress) throws RemoteException {
 		Map<String, OperationHistoryList> thl = new HashMap<String, OperationHistoryList>();
@@ -328,6 +333,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	 * 
 	 * @see ivc.rmi.server.ServerIntf#updatePendingRUL(java.lang.String, java.lang.String, java.util.List, ivc.data.OperationHistoryList)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void updatePendingRUL(String projectPath, String sourceHost, List<String> hosts, OperationHistoryList thl) throws RemoteException {
 		if (hosts == null) {
@@ -369,6 +375,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	 * 
 	 * @see ivc.rmi.server.ServerIntf#disconnectHost(java.lang.String)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void disconnectHost(String hostAddress) throws RemoteException {
 		RMIUtils.disconnectHost(hostAddress);

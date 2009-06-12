@@ -12,14 +12,12 @@ import ivc.managers.ConnectionManager;
 import ivc.managers.ProjectsManager;
 import ivc.rmi.client.ClientIntf;
 import ivc.util.Constants;
-import ivc.util.FileUtils;
 import ivc.util.NetworkUtils;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -41,6 +39,7 @@ public class CommitCommand implements CommandIntf {
 	 * 
 	 * @see command.CommandIntf#execute(data.CommandArgs)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	// add version 1; delete version remains
 	public Result execute(CommandArgs args) {
@@ -118,7 +117,7 @@ public class CommitCommand implements CommandIntf {
 			}
 		}
 		try {
-			currentCommitedVersion = (HashMap) connectionManager.getServer().getVersionNumber(ivcProject.getServerPath());
+			currentCommitedVersion = (HashMap<String, Integer>) connectionManager.getServer().getVersionNumber(ivcProject.getServerPath());
 			Iterator<OperationHistory> it = changedFiles.iterator();
 			while (it.hasNext()) {
 				OperationHistory oh = it.next();

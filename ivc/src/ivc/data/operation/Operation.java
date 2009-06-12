@@ -1,12 +1,8 @@
 package ivc.data.operation;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.Reader;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.StringTokenizer;
-import java.util.UUID;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;

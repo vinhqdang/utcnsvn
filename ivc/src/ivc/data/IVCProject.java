@@ -147,6 +147,7 @@ public class IVCProject implements Serializable {
 				+ hostAddress.replaceAll("\\.", "_"), rul);
 	}
 
+	@SuppressWarnings("unchecked")
 	public HashMap<String, Integer> getCurrentVersion() {
 		return (HashMap<String, Integer>) FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder
 				+ Constants.CurrentVersionFile);

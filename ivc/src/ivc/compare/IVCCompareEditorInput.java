@@ -15,8 +15,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * 
  */
 public class IVCCompareEditorInput extends CompareEditorInput {
-	ResourceEditionNode left;
-	ResourceEditionNode right;
+	IDiffComparable left;
+	IDiffComparable right;
 
 	public IVCCompareEditorInput(CompareConfiguration config) {
 		super(config);
@@ -34,11 +34,11 @@ public class IVCCompareEditorInput extends CompareEditorInput {
 
 	}
 
-	public void setLeft(ResourceEditionNode resource) {
+	public void setLeft(IDiffComparable resource) {
 		left = resource;
 	}
 
-	public void setRight(ResourceEditionNode resource) {
+	public void setRight(IDiffComparable resource) {
 		right = resource;
 	}
 }
