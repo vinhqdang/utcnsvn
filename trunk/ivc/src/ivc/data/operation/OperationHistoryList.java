@@ -155,7 +155,7 @@ public class OperationHistoryList implements Serializable {
 					is = file.getContents();
 					baseContent = FileUtils.InputStreamToStringBuffer(is);
 				}
-				for (Iterator<Operation> iterator = th.getOperations().iterator(); iterator.hasNext();) {
+				for (Iterator<Operation> iterator = th.getOperations().descendingIterator(); iterator.hasNext();) {
 					Operation operation = iterator.next();
 					if (operation.getOperationType() == Operation.CHARACTER_ADD || operation.getOperationType() == Operation.CHARACTER_DELETE) {
 						baseContent = operation.applyContentTransformation(baseContent);
