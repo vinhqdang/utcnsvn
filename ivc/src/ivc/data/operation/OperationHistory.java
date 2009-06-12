@@ -123,7 +123,7 @@ public class OperationHistory implements Serializable,Cloneable {
 	protected Object clone() throws CloneNotSupportedException {	
 		OperationHistory oh = (OperationHistory) super.clone();
 		oh.setOperations(new LinkedList<Operation>());
-		for(Operation op :oh.getOperations()){
+		for(Operation op :getOperations()){
 			oh.getOperations().add((Operation) op.clone());
 		}
 		return oh;
