@@ -19,13 +19,14 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IStartup;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class IVCPlugin extends AbstractUIPlugin {
+public class IVCPlugin extends AbstractUIPlugin implements IStartup {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "IVC";
@@ -145,6 +146,15 @@ public class IVCPlugin extends AbstractUIPlugin {
 			return openError(providedShell, title, message, target, flags);
 		}
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.IStartup#earlyStartup()
+	 */
+	@Override
+	public void earlyStartup() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
