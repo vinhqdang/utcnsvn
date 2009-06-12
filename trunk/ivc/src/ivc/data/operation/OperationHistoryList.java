@@ -170,13 +170,7 @@ public class OperationHistoryList implements Serializable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-		try {
-			project.refreshLocal(IResource.DEPTH_INFINITE, null);			
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-
+		}		
 	}
 
 	public OperationHistoryList includeOperationHistoryList(OperationHistoryList ohl) {

@@ -56,7 +56,7 @@ public class OperationHistory implements Serializable {
 	}
 
 	public void addOperations(LinkedList<Operation> trs) {
-		this.operations.addAll(trs);
+		this.operations.addAll(0,trs);
 	}
 
 	public void addOperation(Operation tr) {
