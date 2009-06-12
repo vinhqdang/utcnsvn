@@ -112,8 +112,8 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 					contains = true;
 					if (!peer.getProjectPaths().contains(projectPath)) {
 						peer.getProjectPaths().add(projectPath);
-						peer.setConnectionStatus(Constants.CONNECTED);
 					}
+					peer.setConnectionStatus(Constants.CONNECTED);
 				}
 			}
 			if (!contains) {

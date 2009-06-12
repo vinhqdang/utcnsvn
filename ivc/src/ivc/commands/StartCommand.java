@@ -69,8 +69,7 @@ public class StartCommand implements CommandIntf {
 		}
 		// 2. append pending rcl transformations
 		try {
-			OperationHistoryList pendingRCL = connectionManager.getServer().returnPendingRCL(ivcProject.getServerPath(),
-					NetworkUtils.getHostAddress());
+			OperationHistoryList pendingRCL = connectionManager.getServer().returnPendingRCL(ivcProject.getServerPath(),NetworkUtils.getHostAddress());
 			if (pendingRCL != null) {
 				UpdateAnnotationsCommand command = new UpdateAnnotationsCommand();
 				CommandArgs args = new CommandArgs();
