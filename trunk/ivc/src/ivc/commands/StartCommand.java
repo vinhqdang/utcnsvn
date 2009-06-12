@@ -116,7 +116,6 @@ public class StartCommand implements CommandIntf {
 				Iterator<String> it = pendingRULs.keySet().iterator();
 				while (it.hasNext()) {
 					String host = it.next();
-
 					OperationHistoryList rul = new OperationHistoryList();
 					File rulfile = new File(ivcProject.getProject().getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog
 							+ "_" + host.replaceAll("\\.", "_"));
