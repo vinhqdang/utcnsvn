@@ -1,5 +1,6 @@
 package ivc.actions;
 
+import ivc.commands.AddToRepositoryCommand;
 import ivc.commands.CommandArgs;
 import ivc.commands.HandleOperationCommand;
 import ivc.data.operation.Operation;
@@ -7,6 +8,7 @@ import ivc.data.operation.OperationHistory;
 import ivc.managers.ProjectsManager;
 import ivc.util.Constants;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
 import org.eclipse.core.resources.IResource;
@@ -30,35 +32,16 @@ public class AddToRepositoryAction extends BaseActionDelegate {
 
 		for (IResource resource : getSelectedResources()) {
 			if (!resourceInRepository(resource)) {
-				// TODO 1. add file to repository
-				Operation operation = new Operation();
-				if (resource.getType() == IResource.FILE) {
-					operation.setOperationType(Operation.ADD_FILE);
-//					InputStream is;
-//					try {
-//						is = ((IFile) resource).getContents();
-//						// TODO 1 add entire file to subversion
-//						// operation.setChar(FileUtils.InputStreamToStringBuffer(is).toString());
-//					} catch (CoreException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-				} else {
-					operation.setOperationType(Operation.ADD_FOLDER);
+				AddToRepositoryCommand command = new AddToRepositoryCommand(null, resource);
+				try {
+					
+					command.run();
+					
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
-				operation.setFilePath(resource.getProjectRelativePath().toOSString());
-				operation.setFileVersion(1);
-				operation.setDate(new Date());
-				OperationHistory oh = new OperationHistory();
-				oh.addOperation(operation);
-				HandleOperationCommand command = new HandleOperationCommand();
-				CommandArgs args = new CommandArgs();
-				args.putArgument(Constants.OPERATION_HIST, oh);
-				args.putArgument(Constants.IPROJECT, resource.getProject());
-				command.execute(args);
-
-				ProjectsManager.instance().setAddedStatus(resource);
-
 			}
 		}
 	}

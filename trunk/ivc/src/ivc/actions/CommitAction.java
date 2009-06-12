@@ -88,19 +88,18 @@ public class CommitAction extends BaseActionDelegate {
 			try {
 				commitCommand.run();
 			} catch (Exception e) {
-				MessageDialog.openInformation(getShell(), "Commit failed", e.getMessage());
+				MessageDialog.openError(getShell(), "Commit failed", e.getMessage());
 				return;
 			}
 			Result result = commitCommand.getResult();
 			if (!result.isSuccess()) {
-				MessageDialog.openInformation(getShell(), "Commit failed", result.getMessage());
+				MessageDialog.openError(getShell(), "Commit failed", result.getMessage());
 				return;
 			}
 			for (IResource resource : commitedResources) {
 				try {
 					if (resource.isPhantom()) {
 						ResourcesPlugin.getWorkspace().getSynchronizer().setSyncInfo(CacheManager.IVC_STATUS_KEY, resource, null);
-
 					}
 
 					ProjectsManager.instance().setCommitedStatus(resource);
