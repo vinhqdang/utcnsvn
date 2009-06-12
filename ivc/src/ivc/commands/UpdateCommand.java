@@ -55,6 +55,8 @@ public class UpdateCommand extends TeamOperation {
 		return result;
 	}
 
+	
+	
 	private void applyRCL() {
 		IProject project = ivcProject.getProject();
 		// read current version
