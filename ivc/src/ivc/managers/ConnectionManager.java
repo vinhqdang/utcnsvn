@@ -136,7 +136,7 @@ public class ConnectionManager implements Serializable {
 		ClientIntf client;
 		try {
 			client = server.getClientIntf(hostAddress);
-			if (client != null && hostAddress.equalsIgnoreCase(NetworkUtils.getHostAddress()) ) {
+			if (client != null && !hostAddress.equalsIgnoreCase(NetworkUtils.getHostAddress()) ) {
 				peers.put(hostAddress, client);
 				peersHosts.add(hostAddress);
 				return client;
