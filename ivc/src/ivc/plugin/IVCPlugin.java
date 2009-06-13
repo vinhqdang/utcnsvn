@@ -148,13 +148,15 @@ public class IVCPlugin extends AbstractUIPlugin implements IStartup {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IStartup#earlyStartup()
 	 */
 	@Override
 	public void earlyStartup() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
