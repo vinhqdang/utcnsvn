@@ -48,7 +48,7 @@ public class StringComparer {
 
 			RangeDifference[] diff = RangeDifferencer.findDifferences(CL, CR);
 			System.out.println("Changes to file: " + diff.length);
-			for (int i = diff.length-1; i >=0; i--) {
+			for (int i = 0; i < diff.length; i++) {
 				String removedText = SR.substring(CR.getTokenStart(diff[i].rightStart()), CR.getTokenStart(diff[i].rightEnd()));
 				System.out.println("-|" + removedText + "|");
 				addOperations(removedText, Operation.CHARACTER_DELETE, CR.getTokenStart(diff[i].rightStart()));
