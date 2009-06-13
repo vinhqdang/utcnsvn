@@ -49,7 +49,7 @@ public class GetUserCopyCommand implements CommandIntf {
 			} catch (RemoteException e) {
 				return new Result(true, Exceptions.COULD_NOT_GET_BASEVERSION_FORFILE, e);
 			}
-			int version = 0;
+			int version = 1;
 			OperationHistoryList rul = new OperationHistoryList();
 			if (hostAddress.equalsIgnoreCase(Constants.COMMITED)) {
 				version = Integer.MAX_VALUE;
@@ -67,9 +67,9 @@ public class GetUserCopyCommand implements CommandIntf {
 					for (Iterator<Operation> iterator = fileOps.getOperations().descendingIterator(); iterator.hasNext();) {
 						Operation operation = iterator.next();
 						if (operation.getOperationType() == Operation.CHARACTER_ADD || operation.getOperationType() == Operation.CHARACTER_DELETE) {
-							if (operation.getFileVersion() <= version) {
+							//if (operation.getFileVersion() <= version) {
 								fileContent = operation.applyContentTransformation(fileContent);
-							}
+							//}
 						}
 					}
 				}
