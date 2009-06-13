@@ -51,7 +51,7 @@ public class StringComparer {
 			for (int i = 0; i < diff.length; i++) {
 				String removedText = SR.substring(CR.getTokenStart(diff[i].rightStart()), CR.getTokenStart(diff[i].rightEnd()));
 				System.out.println("-|" + removedText + "|");
-				addOperations(removedText, Operation.CHARACTER_DELETE, CR.getTokenStart(diff[i].rightStart()));
+				addOperations(removedText, Operation.CHARACTER_DELETE, CL.getTokenStart(diff[i].leftStart()));
 
 				String addedText = SL.substring(CL.getTokenStart(diff[i].leftStart()), CL.getTokenStart(diff[i].leftEnd()));
 				System.out.println("+|" + addedText + "|");
