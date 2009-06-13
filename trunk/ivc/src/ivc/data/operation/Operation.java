@@ -315,7 +315,8 @@ public class Operation implements Serializable,Cloneable {
 	public Operation excludeOperation(Operation op) {
 		Operation newOp = new Operation();
 		try {
-			newOp = (Operation) op.clone();
+			newOp = (Operation) clone();
+		
 		} catch (CloneNotSupportedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
