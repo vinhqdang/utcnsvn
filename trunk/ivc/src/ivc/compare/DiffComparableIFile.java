@@ -1,5 +1,6 @@
 package ivc.compare;
 
+import ivc.managers.ImageDescriptorManager;
 import ivc.plugin.IVCPlugin;
 
 import java.io.ByteArrayInputStream;
@@ -76,7 +77,7 @@ public class DiffComparableIFile implements IDiffComparable {
 	 * @see org.eclipse.compare.ITypedElement#getImage()
 	 */
 	public Image getImage() {
-		return CompareUI.getImage(resource);
+		return ImageDescriptorManager.getImage(ImageDescriptorManager.DCORATOR_SHARED);
 	}
 
 	/*
@@ -85,7 +86,7 @@ public class DiffComparableIFile implements IDiffComparable {
 	 * @see org.eclipse.compare.ITypedElement#getName()
 	 */
 	public String getName() {
-		return resource == null ? "" : resource.getName();
+		return resource == null ? "" : resource.getProjectRelativePath().toOSString();
 	}
 
 	/**
@@ -112,8 +113,6 @@ public class DiffComparableIFile implements IDiffComparable {
 	/**
 	 * the following methods are only implemented to support a simple compare between two IFiles
 	 */
-	
-
 
 	@Override
 	public boolean isEditable() {
