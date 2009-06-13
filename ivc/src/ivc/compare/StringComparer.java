@@ -57,6 +57,7 @@ public class StringComparer {
 				System.out.println("+|" + addedText + "|");
 				addOperations(addedText, Operation.CHARACTER_ADD, CL.getTokenStart(diff[i].leftStart()));
 			}
+			System.out.println(history.getOperations());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
