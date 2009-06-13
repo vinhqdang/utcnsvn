@@ -10,7 +10,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 
-public class Operation implements Serializable,Cloneable {
+public class Operation implements Serializable, Cloneable {
 
 	/**
 	 * used for serialization
@@ -249,12 +249,12 @@ public class Operation implements Serializable,Cloneable {
 	public StringBuffer applyContentTransformation(StringBuffer content) {
 		switch (operationType) {
 		case CHARACTER_ADD:
-			if (content.length() > position){
+			if (content.length() >= position) {
 				content = content.insert(position.intValue(), chr);
 			}
 			break;
 		case CHARACTER_DELETE:
-			if (content.length() > position){
+			if (content.length() >= position) {
 				content.deleteCharAt(position.intValue());
 			}
 			break;
@@ -316,20 +316,20 @@ public class Operation implements Serializable,Cloneable {
 		Operation newOp = new Operation();
 		try {
 			newOp = (Operation) clone();
-		
+
 		} catch (CloneNotSupportedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-//		newOp.setCommited(op.getCommited());
-//		newOp.setDate(op.getDate());
-//		newOp.setFilePath(op.getFilePath());
-//		newOp.setFileVersion(op.getFileVersion());
-//		newOp.setOperationType(op.getOperationType());
-//		newOp.setText(chr);
-//		newOp.setUserID(op.getUserID());
-//		newOp.setSid(op.getSid());
-//		newOp.setPosition(position);
+		// newOp.setCommited(op.getCommited());
+		// newOp.setDate(op.getDate());
+		// newOp.setFilePath(op.getFilePath());
+		// newOp.setFileVersion(op.getFileVersion());
+		// newOp.setOperationType(op.getOperationType());
+		// newOp.setText(chr);
+		// newOp.setUserID(op.getUserID());
+		// newOp.setSid(op.getSid());
+		// newOp.setPosition(position);
 
 		// the positions of the operations
 		int posOther = op.getPosition();
@@ -368,11 +368,13 @@ public class Operation implements Serializable,Cloneable {
 		return newOp;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#clone()
 	 */
 	@Override
-	protected Object clone() throws CloneNotSupportedException {		
+	protected Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
 
@@ -381,22 +383,23 @@ public class Operation implements Serializable,Cloneable {
 		return chr + "|" + position + "|";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#clone()
 	 */
 
-//	protected Object getCopy() {
-//		Operation op = new Operation();
-//		op.setCommited((commited != null)? commited.booleanValue():false);
-//		op.setDate((date != null)? new Date(date.getTime()): new Date());
-//		op.setFilePath((filePath != null)? new String(filePath): "");
-//		op.setOperationType((operationType != null) ? operationType.intValue(): 0);
-//		op.setPosition((position!= null)? position.intValue(): 0);
-//		op.setSid((sid != null )?sid.intValue() : 0);
-//		op.setText((chr!= null)?chr.charValue():' ');
-//		op.setUserID((userID!= null)? new String(userID):"");
-//		return op;
-//	}
-	
-	
+	// protected Object getCopy() {
+	// Operation op = new Operation();
+	// op.setCommited((commited != null)? commited.booleanValue():false);
+	// op.setDate((date != null)? new Date(date.getTime()): new Date());
+	// op.setFilePath((filePath != null)? new String(filePath): "");
+	// op.setOperationType((operationType != null) ? operationType.intValue(): 0);
+	// op.setPosition((position!= null)? position.intValue(): 0);
+	// op.setSid((sid != null )?sid.intValue() : 0);
+	// op.setText((chr!= null)?chr.charValue():' ');
+	// op.setUserID((userID!= null)? new String(userID):"");
+	// return op;
+	// }
+
 }
