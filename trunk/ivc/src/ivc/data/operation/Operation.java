@@ -454,9 +454,7 @@ public class Operation implements Serializable, Cloneable {
 					return false;
 				if (!this.commited.equals(operation.getCommited()))
 					return false;
-			}
-			if (!this.commited.equals(operation.getCommited()))
-				return false;
+			}			
 		} catch (Exception e) {
 			return false;
 		}
