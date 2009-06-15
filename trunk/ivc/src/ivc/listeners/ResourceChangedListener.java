@@ -2,18 +2,14 @@ package ivc.listeners;
 
 import ivc.commands.RemoveResourceCommand;
 import ivc.data.IVCProject;
-import ivc.data.operation.Operation;
-import ivc.data.operation.OperationHistoryList;
 import ivc.managers.ProjectsManager;
 import ivc.repository.IVCRepositoryProvider;
 import ivc.repository.Status;
 
-import java.awt.font.OpenType;
 import java.lang.reflect.InvocationTargetException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -59,6 +55,16 @@ public class ResourceChangedListener implements IResourceChangeListener {
 
 					case IResourceDelta.REMOVED:
 						resource = delta.getResource();
+						if (resource instanceof IProject) {
+							IVCProject project = projectsManager.getIVCProjectByResource(resource);
+							if (project != null) {
+								try {
+									projectsManager.removeProject(project);
+								} catch (RemoteException e) {
+									e.printStackTrace();
+								}
+							}
+						}
 						if (IVCRepositoryProvider.isShared(resource.getProject())) {
 							if (!(resource instanceof IProject)) {
 								toBeRefreshed.add(resource.getParent());

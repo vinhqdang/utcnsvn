@@ -49,8 +49,7 @@ public class IVCRepositoryProvider extends RepositoryProvider {
 
 	@Override
 	public void deconfigure() throws CoreException {
-		// TODO Auto-generated method stub
-
+		System.out.println("testdeconfigure");
 	}
 
 	@Override
@@ -59,4 +58,7 @@ public class IVCRepositoryProvider extends RepositoryProvider {
 		return true;
 	}
 
+	private void onDelete() {
+		System.out.println("delete");
+	}
 }

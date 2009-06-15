@@ -35,7 +35,7 @@ public class FindHostProjectCommand implements IRunnableWithProgress {
 			if (!isOK) {
 				result = new Result(false, Exceptions.SERVER_PROJ_PATH_INVALID, null);
 			}
-		} catch (RemoteException e) {
+		} catch (Exception e) {
 			result = new Result(false, e.getMessage(), e);
 		}
 		monitor.done();
