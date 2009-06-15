@@ -15,7 +15,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * 
  */
 public class IVCCompareEditorInput extends CompareEditorInput {
+	/**
+	 * the left resource to compare
+	 */
 	IDiffComparable left;
+	/**
+	 * the right resource to compare
+	 */
 	IDiffComparable right;
 
 	public IVCCompareEditorInput(CompareConfiguration config) {

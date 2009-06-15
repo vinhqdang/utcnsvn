@@ -62,7 +62,6 @@ public class UpdateAction extends BaseActionDelegate {
 	 */
 	@Override
 	public boolean menuItemEnabled() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
