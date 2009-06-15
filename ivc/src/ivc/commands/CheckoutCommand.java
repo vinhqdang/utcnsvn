@@ -81,6 +81,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		monitor.worked(1);
 		monitor.setTaskName("Establish connections");
 		// 2. create IProject
+		FileModificationListener.ignoreModifications = true;
 		try {
 			createProject(monitor);
 		} catch (CoreException e) {
@@ -90,7 +91,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		}
 
 		// 3. get base version and transformations
-		FileModificationListener.ignoreModifications = true;
+
 		createProjectFiles(monitor);
 
 		// 4. init workspace file

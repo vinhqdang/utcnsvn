@@ -98,6 +98,7 @@ public class CommitCommand extends TeamOperation {
 			monitor.done();
 			// refreshing the decorations
 		} catch (Exception e) {
+			e.printStackTrace();
 			result = new Result(false, e.getMessage(), e);
 			return;
 		}

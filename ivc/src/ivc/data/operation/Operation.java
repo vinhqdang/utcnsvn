@@ -168,7 +168,7 @@ public class Operation implements Serializable, Cloneable {
 	/**
 	 * @return the operationType
 	 */
-	public int getOperationType() {
+	public Integer getOperationType() {
 		return operationType;
 	}
 
@@ -386,22 +386,80 @@ public class Operation implements Serializable, Cloneable {
 	@Override
 	public boolean equals(Object obj) {
 		Operation operation = (Operation) obj;
-		if (this.chr.charValue() != operation.getChr().charValue())
+		try {
+			if ((this.chr == null) && (operation.getChr() != null))
+				return false;
+			else if (this.chr != null) {
+				if (operation.getChr() == null)
+					return false;
+				if (this.chr.charValue() != operation.getChr().charValue())
+					return false;
+			}
+
+			if ((this.filePath == null) && (operation.getFilePath() != null))
+				return false;
+			else if (this.filePath != null) {
+				if (operation.filePath == null)
+					return false;
+				if (!this.filePath.equals(operation.getFilePath()))
+					return false;
+			}
+
+			if ((this.date == null) && (operation.getDate() != null))
+				return false;
+			else if (this.date != null) {
+				if (operation.date == null)
+					return false;
+				if (!this.date.equals(operation.getDate()))
+					return false;
+			}
+
+			if ((this.fileVersion == null) && (operation.getFileVersion() != null))
+				return false;
+			else if (this.fileVersion != null) {
+				if (operation.fileVersion == null)
+					return false;
+				if (!this.fileVersion.equals(operation.getFileVersion()))
+					return false;
+			}
+			if ((this.operationType == null) && (operation.getOperationType() != null))
+				return false;
+			else if (this.operationType != null) {
+				if (operation.filePath == null)
+					return false;
+				if (!this.operationType.equals(operation.getOperationType()))
+					return false;
+			}
+
+			if ((this.position == null) && (operation.getPosition() != null))
+				return false;
+			else if (this.position != null) {
+				if (operation.position == null)
+					return false;
+				if (!this.position.equals(operation.getPosition()))
+					return false;
+			}
+			if ((this.userID == null) && (operation.getUserID() != null))
+				return false;
+			else if (this.userID != null) {
+				if (operation.userID == null)
+					return false;
+				if (!this.userID.equals(operation.getUserID()))
+					return false;
+			}
+			if ((this.commited == null) && (operation.getCommited() != null))
+				return false;
+			else if (this.commited != null) {
+				if (operation.commited == null)
+					return false;
+				if (!this.commited.equals(operation.getCommited()))
+					return false;
+			}
+			if (!this.commited.equals(operation.getCommited()))
+				return false;
+		} catch (Exception e) {
 			return false;
-		if (!this.filePath.equals(operation.getFilePath()))
-			return false;
-		if (!this.date.equals(operation.getDate()))
-			return false;
-		if (!this.fileVersion.equals(operation.getFileVersion()))
-			return false;
-		if (!this.operationType.equals(operation.getOperationType()))
-			return false;
-		if (!this.position.equals(operation.getPosition()))
-			return false;
-		if (!this.userID.equals(operation.getUserID()))
-			return false;
-		if (!this.commited.equals(operation.getCommited()))
-			return false;
+		}
 		return true;
 	}
 	/*
