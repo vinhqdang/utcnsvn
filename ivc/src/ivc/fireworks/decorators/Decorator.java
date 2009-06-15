@@ -116,36 +116,7 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 	 * @return label with which the object should be decorated. If null is returned, then the object is decorated with default label
 	 * 
 	 */
-	public String decorateText(String label, Object object) {
-
-		// decorations are enabled
-		if (enableDecoration) {
-
-			// the object passed as parameter is an IResource
-			// if (object instanceof IResource) {
-			// IResource objectResource = (IResource) object;
-			// if (objectResource == null)
-			// return null;
-			//
-			// // if the resource to be decorated has been remotely deleted
-			// // if
-			// // (ResourceManager.hasDeletedResource(objectResource.getFullPath()
-			// // .toString())) {
-			// // get the type of the resource
-			// int objectType = objectResource.getType();
-			// // decorate only files
-			// if (objectType == IResource.FILE) {
-			// try {
-			// return label + " [shared]";
-			//
-			// } catch (Exception e) {
-			// System.out.println("Error decorating image");
-			// }
-			// // }
-			// }
-			// }
-		}
-
+	public String decorateText(String label, Object object) {		
 		return null;
 	}
 
