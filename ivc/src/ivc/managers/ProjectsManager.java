@@ -62,7 +62,7 @@ public class ProjectsManager {
 	}
 
 	public void removeProject(IVCProject project) throws RemoteException {
-		projects.remove(project);
+		projects.remove(project.getName());
 		ServerIntf server = ConnectionManager.getInstance(project.getName()).getServer();
 		server.removePeerProject(NetworkUtils.getHostAddress(), project.getServerPath());
 

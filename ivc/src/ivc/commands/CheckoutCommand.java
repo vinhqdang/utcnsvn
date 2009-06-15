@@ -4,6 +4,7 @@ import ivc.data.BaseVersion;
 import ivc.data.exception.Exceptions;
 import ivc.data.exception.IVCException;
 import ivc.data.operation.OperationHistoryList;
+import ivc.listeners.FileModificationListener;
 import ivc.managers.ConnectionManager;
 import ivc.repository.IVCRepositoryProvider;
 import ivc.rmi.client.ClientIntf;
@@ -89,6 +90,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		}
 
 		// 3. get base version and transformations
+		FileModificationListener.ignoreModifications = true;
 		createProjectFiles(monitor);
 
 		// 4. init workspace file
@@ -101,6 +103,8 @@ public class CheckoutCommand implements IRunnableWithProgress {
 			project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 		} catch (CoreException e) {
 			e.printStackTrace();
+		} finally {
+			FileModificationListener.ignoreModifications = false;
 		}
 
 		try {
@@ -135,7 +139,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 				Iterator<String> it = peerHosts.iterator();
 				while (it.hasNext()) {
 					String peerHost = it.next();
-					File rlufile = new File(project.getLocation().toOSString() +Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
+					File rlufile = new File(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
 							+ peerHost.replaceAll("\\.", "_"));
 					rlufile.createNewFile();
 				}
