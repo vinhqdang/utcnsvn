@@ -5,9 +5,12 @@ import ivc.repository.CacheManager;
 import ivc.repository.IVCRepositoryProvider;
 import ivc.repository.ResourceStatus;
 import ivc.repository.Status;
+import ivc.rmi.server.ServerIntf;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
+import ivc.util.NetworkUtils;
 
+import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -56,6 +59,13 @@ public class ProjectsManager {
 
 			tryAddProject(project);
 		}
+	}
+
+	public void removeProject(IVCProject project) throws RemoteException {
+		projects.remove(project);
+		ServerIntf server = ConnectionManager.getInstance(project.getName()).getServer();
+		server.removePeerProject(NetworkUtils.getHostAddress(), project.getServerPath());
+
 	}
 
 	public void tryAddProject(IProject project) {
