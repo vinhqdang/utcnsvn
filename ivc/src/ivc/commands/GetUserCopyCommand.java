@@ -84,7 +84,7 @@ public class GetUserCopyCommand implements CommandIntf {
 						for (Iterator<Operation> iterator = rulOps.getOperations().descendingIterator(); iterator.hasNext();) {
 							Operation operation = iterator.next();
 							if (operation.getOperationType() == Operation.CHARACTER_ADD || operation.getOperationType() == Operation.CHARACTER_DELETE) {
-								fileContent = operation.applyContentTransformation(fileContent);
+		 						fileContent = operation.applyContentTransformation(fileContent);
 							}
 						}
 					}
