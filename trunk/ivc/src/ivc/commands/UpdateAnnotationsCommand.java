@@ -46,11 +46,11 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 		if (isCommit) {
 			rcl = project.getRemoteCommitedLog();
 			computeCommitedAnnotations(rl);
-			project.setRemoteCommitedLog(rcl);
+				project.setRemoteCommitedLog(rcl);
 		} else {
 			rul = project.getRemoteUncommitedLog(remoteAddress);
 			computeUncommitedAnnotations(rl, remoteAddress);
-			project.setRemoteUncommitedLog(rul, remoteAddress);
+				project.setRemoteUncommitedLog(rul, remoteAddress);
 		}
 		return new Result(true, "Success", null);
 	}

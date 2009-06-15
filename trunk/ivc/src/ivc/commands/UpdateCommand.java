@@ -138,6 +138,7 @@ public class UpdateCommand extends TeamOperation {
 				rcl.removeOperationHistForFile(it.next());
 			}
 		}
+		ivcProject.setRemoteCommitedLog(rcl);
 	}
 
 	/**
