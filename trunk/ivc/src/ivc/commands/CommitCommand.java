@@ -118,7 +118,7 @@ public class CommitCommand extends TeamOperation {
 				}
 			}
 		} else {
-			// TODO: 1. handle add and remove files ca alex nu a avut chef sa faca o transformare
+			// TODO: 1. handle add and remove files
 			changedFiles.appendOperationHistoryList(ll);
 		}
 
