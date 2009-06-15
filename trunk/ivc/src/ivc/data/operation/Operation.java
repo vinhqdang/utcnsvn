@@ -254,7 +254,7 @@ public class Operation implements Serializable, Cloneable {
 			}
 			break;
 		case CHARACTER_DELETE:
-			if (content.length() >= position) {
+			if (content.length() > position) {
 				content.deleteCharAt(position.intValue());
 			}
 			break;
