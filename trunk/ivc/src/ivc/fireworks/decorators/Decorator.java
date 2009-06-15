@@ -131,7 +131,6 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 			return;
 		} else {
 			decorator.fireLabelEvent(new LabelProviderChangedEvent(decorator));
-
 		}
 	}
 
