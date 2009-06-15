@@ -106,8 +106,15 @@ public class OperationHistoryList implements Serializable {
 		return this;
 	}
 
-	public OperationHistoryList removeOperationHistory(OperationHistory th) {
-		operations.remove(th);
+	public OperationHistoryList removeOperationHistory(OperationHistory oh) {
+		Iterator<OperationHistory> it = this.operations.descendingIterator();
+		while (it.hasNext()) {
+			OperationHistory cth = it.next();
+			if (oh.getFilePath().equalsIgnoreCase(cth.getFilePath())) {				
+				cth.removeOperations(oh.getOperations());
+				break;
+			}
+		}
 		return this;
 	}
 
@@ -132,8 +139,15 @@ public class OperationHistoryList implements Serializable {
 	}
 
 	public OperationHistoryList removeOperationHistList(OperationHistoryList thl) {
-		operations.removeAll(thl.getOperationHist());
-		return this;
+		if (thl == null || thl.getOperationHist() == null) {
+			return this;
+		}
+		Iterator<OperationHistory> it = thl.iterator();
+		while (it.hasNext()) {
+			OperationHistory th = it.next();
+			removeOperationHistory(th);
+		}
+		return this;		
 	}
 
 	public void applyOperationHistoryList(IProject project) {

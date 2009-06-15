@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class OperationHistory implements Serializable,Cloneable {
+public class OperationHistory implements Serializable, Cloneable {
 
 	/**
 	 * 
@@ -56,7 +56,7 @@ public class OperationHistory implements Serializable,Cloneable {
 	}
 
 	public void addOperations(LinkedList<Operation> trs) {
-		this.operations.addAll(0,trs);
+		this.operations.addAll(0, trs);
 	}
 
 	public void addOperation(Operation tr) {
@@ -68,7 +68,7 @@ public class OperationHistory implements Serializable,Cloneable {
 	}
 
 	public OperationHistory excludeOperations(OperationHistory oh) {
-		if (oh == null || oh.getOperations().isEmpty()){
+		if (oh == null || oh.getOperations().isEmpty()) {
 			try {
 				return (OperationHistory) clone();
 			} catch (CloneNotSupportedException e) {
@@ -84,7 +84,7 @@ public class OperationHistory implements Serializable,Cloneable {
 			Operation ownOp = itoOwn.next();
 			Operation newOp = new Operation();
 			try {
-				newOp = (Operation)ownOp.clone();
+				newOp = (Operation) ownOp.clone();
 			} catch (CloneNotSupportedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -116,18 +116,23 @@ public class OperationHistory implements Serializable,Cloneable {
 		return newOh;
 	}
 
-	/* (non-Javadoc)
+	public void removeOperations(LinkedList<Operation> ops) {
+		 operations.removeAll(ops);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#clone()
 	 */
 	@Override
-	protected Object clone() throws CloneNotSupportedException {	
+	protected Object clone() throws CloneNotSupportedException {
 		OperationHistory oh = (OperationHistory) super.clone();
 		oh.setOperations(new LinkedList<Operation>());
-		for(Operation op :getOperations()){
+		for (Operation op : getOperations()) {
 			oh.getOperations().add((Operation) op.clone());
 		}
 		return oh;
 	}
 
-	
 }
