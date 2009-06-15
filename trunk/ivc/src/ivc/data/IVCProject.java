@@ -122,15 +122,20 @@ public class IVCProject implements Serializable {
 	}
 
 	public OperationHistoryList getRemoteUncommitedLog(String hostAddress) {
-		File f = new File(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
-				+ hostAddress.replaceAll("\\.", "_"));
-		if (f.exists()) {
-			Object obj = FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
+		try {
+			File f = new File(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
 					+ hostAddress.replaceAll("\\.", "_"));
-			if (obj != null && obj instanceof OperationHistoryList) {
-				return (OperationHistoryList) obj;
+			if (f.exists()) {
+				Object obj = FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog
+						+ "_" + hostAddress.replaceAll("\\.", "_"));
+				if (obj != null && obj instanceof OperationHistoryList) {
+					return (OperationHistoryList) obj;
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
 		return new OperationHistoryList();
 	}
 
