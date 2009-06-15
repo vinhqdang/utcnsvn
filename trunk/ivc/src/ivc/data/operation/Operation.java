@@ -247,6 +247,7 @@ public class Operation implements Serializable, Cloneable {
 	}
 
 	public StringBuffer applyContentTransformation(StringBuffer content) {
+		
 		switch (operationType) {
 		case CHARACTER_ADD:
 			if (content.length() >= position) {
