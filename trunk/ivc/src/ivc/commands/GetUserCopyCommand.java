@@ -67,9 +67,9 @@ public class GetUserCopyCommand implements CommandIntf {
 					for (Iterator<Operation> iterator = fileOps.getOperations().descendingIterator(); iterator.hasNext();) {
 						Operation operation = iterator.next();
 						if (operation.getOperationType() == Operation.CHARACTER_ADD || operation.getOperationType() == Operation.CHARACTER_DELETE) {
-							//if (operation.getFileVersion() <= version) {
+							if (operation.getFileVersion() <= version) {
 								fileContent = operation.applyContentTransformation(fileContent);
-							//}
+							}
 						}
 					}
 				}

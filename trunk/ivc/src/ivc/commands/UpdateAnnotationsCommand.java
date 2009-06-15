@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 
-
 /**
  * @author danielan
  * 
@@ -46,11 +45,11 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 		if (isCommit) {
 			rcl = project.getRemoteCommitedLog();
 			computeCommitedAnnotations(rl);
-				project.setRemoteCommitedLog(rcl);
+			project.setRemoteCommitedLog(rcl);
 		} else {
 			rul = project.getRemoteUncommitedLog(remoteAddress);
 			computeUncommitedAnnotations(rl, remoteAddress);
-				project.setRemoteUncommitedLog(rul, remoteAddress);
+			project.setRemoteUncommitedLog(rul, remoteAddress);
 		}
 		return new Result(true, "Success", null);
 	}
@@ -124,7 +123,7 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 			arl = arl.includeOperations(llOh);
 		}
 		if (flag) {
-			operationsToAnnotation(arl, "commited");
+			operationsToAnnotation(arl, Constants.COMMITED);
 		} else {
 			operationsToAnnotation(arl, host);
 		}
@@ -185,7 +184,7 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 			lineNumbers.add(position);
 		}
 		ra.setAnnotations(filePath, user, lineNumbers);
-		
+
 		IFile file = project.getProject().getFile(filePath);
 		if (file.exists()) {
 			try {

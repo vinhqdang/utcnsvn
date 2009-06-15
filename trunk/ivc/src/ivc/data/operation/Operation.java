@@ -380,7 +380,7 @@ public class Operation implements Serializable, Cloneable {
 
 	@Override
 	public String toString() {
-		return chr + "|" + position + "|";
+		return "|"+chr + "|" + position + "|"+operationType;
 	}
 
 	/*
