@@ -69,6 +69,7 @@ public interface ServerIntf extends Remote {
 	
 	public boolean checkProjectPath(String projectPath) throws RemoteException;
 	
+	public void removePeerProject(String hostAddress, String projectPath)throws RemoteException;
 	 
 	
 }

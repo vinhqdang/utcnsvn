@@ -407,4 +407,30 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ivc.rmi.server.ServerIntf#removePeerProjec(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void removePeerProject(String hostAddress, String projectPath) throws RemoteException {
+		RMIUtils.disconnectHost(hostAddress);
+		ArrayList<Peer> allHosts = (ArrayList<Peer>) FileUtils.readObjectFromFile(Constants.RepositoryFolder + Constants.Peers);
+		if (allHosts != null) {
+			Iterator<Peer> it = allHosts.iterator();
+			while (it.hasNext()) {
+				Peer peer = it.next();
+				if (peer.getHostAddress().equalsIgnoreCase(hostAddress)) {
+					peer.setConnectionStatus(Constants.DISCONNECTED);
+					List<String> projects = peer.getProjectPaths();
+					if (projects.contains(projectPath)) {
+						projects.remove(projectPath);
+						peer.setProjectPaths(projects);
+					}
+				}
+			}
+		}
+		FileUtils.writeObjectToFile(Constants.RepositoryFolder + Constants.Peers, allHosts);
+	}
+
 }
