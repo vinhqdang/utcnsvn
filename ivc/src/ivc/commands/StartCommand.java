@@ -145,6 +145,8 @@ public class StartCommand implements CommandIntf {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
 
 		return new Result(true, "Success", null);
 	}
