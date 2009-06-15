@@ -380,9 +380,30 @@ public class Operation implements Serializable, Cloneable {
 
 	@Override
 	public String toString() {
-		return "|"+chr + "|" + position + "|"+operationType;
+		return "|" + chr + "|" + position + "|" + operationType;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		Operation operation = (Operation) obj;
+		if (this.chr.charValue() != operation.getChr().charValue())
+			return false;
+		if (!this.filePath.equals(operation.getFilePath()))
+			return false;
+		if (!this.date.equals(operation.getDate()))
+			return false;
+		if (!this.fileVersion.equals(operation.getFileVersion()))
+			return false;
+		if (!this.operationType.equals(operation.getOperationType()))
+			return false;
+		if (!this.position.equals(operation.getPosition()))
+			return false;
+		if (!this.userID.equals(operation.getUserID()))
+			return false;
+		if (!this.commited.equals(operation.getCommited()))
+			return false;
+		return true;
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -401,5 +422,4 @@ public class Operation implements Serializable, Cloneable {
 	// op.setUserID((userID!= null)? new String(userID):"");
 	// return op;
 	// }
-
 }
