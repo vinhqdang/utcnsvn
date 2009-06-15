@@ -87,7 +87,7 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *  
 	 * @see ivc.rmi.client.ClientIntf#handleNewPeerConnected(java.lang.String, java.lang.String)
 	 */
 	@Override
