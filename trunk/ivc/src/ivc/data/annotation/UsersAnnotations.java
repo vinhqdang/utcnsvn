@@ -12,21 +12,21 @@ public class UsersAnnotations {
 		annotations = new HashMap<String, List<Integer>>();
 	}
 
-	public void setAnnotations(String user, List<Integer> lineNumbers) {
+	public void setAnnotations(String user, List<Integer> postitions) {
 		if (annotations.containsKey(user)) {
 			annotations.remove(user);
 		}
-		annotations.put(user, lineNumbers);
+		annotations.put(user, postitions);
 	}
 
-	public void addAnnotation(String user, Integer lineNumber) {
+	public void addAnnotation(String user, Integer position) {
 		if (!annotations.containsKey(user)) {
-			ArrayList<Integer> lines = new ArrayList<Integer>();
-			lines.add(lineNumber);
-			annotations.put(user, lines);
+			ArrayList<Integer> positions = new ArrayList<Integer>();
+			positions.add(position);
+			annotations.put(user, positions);
 		} else {
-			if (!annotations.get(user).contains(lineNumber)) {
-				annotations.get(user).add(lineNumber);
+			if (!annotations.get(user).contains(position)) {
+				annotations.get(user).add(position);
 			}
 		}
 	}
@@ -38,27 +38,27 @@ public class UsersAnnotations {
 	}
 
 	public List<Integer> getPositions() {
-		ArrayList<Integer> lines = new ArrayList<Integer>();
+		ArrayList<Integer> positions = new ArrayList<Integer>();
 		for (String user : annotations.keySet()) {
-			for (int line : annotations.get(user)) {
-				if (!lines.contains(line)) {
-					lines.add(line);
+			for (int position : annotations.get(user)) {
+				if (!positions.contains(position)) {
+					positions.add(position);
 				}
 			}
 		}
-		return lines;
+		return positions;
 	}
 
-	public HashMap<Integer, ArrayList<String>> getAnnotationsUsersForAllLines() {
+	public HashMap<Integer, ArrayList<String>> getAnnotationsUsersForAllPositions() {
 		HashMap<Integer, ArrayList<String>> result = new HashMap<Integer, ArrayList<String>>();
 		for (String user : annotations.keySet()) {
-			for (int line : annotations.get(user)) {
-				if (result.containsKey(line)) {
-					result.get(line).add(user);
+			for (int position : annotations.get(user)) {
+				if (result.containsKey(position)) {
+					result.get(position).add(user);
 				} else {
 					ArrayList<String> users = new ArrayList<String>();
 					users.add(user);
-					result.put(line, users);
+					result.put(position, users);
 				}
 			}
 		}

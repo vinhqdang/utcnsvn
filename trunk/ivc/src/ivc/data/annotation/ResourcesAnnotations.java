@@ -72,11 +72,11 @@ public class ResourcesAnnotations {
 	 *            the resource
 	 * @return the users who modiffied the characters
 	 */
-	public HashMap<Integer, ArrayList<String>> getAnnotationsUsersForAllLines(IResource resource) {
+	public HashMap<Integer, ArrayList<String>> getAnnotationsUsersForAllPositions(IResource resource) {
 		if (!annotations.containsKey(key(resource))) {
 			return null;
 		}
-		return annotations.get(key(resource)).getAnnotationsUsersForAllLines();
+		return annotations.get(key(resource)).getAnnotationsUsersForAllPositions();
 	}
 
 	/**
