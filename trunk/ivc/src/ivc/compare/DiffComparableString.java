@@ -18,7 +18,7 @@ public class DiffComparableString implements IDiffComparable {
 
 	@Override
 	public Image getImage() {
-		return ImageDescriptorManager.getImage(ImageDescriptorManager.DCORATOR_SHARED);
+		return ImageDescriptorManager.getImage(ImageDescriptorManager.DECORATOR_SHARED);
 	}
 
 	@Override

@@ -77,7 +77,7 @@ public class DiffComparableIFile implements IDiffComparable {
 	 * @see org.eclipse.compare.ITypedElement#getImage()
 	 */
 	public Image getImage() {
-		return ImageDescriptorManager.getImage(ImageDescriptorManager.DCORATOR_SHARED);
+		return ImageDescriptorManager.getImage(ImageDescriptorManager.DECORATOR_SHARED);
 	}
 
 	/*

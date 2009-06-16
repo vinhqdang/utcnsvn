@@ -211,20 +211,20 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 		// create a new Vector
 		Vector images = new Vector();
 		// add an image key to the vector
-		ImageIcon versioned = new ImageIcon(ImageDescriptorManager.DCORATOR_SHARED, Position.BOTTOM_RIGHT);
+		ImageIcon versioned = new ImageIcon(ImageDescriptorManager.DECORATOR_SHARED, Position.BOTTOM_RIGHT);
 		images.add(versioned);
 		switch (status) {
 		case Added:
-			images.add(new ImageIcon(ImageDescriptorManager.DCORATOR_ADDED, Position.TOP_LEFT));
+			images.add(new ImageIcon(ImageDescriptorManager.DECORATOR_ADDED, Position.TOP_LEFT));
 			break;
 		case Modified:
-			images.add(new ImageIcon(ImageDescriptorManager.DCORATOR_CHANGED, Position.TOP_LEFT));
+			images.add(new ImageIcon(ImageDescriptorManager.DECORATOR_CHANGED, Position.TOP_LEFT));
 			break;
 		case Deleted:
-			images.add(new ImageIcon(ImageDescriptorManager.DCORATOR_DELETED, Position.TOP_LEFT));
+			images.add(new ImageIcon(ImageDescriptorManager.DECORATOR_DELETED, Position.TOP_LEFT));
 			break;
 		case Unversioned:
-			images.add(new ImageIcon(ImageDescriptorManager.DCORATOR_UNVERSIONED, Position.TOP_LEFT));
+			images.add(new ImageIcon(ImageDescriptorManager.DECORATOR_UNVERSIONED, Position.TOP_LEFT));
 			images.remove(versioned);
 			break;
 		default:
