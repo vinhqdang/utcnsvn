@@ -20,7 +20,7 @@
     	<repository            
     		class="ivc.repository.IVCRepositoryProvider"            
     			id="ivc.reprovider"
-    			metaFilePaths=".ivc,.project" >
+    			metaFilePaths=".ivc" >
     	</repository>    
 	</extension>
 

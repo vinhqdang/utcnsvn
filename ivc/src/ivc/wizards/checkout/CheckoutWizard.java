@@ -47,7 +47,6 @@ public class CheckoutWizard extends Wizard implements INewWizard, IImportWizard 
 			e.printStackTrace();
 
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (command.getResult().isSuccess())
@@ -65,8 +64,6 @@ public class CheckoutWizard extends Wizard implements INewWizard, IImportWizard 
 
 	@Override
 	public void init(IWorkbench arg0, IStructuredSelection arg1) {
-		// TODO Auto-generated method stub
 
 	}
-
 }

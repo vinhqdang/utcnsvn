@@ -55,12 +55,6 @@ public class ResourceStatus {
 			// lastChangedDate
 			dos.writeLong(lastChangedDate.getTime());
 
-			// textStatus
-			// dos.writeInt(textStatus);
-
-			// propStatus
-			// dos.writeInt(propStatus);
-
 			// status
 			dos.writeInt(status.ordinal());
 

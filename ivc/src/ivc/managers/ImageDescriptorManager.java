@@ -10,12 +10,12 @@ import org.eclipse.swt.graphics.ImageData;
 
 public class ImageDescriptorManager {
 	public static final String SHARE_WIZARD = "img\\share_icon.png";
-	public static final String DCORATOR_SHARED = "img\\shared.png";
-	public static final String DCORATOR_CHANGED = "img\\modified.gif";
-	public static final String DCORATOR_ADDED = "img\\added.gif";
-	public static final String DCORATOR_DELETED = "img\\deleted.png";
-	public static final String DCORATOR_UNVERSIONED = "img\\unversioned.gif";
-	public static final String DCORATOR_ = "";
+	public static final String DECORATOR_SHARED = "img\\shared.png";
+	public static final String DECORATOR_CHANGED = "img\\modified.gif";
+	public static final String DECORATOR_ADDED = "img\\added.gif";
+	public static final String DECORATOR_DELETED = "img\\deleted.png";
+	public static final String DECORATOR_UNVERSIONED = "img\\unversioned.gif";
+	public static final String DECORATOR_ = "";
 	public static final String MARKER = "img\\shared.png";
 	public static final String TREE_FLAT = "img\\tree_flat.png";
 	public static final String TREE_AFFECTED_PATHS = "img\\tree.png";

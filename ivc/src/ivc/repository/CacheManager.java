@@ -4,12 +4,10 @@ import ivc.fireworks.decorators.Decorator;
 import ivc.plugin.IVCPlugin;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.QualifiedName;
 
-public class CacheManager implements IResourceChangeListener {
+public class CacheManager  {
 	private IStatusCache statusCache;
 	public static final QualifiedName IVC_STATUS_KEY = new QualifiedName(IVCPlugin.PLUGIN_ID, "IVC_STATUS_KEY");
 
@@ -42,11 +40,5 @@ public class CacheManager implements IResourceChangeListener {
 	public void removeStatus(IResource resource){		
 		statusCache.removeStatus(resource);
 		Decorator.getDecorator().refresh(resource);
-	}
-
-	@Override
-	public void resourceChanged(IResourceChangeEvent arg0) {
-		// TODO Auto-generated method stub
-
 	}
 }
