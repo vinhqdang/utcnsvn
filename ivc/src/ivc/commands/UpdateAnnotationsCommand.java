@@ -176,14 +176,14 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 	private void operationsToAnnotation(OperationHistory oh, String user) {
 		ResourcesAnnotations ra = project.getResourcesAnnotations();
 		String filePath = oh.getFilePath();
-		List<Integer> lineNumbers = new ArrayList<Integer>();
+		List<Integer> positions = new ArrayList<Integer>();
 		Iterator<Operation> it = oh.getOperations().descendingIterator();
 		while (it.hasNext()) {
 			Operation op = it.next();
 			Integer position = op.getPosition();
-			lineNumbers.add(position);
+			positions.add(position);
 		}
-		ra.setAnnotations(filePath, user, lineNumbers);
+		ra.setAnnotations(filePath, user, positions);
 
 		IFile file = project.getProject().getFile(filePath);
 		if (file.exists()) {
