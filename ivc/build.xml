@@ -10,7 +10,7 @@
   <property name="src-client" value="${basedir}/src/ivc" /> 
   <property name="dest-client" value="${basedir}/bin" /> 
   <property name="lib.dir" value="${basedir}/lib" /> 
-  <property name="eclipse.plugin.dir" value="D:\personal\school\utilitare\eclipse\plugins" /> 
+  <property name="eclipse.plugin.dir" value="d:\Own\Scoala\Java\eclipse\plugins" /> 
 
 	 <path id="classpath">
 	    <fileset dir="${lib.dir}" includes="**/*.jar"/>
@@ -39,7 +39,7 @@
 <target name="build-server">
   <mkdir dir="${dest-server}" />   
   <javac srcdir="${src-server}" destdir="${dest-server}"  debug="on" optimize="on" classpath="${dest-server}"  classpathref="classpath" /> 
-  <rmic base="${dest-server}" stubversion="1.2" classname="ivc.rmi.server.ServerImpl" /> 
+  <rmic base="${dest-server}" stubversion="1.2" classname="ivc.server.rmi.ServerImpl" /> 
 <copy todir="${dest-server}">
   <fileset dir="${src-server}" includes="*.txt" /> 
    </copy>
@@ -48,7 +48,7 @@
 	<target name="build-client">
 	  <mkdir dir="${dest-client}" />   
 	  <javac srcdir="${src-client}" destdir="${dest-client}"  debug="on" optimize="on" classpath="${dest-client}"  classpathref="classpath" /> 
-	  <rmic base="${dest-client}" stubversion="1.2" classname="ivc.rmi.client.ClientImpl" /> 
+	  <rmic base="${dest-client}" stubversion="1.2" classname="ivc.client.rmi.ClientImpl" /> 
 	<copy todir="${dest-client}">
 	  <fileset dir="${src-client}" includes="*.txt" /> 
 	   </copy>
@@ -58,7 +58,7 @@
 <!-- Run the test client 
   --> 
 <target name="run">
-<java classname="ivc.rmi.ServerImpl" classpath="${dest-server}" fork="true">
+<java classname="ivc.server.rmi.ServerImpl" classpath="${dest-server}" fork="true">
    </java>
   </target>
   <target name="full" depends="build-server,build-client" /> 
