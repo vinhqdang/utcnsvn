@@ -20,7 +20,8 @@ public class ResourcesAnnotations {
 	}
 
 	/**
-	 * Creates a new UsersAnnotations object and adds the supplied characters to the annotations
+	 * Creates a new UsersAnnotations object and adds the supplied characters to the
+	 * annotations
 	 * 
 	 * @param filePath
 	 *            the path of the file to which to add the annotations
@@ -29,7 +30,8 @@ public class ResourcesAnnotations {
 	 * @param charPositions
 	 *            the positions of the characters
 	 */
-	public void setAnnotations(String filePath, String userName, List<Integer> charPositions) {
+	public void setAnnotations(String filePath, String userName,
+			List<Integer> charPositions) {
 		UsersAnnotations userAnnot = new UsersAnnotations();
 		if (annotations.containsKey(filePath)) {
 			userAnnot = annotations.get(filePath);
@@ -66,13 +68,15 @@ public class ResourcesAnnotations {
 	}
 
 	/**
-	 * Returns a map of characters as keys and a list of usernames as values for a given resource.
+	 * Returns a map of characters as keys and a list of usernames as values for a given
+	 * resource.
 	 * 
 	 * @param resource
 	 *            the resource
 	 * @return the users who modiffied the characters
 	 */
-	public HashMap<Integer, ArrayList<String>> getAnnotationsUsersForAllPositions(IResource resource) {
+	public HashMap<Integer, ArrayList<String>> getAnnotationsUsersForAllPositions(
+			IResource resource) {
 		if (!annotations.containsKey(key(resource))) {
 			return null;
 		}

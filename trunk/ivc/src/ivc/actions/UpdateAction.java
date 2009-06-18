@@ -14,6 +14,12 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 
+/**
+ * The class is used to perform a update action
+ * 
+ * @author alexm
+ * 
+ */
 public class UpdateAction extends BaseActionDelegate {
 
 	@Override
@@ -29,6 +35,7 @@ public class UpdateAction extends BaseActionDelegate {
 	public void run(IAction arg0) {
 		try {
 			List<String> files = new ArrayList<String>();
+			// returning all selected resources for update
 			IResource[] resources = findAllResources(false);
 			if (resources != null) {
 				for (int i = 0; i < resources.length; i++) {
@@ -53,11 +60,6 @@ public class UpdateAction extends BaseActionDelegate {
 		MessageDialog.openInformation(getShell(), "Success", "Update Successful");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ivc.fireworks.actions.BaseActionDelegate#menuItemEnabled()
-	 */
 	@Override
 	public boolean menuItemEnabled() {
 		return true;

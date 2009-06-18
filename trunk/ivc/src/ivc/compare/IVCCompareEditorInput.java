@@ -30,20 +30,32 @@ public class IVCCompareEditorInput extends CompareEditorInput {
 	}
 
 	@Override
-	protected Object prepareInput(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	protected Object prepareInput(IProgressMonitor monitor)
+			throws InvocationTargetException, InterruptedException {
 
 		Differencer diferencer = new Differencer();
 		DiffNode result;
 
-		result = (DiffNode) diferencer.findDifferences(false, monitor, null, null, left, right);
+		result = (DiffNode) diferencer.findDifferences(false, monitor, null, null, left,
+				right);
 		return result;
 
 	}
 
+	/**
+	 * Sets the left IDiffComparable
+	 * 
+	 * @param resource
+	 */
 	public void setLeft(IDiffComparable resource) {
 		left = resource;
 	}
 
+	/**
+	 * Sets the right resource for the compare
+	 * 
+	 * @param resource
+	 */
 	public void setRight(IDiffComparable resource) {
 		right = resource;
 	}

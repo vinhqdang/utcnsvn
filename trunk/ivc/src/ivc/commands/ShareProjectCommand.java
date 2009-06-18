@@ -47,12 +47,14 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 	}
 
 	@Override
-	/**
-	 * Shares a project from the local host. The class establishes connection with the server and sends over 
-	 * the base version of the project. This base version is saved by the server in a specific file, that will 
-	 * from now on available through server methods invocation. 
+	/*
+	 * * Shares a project from the local host. The class establishes connection with the
+	 * server and sends over the base version of the project. This base version is saved
+	 * by the server in a specific file, that will from now on available through server
+	 * methods invocation.
 	 */
-	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	public void run(IProgressMonitor monitor) throws InvocationTargetException,
+			InterruptedException {
 
 		// init local properties
 		monitor.beginTask("Init local properties", 5);
@@ -72,18 +74,21 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 		// 1. connect to server
 
 		try {
-			ServerIntf server = ConnectionManager.getInstance(project.getName()).connectToServer(serverAddress);
+			ServerIntf server = ConnectionManager.getInstance(project.getName())
+					.connectToServer(serverAddress);
 
 			// continue if connection succedded
 			if (server != null) {
 				// authenticate
 				try {
 					if (!server.authenticateHost(userName, pass)) {
-						result = new Result(false, Exceptions.SERVER_AUTHENTICATION_FAILED, null);
+						result = new Result(false,
+								Exceptions.SERVER_AUTHENTICATION_FAILED, null);
 						return;
 					}
 				} catch (RemoteException e1) {
-					result = new Result(false, Exceptions.SERVER_AUTHENTICATION_FAILED, e1);
+					result = new Result(false, Exceptions.SERVER_AUTHENTICATION_FAILED,
+							e1);
 					e1.printStackTrace();
 					return;
 				}
@@ -142,16 +147,21 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 			File ivcfolder = new File(localProjPath + Constants.IvcFolder);
 			ivcfolder.mkdir();
 			// svr host file
-			File svrfile = new File(localProjPath + Constants.IvcFolder + Constants.ServerFile);
+			File svrfile = new File(localProjPath + Constants.IvcFolder
+					+ Constants.ServerFile);
 			svrfile.createNewFile();
-			FileUtils.writeObjectToFile(svrfile.getAbsolutePath(), serverAddress + "\\" + projectPath);
+			FileUtils.writeObjectToFile(svrfile.getAbsolutePath(), serverAddress + "\\"
+					+ projectPath);
 			// local log file
-			File llfile = new File(localProjPath + Constants.IvcFolder + Constants.LocalLog);
+			File llfile = new File(localProjPath + Constants.IvcFolder
+					+ Constants.LocalLog);
 			llfile.createNewFile();
 			// remote committed log
-			File rclfile = new File(localProjPath + Constants.IvcFolder + Constants.RemoteCommitedLog);
+			File rclfile = new File(localProjPath + Constants.IvcFolder
+					+ Constants.RemoteCommitedLog);
 			rclfile.createNewFile();
-			File cvFile = new File(localProjPath + Constants.IvcFolder + Constants.CurrentVersionFile);
+			File cvFile = new File(localProjPath + Constants.IvcFolder
+					+ Constants.CurrentVersionFile);
 			cvFile.createNewFile();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -177,7 +187,8 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 					cv.put(file, 1);
 				}
 				cv.put(project.getName(), 1);
-				FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.CurrentVersionFile, cv);
+				FileUtils.writeObjectToFile(project.getLocation().toOSString()
+						+ Constants.IvcFolder + Constants.CurrentVersionFile, cv);
 			} catch (CoreException e) {
 				e.printStackTrace();
 			}

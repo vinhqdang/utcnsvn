@@ -24,7 +24,10 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * The activator class controls the plug-in life cycle
+ * 
+ * @author alexm
+ * 
+ *         This is the main plugin class
  */
 public class IVCPlugin extends AbstractUIPlugin implements IStartup {
 
@@ -44,7 +47,8 @@ public class IVCPlugin extends AbstractUIPlugin implements IStartup {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext )
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
+	 * )
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -52,8 +56,10 @@ public class IVCPlugin extends AbstractUIPlugin implements IStartup {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		ResourceChangedListener changeListener = new ResourceChangedListener();
 		FileModificationListener modifications = new FileModificationListener();
-		workspace.addResourceChangeListener(changeListener, IResourceChangeEvent.PRE_BUILD);
-		workspace.addResourceChangeListener(modifications, IResourceChangeEvent.PRE_BUILD);
+		workspace.addResourceChangeListener(changeListener,
+				IResourceChangeEvent.PRE_BUILD);
+		workspace
+				.addResourceChangeListener(modifications, IResourceChangeEvent.PRE_BUILD);
 
 		Decorator.enableDecoration = true;
 
@@ -85,7 +91,20 @@ public class IVCPlugin extends AbstractUIPlugin implements IStartup {
 		return plugin;
 	}
 
-	public void runWithProgress(Shell parent, boolean cancelable, final IRunnableWithProgress runnable) throws InvocationTargetException,
+	/**
+	 * Runs a IRunnableWithProgress instance in the giben shell
+	 * 
+	 * @param parent
+	 *            the shell
+	 * @param cancelable
+	 *            specifies if the runnable is cancelable
+	 * @param runnable
+	 *            the object to run
+	 * @throws InvocationTargetException
+	 * @throws InterruptedException
+	 */
+	public void runWithProgress(Shell parent, boolean cancelable,
+			final IRunnableWithProgress runnable) throws InvocationTargetException,
 			InterruptedException {
 
 		boolean createdShell = false;
@@ -132,11 +151,23 @@ public class IVCPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	}
 
-	public static IStatus openError(Shell providedShell, String title, String message, Throwable exception, int flags) {
+	/**
+	 * 
+	 * @param providedShell
+	 * @param title
+	 * @param message
+	 * @param exception
+	 * @param flags
+	 * @return
+	 */
+	public static IStatus openError(Shell providedShell, String title, String message,
+			Throwable exception, int flags) {
 		// Unwrap InvocationTargetExceptions
 		if (exception instanceof InvocationTargetException) {
-			Throwable target = ((InvocationTargetException) exception).getTargetException();
-			// re-throw any runtime exceptions or errors so they can be handled by the workbench
+			Throwable target = ((InvocationTargetException) exception)
+					.getTargetException();
+			// re-throw any runtime exceptions or errors so they can be handled by the
+			// workbench
 			if (target instanceof RuntimeException) {
 				throw (RuntimeException) target;
 			}

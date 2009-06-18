@@ -27,10 +27,10 @@ public class GetUserCopyCommand implements CommandIntf {
 
 	private StringBuffer fileContent;
 
-	
 	@Override
-	/**
-	 * Computes the current version of the remote file based on the operations stored in the log files of the current user workspace
+	/*
+	 * * Computes the current version of the remote file based on the operations stored in
+	 * the log files of the current user workspace
 	 */
 	public Result execute(CommandArgs args) {
 		hostAddress = (String) args.getArgumentValue(Constants.HOST_ADDRESS);
@@ -43,7 +43,8 @@ public class GetUserCopyCommand implements CommandIntf {
 		ServerIntf server = conMg.getServer();
 		if (server != null) {
 			try {
-				fileContent = server.getBaseVersionForFile(ivcProject.getServerPath(), filePath);
+				fileContent = server.getBaseVersionForFile(ivcProject.getServerPath(),
+						filePath);
 			} catch (RemoteException e) {
 				return new Result(true, Exceptions.COULD_NOT_GET_BASEVERSION_FORFILE, e);
 			}
@@ -54,21 +55,27 @@ public class GetUserCopyCommand implements CommandIntf {
 			} else {
 				rul = ivcProject.getRemoteUncommitedLog(hostAddress);
 				if (rul != null && rul.getOperationHistForFile(filePath) != null) {
-					version = rul.getOperationHistForFile(filePath).getOperations().getLast().getFileVersion();
+					version = rul.getOperationHistForFile(filePath).getOperations()
+							.getLast().getFileVersion();
 				}
 			}
 			// apply commited transformations
 			try {
-				OperationHistoryList cl = server.returnHeadVersion(ivcProject.getServerPath());
+				OperationHistoryList cl = server.returnHeadVersion(ivcProject
+						.getServerPath());
 				OperationHistory fileOps = cl.getOperationHistForFile(filePath);
 				if (fileOps != null) {
-					for (Iterator<Operation> iterator = fileOps.getOperations().descendingIterator(); iterator.hasNext();) {
+					for (Iterator<Operation> iterator = fileOps.getOperations()
+							.descendingIterator(); iterator.hasNext();) {
 						Operation operation = iterator.next();
-						if (operation.getOperationType() == Operation.CHARACTER_ADD || operation.getOperationType() == Operation.CHARACTER_DELETE) {
+						if (operation.getOperationType() == Operation.CHARACTER_ADD
+								|| operation.getOperationType() == Operation.CHARACTER_DELETE) {
 							if (operation.getFileVersion() <= version) {
-								try{
-								fileContent = operation.applyContentTransformation(fileContent);
-								}catch(Exception e){}
+								try {
+									fileContent = operation
+											.applyContentTransformation(fileContent);
+								} catch (Exception e) {
+								}
 							}
 						}
 					}
@@ -81,10 +88,13 @@ public class GetUserCopyCommand implements CommandIntf {
 				if (rul != null && rul.getOperationHistForFile(filePath) != null) {
 					OperationHistory rulOps = rul.getOperationHistForFile(filePath);
 					if (rulOps != null) {
-						for (Iterator<Operation> iterator = rulOps.getOperations().descendingIterator(); iterator.hasNext();) {
+						for (Iterator<Operation> iterator = rulOps.getOperations()
+								.descendingIterator(); iterator.hasNext();) {
 							Operation operation = iterator.next();
-							if (operation.getOperationType() == Operation.CHARACTER_ADD || operation.getOperationType() == Operation.CHARACTER_DELETE) {
-		 						fileContent = operation.applyContentTransformation(fileContent);
+							if (operation.getOperationType() == Operation.CHARACTER_ADD
+									|| operation.getOperationType() == Operation.CHARACTER_DELETE) {
+								fileContent = operation
+										.applyContentTransformation(fileContent);
 							}
 						}
 					}

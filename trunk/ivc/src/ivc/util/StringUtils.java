@@ -75,38 +75,7 @@ public class StringUtils {
 		return list.toArray(new String[list.size()]);
 	}
 
-	// the following method has been taken from commons-lang StringUtils class
-
-	/**
-	 * <p>
-	 * Strips any of a set of characters from the start of a String.
-	 * </p>
-	 * 
-	 * <p>
-	 * A <code>null</code> input String returns <code>null</code>. An empty string ("") input returns the empty string.
-	 * </p>
-	 * 
-	 * <p>
-	 * If the stripChars String is <code>null</code>, whitespace is stripped as defined by {@link Character#isWhitespace(char)}.
-	 * </p>
-	 * 
-	 * <pre>
-	 * StringUtils.stripStart(null, *)          = null
-	 * StringUtils.stripStart(&quot;&quot;, *)            = &quot;&quot;
-	 * StringUtils.stripStart(&quot;abc&quot;, &quot;&quot;)        = &quot;abc&quot;
-	 * StringUtils.stripStart(&quot;abc&quot;, null)      = &quot;abc&quot;
-	 * StringUtils.stripStart(&quot;  abc&quot;, null)    = &quot;abc&quot;
-	 * StringUtils.stripStart(&quot;abc  &quot;, null)    = &quot;abc  &quot;
-	 * StringUtils.stripStart(&quot; abc &quot;, null)    = &quot;abc &quot;
-	 * StringUtils.stripStart(&quot;yxabc  &quot;, &quot;xyz&quot;) = &quot;abc  &quot;
-	 * </pre>
-	 * 
-	 * @param str
-	 *            the String to remove characters from, may be null
-	 * @param stripChars
-	 *            the characters to remove, null treated as whitespace
-	 * @return the stripped String, <code>null</code> if null String input
-	 */
+	
 	public static String stripStart(String str, String stripChars) {
 		int strLen;
 		if (str == null || (strLen = str.length()) == 0) {

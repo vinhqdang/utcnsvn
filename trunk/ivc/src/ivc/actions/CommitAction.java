@@ -25,6 +25,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 
+/**
+ * Action used to commit the modified resources
+ * 
+ * @author alexm
+ * 
+ */
 public class CommitAction extends BaseActionDelegate {
 
 	@Override
@@ -48,20 +54,30 @@ public class CommitAction extends BaseActionDelegate {
 			e.printStackTrace();
 		}
 		if (resources.length == 0) {
-			MessageDialog.openInformation(getShell(), "Cannot commit", "No files were changed");
+			MessageDialog.openInformation(getShell(), "Cannot commit",
+					"No files were changed");
 			return;
 		}
+		// setting the status map of the resources which is necesary for the dialog to
+		// display
+		// the resource icons correctly
 		try {
 			for (IResource resource : resources) {
 				if (!resource.isPhantom())
-					statusMap.put(resource, ProjectsManager.instance().getStatus(resource));
+					statusMap.put(resource, ProjectsManager.instance()
+							.getStatus(resource));
 				else
 					statusMap.put(resource, Status.Deleted);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		CommitWizardPage commitPage = new CommitWizardPage(resources, statusMap, false);
+		// create a new wizard page to display the selected resources
+		// add the wizard page to the wizards
+		// add the wizard dialog which permits checking of resources which will be
+		// commited
+
+		CommitWizardPage commitPage = new CommitWizardPage(resources, statusMap);
 		CommitWizard wizard = new CommitWizard(commitPage);
 		CommitWizardDialog dialog = new CommitWizardDialog(getShell(), wizard);
 
@@ -73,10 +89,17 @@ public class CommitAction extends BaseActionDelegate {
 		List<String> filePaths = new ArrayList<String>();
 		IResource[] commitedResources = commitPage.getSelectedResources();
 		if (commitedResources != null && commitedResources.length > 0) {
+			// adding the checked resources to the file paths list which contains the
+			// paths
+			// that are going to be committed
 			for (IResource resource : commitedResources) {
 				if (resource.getType() != IResource.PROJECT) {
+					// if resources without a status where selected we have to add them to
+					// the
+					// repository before committing
 					if (ProjectsManager.instance().isManaged(resource)) {
-						AddToRepositoryCommand command = new AddToRepositoryCommand(null, resource);
+						AddToRepositoryCommand command = new AddToRepositoryCommand(null,
+								resource);
 
 						try {
 							command.run();
@@ -90,10 +113,14 @@ public class CommitAction extends BaseActionDelegate {
 				}
 			}
 			CommandArgs args = new CommandArgs();
-			args.putArgument(Constants.PROJECT_NAME, commitedResources[0].getProject().getName());
+			args.putArgument(Constants.PROJECT_NAME, commitedResources[0].getProject()
+					.getName());
 			args.putArgument(Constants.FILE_PATHS, filePaths);
 
+			// creating the command used to commit the resources
+
 			CommitCommand commitCommand = new CommitCommand(null, args);
+
 			try {
 				commitCommand.run();
 			} catch (Exception e) {
@@ -108,7 +135,8 @@ public class CommitAction extends BaseActionDelegate {
 			for (IResource resource : commitedResources) {
 				try {
 					if (resource.isPhantom()) {
-						ResourcesPlugin.getWorkspace().getSynchronizer().setSyncInfo(CacheManager.IVC_STATUS_KEY, resource, null);
+						ResourcesPlugin.getWorkspace().getSynchronizer().setSyncInfo(
+								CacheManager.IVC_STATUS_KEY, resource, null);
 					}
 
 					ProjectsManager.instance().setCommitedStatus(resource);
@@ -117,7 +145,8 @@ public class CommitAction extends BaseActionDelegate {
 					e.printStackTrace();
 				}
 			}
-			MessageDialog.openInformation(getShell(), "Commit successful", "Commit succeded");
+			MessageDialog.openInformation(getShell(), "Commit successful",
+					"Commit succeded");
 		}
 	}
 

@@ -52,8 +52,8 @@ public class CommitCommand extends TeamOperation {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	/**
-	 * Handle operations needed at commit
+	/*
+	 * * Handle operations needed at commit
 	 */
 	public void run(IProgressMonitor monitor) {
 		// init local fields
@@ -78,7 +78,8 @@ public class CommitCommand extends TeamOperation {
 		}
 		try {
 			// send commited changes to the server
-			connectionManager.getServer().updateHeadVersion(ivcProject.getServerPath(), changedFiles);
+			connectionManager.getServer().updateHeadVersion(ivcProject.getServerPath(),
+					changedFiles);
 
 			// increment file versions
 			monitor.setTaskName("Updating current version");
@@ -136,13 +137,16 @@ public class CommitCommand extends TeamOperation {
 			Iterator<String> it = filePaths.iterator();
 			while (it.hasNext()) {
 				String filePath = it.next();
-				if (rcl.getOperationHistForFile(filePath) != null && !rcl.getOperationHistForFile(filePath).getOperations().isEmpty()) {
+				if (rcl.getOperationHistForFile(filePath) != null
+						&& !rcl.getOperationHistForFile(filePath).getOperations()
+								.isEmpty()) {
 					return false;
 				}
 			}
 		}
 		try {
-			currentCommitedVersion = (HashMap<String, Integer>) connectionManager.getServer().getVersionNumber(ivcProject.getServerPath());
+			currentCommitedVersion = (HashMap<String, Integer>) connectionManager
+					.getServer().getVersionNumber(ivcProject.getServerPath());
 			Iterator<OperationHistory> it = changedFiles.iterator();
 			while (it.hasNext()) {
 				OperationHistory oh = it.next();
@@ -195,7 +199,8 @@ public class CommitCommand extends TeamOperation {
 
 			// save new changes
 			ivcProject.setCurrentVersion(localVersion);
-			connectionManager.getServer().updateVersionNumber(ivcProject.getServerPath(), currentCommitedVersion);
+			connectionManager.getServer().updateVersionNumber(ivcProject.getServerPath(),
+					currentCommitedVersion);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -211,24 +216,28 @@ public class CommitCommand extends TeamOperation {
 		while (it.hasNext()) {
 			ClientIntf peer = it.next();
 			try {
-				peer.updateRCL(ivcProject.getServerPath(), NetworkUtils.getHostAddress(), changedFiles);
+				peer.updateRCL(ivcProject.getServerPath(), NetworkUtils.getHostAddress(),
+						changedFiles);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
 		}
 		// notify peers that are not on line
 		try {
-			List<Peer> all = connectionManager.getServer().getAllClientHosts(ivcProject.getServerPath());
+			List<Peer> all = connectionManager.getServer().getAllClientHosts(
+					ivcProject.getServerPath());
 			List<String> disconnected = new ArrayList<String>();
 			Iterator<Peer> itp = all.iterator();
 			while (itp.hasNext()) {
 				Peer peer = itp.next();
 				if (!connectionManager.getPeerHosts().contains(peer.getHostAddress())
-						&& !peer.getHostAddress().equalsIgnoreCase(NetworkUtils.getHostAddress())) {
+						&& !peer.getHostAddress().equalsIgnoreCase(
+								NetworkUtils.getHostAddress())) {
 					disconnected.add(peer.getHostAddress());
 				}
 			}
-			connectionManager.getServer().updatePendingRCL(ivcProject.getServerPath(), disconnected, changedFiles);
+			connectionManager.getServer().updatePendingRCL(ivcProject.getServerPath(),
+					disconnected, changedFiles);
 		} catch (RemoteException e) {
 
 			e.printStackTrace();
@@ -241,17 +250,20 @@ public class CommitCommand extends TeamOperation {
 
 	private void updatePendingRUL() throws RemoteException {
 		// notify peers that are not on line
-		List<Peer> all = connectionManager.getServer().getAllClientHosts(ivcProject.getServerPath());
+		List<Peer> all = connectionManager.getServer().getAllClientHosts(
+				ivcProject.getServerPath());
 		List<String> disconnected = new ArrayList<String>();
 		Iterator<Peer> itp = all.iterator();
 		while (itp.hasNext()) {
 			Peer peer = itp.next();
 			if (!connectionManager.getPeerHosts().contains(peer.getHostAddress())
-					&& !peer.getHostAddress().equalsIgnoreCase(NetworkUtils.getHostAddress())) {
+					&& !peer.getHostAddress().equalsIgnoreCase(
+							NetworkUtils.getHostAddress())) {
 				disconnected.add(peer.getHostAddress());
 			}
 		}
-		connectionManager.getServer().updatePendingRUL(ivcProject.getServerPath(), NetworkUtils.getHostAddress(), disconnected, changedFiles);
+		connectionManager.getServer().updatePendingRUL(ivcProject.getServerPath(),
+				NetworkUtils.getHostAddress(), disconnected, changedFiles);
 
 	}
 

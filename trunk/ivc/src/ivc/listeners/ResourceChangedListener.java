@@ -18,6 +18,13 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 
+/**
+ * 
+ * @author alexm
+ * 
+ *         The class is used to retrieve the resources modifications which can be add or
+ *         remove and modify the resource status
+ */
 public class ResourceChangedListener implements IResourceChangeListener {
 	/**
 	 * Method called each time a resource is changed
@@ -42,7 +49,8 @@ public class ResourceChangedListener implements IResourceChangeListener {
 						resource = delta.getResource();
 						if (IVCRepositoryProvider.isShared(resource.getProject())) {
 							if (projectsManager.isManaged(resource)) {
-								if (projectsManager.getStatus(resource).equals(Status.Commited))
+								if (projectsManager.getStatus(resource).equals(
+										Status.Commited))
 									return true;
 							}
 							toBeRefreshed.add(resource.getParent());
@@ -56,7 +64,8 @@ public class ResourceChangedListener implements IResourceChangeListener {
 					case IResourceDelta.REMOVED:
 						resource = delta.getResource();
 						if (resource instanceof IProject) {
-							IVCProject project = projectsManager.getIVCProjectByResource(resource);
+							IVCProject project = projectsManager
+									.getIVCProjectByResource(resource);
 							if (project != null) {
 								try {
 									projectsManager.removeProject(project);
@@ -70,7 +79,8 @@ public class ResourceChangedListener implements IResourceChangeListener {
 								toBeRefreshed.add(resource.getParent());
 							}
 							if (projectsManager.isManaged(resource)) {
-								RemoveResourceCommand command = new RemoveResourceCommand(null, resource);
+								RemoveResourceCommand command = new RemoveResourceCommand(
+										null, resource);
 								try {
 									command.run();
 								} catch (InvocationTargetException e) {
@@ -95,6 +105,11 @@ public class ResourceChangedListener implements IResourceChangeListener {
 		}
 	}
 
+	/**
+	 * Updates the status and the decorators for all resources in the resources list
+	 * 
+	 * @param resources
+	 */
 	private void refreshResources(ArrayList<IResource> resources) {
 		for (IResource resource : resources) {
 			try {

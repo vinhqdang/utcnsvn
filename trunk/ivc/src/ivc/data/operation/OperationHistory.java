@@ -115,7 +115,7 @@ public class OperationHistory implements Serializable, Cloneable {
 	}
 
 	public void removeOperations(LinkedList<Operation> ops) {
-		 operations.removeAll(ops);
+		operations.removeAll(ops);
 	}
 
 	/*

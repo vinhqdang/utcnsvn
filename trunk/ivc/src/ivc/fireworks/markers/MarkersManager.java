@@ -14,14 +14,29 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 
+/**
+ * 
+ * @author alexm The class is used to create markers for the speciffied resources
+ */
+
 public class MarkersManager {
 	public static String IVC_MARKER = "ivc.Marker";
 
+	/**
+	 * Adds a marker at the specified line number
+	 * 
+	 * @param resource
+	 *            the resource for which the marker should be added
+	 * @param line
+	 *            the line where the marker should be added
+	 * @return returns if the set succeded or not
+	 */
 	private static boolean addMarker(IResource resource, int line) {
 		try {
 
 			IMarker marker = resource.createMarker(IVC_MARKER);
-			marker.setAttribute(IMarker.MESSAGE, "Other users are concurently modifying this resource");
+			marker.setAttribute(IMarker.MESSAGE,
+					"Other users are concurently modifying this resource");
 			marker.setAttribute(IMarker.LINE_NUMBER, line);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -30,6 +45,13 @@ public class MarkersManager {
 		return true;
 	}
 
+	/**
+	 * Updates all markers from the specified file
+	 * 
+	 * @param file
+	 *            the file for which the update should be executed
+	 * @throws CoreException
+	 */
 	public static void updateMarkers(IFile file) throws CoreException {
 		file.deleteMarkers(IVC_MARKER, true, 1);
 
@@ -45,6 +67,13 @@ public class MarkersManager {
 		}
 	}
 
+	/**
+	 * Returns the line number if the position in the file
+	 * 
+	 * @param buff
+	 *            the substring where to search
+	 * @return the line number if the position in the file
+	 */
 	private static int getCount(String buff) {
 		int count = 1;
 		for (Character c : buff.toCharArray()) {
@@ -54,6 +83,14 @@ public class MarkersManager {
 		return count;
 	}
 
+	/**
+	 * Returns all lines for the specified resource
+	 * 
+	 * @param file
+	 *            the file for which to calculate the lines
+	 * @return a list of lines for the specified
+	 * @throws CoreException
+	 */
 	private static List<Integer> getLines(IFile file) throws CoreException {
 		StringBuffer sBuffer = FileUtils.InputStreamToStringBuffer(file.getContents());
 		String values = sBuffer.toString();
@@ -72,8 +109,16 @@ public class MarkersManager {
 		return lines;
 	}
 
+	/**
+	 * Returns the list of the modified positions for the IFile
+	 * 
+	 * @param file
+	 *            the file for which to get the positions
+	 * @return the list of the modified positions for the IFile
+	 */
 	private static List<Integer> getPositions(IFile file) {
-		IVCProject proj = ProjectsManager.instance().getIVCProjectByName(file.getProject().getName());
+		IVCProject proj = ProjectsManager.instance().getIVCProjectByName(
+				file.getProject().getName());
 		if (proj != null) {
 			UsersAnnotations annotations = proj.getUsersAnnotations(file);
 			return annotations.getPositions();

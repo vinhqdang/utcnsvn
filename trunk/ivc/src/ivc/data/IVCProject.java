@@ -105,7 +105,8 @@ public class IVCProject implements Serializable {
 	}
 
 	public OperationHistoryList getLocalLog() {
-		Object obj = FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.LocalLog);
+		Object obj = FileUtils.readObjectFromFile(project.getLocation().toOSString()
+				+ Constants.IvcFolder + Constants.LocalLog);
 		if (obj != null && obj instanceof OperationHistoryList) {
 			return (OperationHistoryList) obj;
 		}
@@ -113,7 +114,8 @@ public class IVCProject implements Serializable {
 	}
 
 	public OperationHistoryList getRemoteCommitedLog() {
-		Object obj = FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteCommitedLog);
+		Object obj = FileUtils.readObjectFromFile(project.getLocation().toOSString()
+				+ Constants.IvcFolder + Constants.RemoteCommitedLog);
 		if (obj != null && obj instanceof OperationHistoryList) {
 			return (OperationHistoryList) obj;
 		}
@@ -122,11 +124,16 @@ public class IVCProject implements Serializable {
 
 	public OperationHistoryList getRemoteUncommitedLog(String hostAddress) {
 		try {
-			File f = new File(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
+			File f = new File(project.getLocation().toOSString() + Constants.IvcFolder
+					+ Constants.RemoteUnCommitedLog + "_"
 					+ hostAddress.replaceAll("\\.", "_"));
 			if (f.exists()) {
-				Object obj = FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog
-						+ "_" + hostAddress.replaceAll("\\.", "_"));
+				Object obj = FileUtils.readObjectFromFile(project.getLocation()
+						.toOSString()
+						+ Constants.IvcFolder
+						+ Constants.RemoteUnCommitedLog
+						+ "_"
+						+ hostAddress.replaceAll("\\.", "_"));
 				if (obj != null && obj instanceof OperationHistoryList) {
 					return (OperationHistoryList) obj;
 				}
@@ -139,26 +146,31 @@ public class IVCProject implements Serializable {
 	}
 
 	public void setLocalLog(OperationHistoryList ll) {
-		FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.LocalLog, ll);
+		FileUtils.writeObjectToFile(project.getLocation().toOSString()
+				+ Constants.IvcFolder + Constants.LocalLog, ll);
 	}
 
 	public void setRemoteCommitedLog(OperationHistoryList rcl) {
-		FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteCommitedLog, rcl);
+		FileUtils.writeObjectToFile(project.getLocation().toOSString()
+				+ Constants.IvcFolder + Constants.RemoteCommitedLog, rcl);
 	}
 
 	public void setRemoteUncommitedLog(OperationHistoryList rul, String hostAddress) {
-		FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
+		FileUtils.writeObjectToFile(project.getLocation().toOSString()
+				+ Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
 				+ hostAddress.replaceAll("\\.", "_"), rul);
 	}
 
 	@SuppressWarnings("unchecked")
 	public HashMap<String, Integer> getCurrentVersion() {
-		return (HashMap<String, Integer>) FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder
-				+ Constants.CurrentVersionFile);
+		return (HashMap<String, Integer>) FileUtils.readObjectFromFile(project
+				.getLocation().toOSString()
+				+ Constants.IvcFolder + Constants.CurrentVersionFile);
 	}
 
 	public void setCurrentVersion(HashMap<String, Integer> cv) {
-		FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.CurrentVersionFile, cv);
+		FileUtils.writeObjectToFile(project.getLocation().toOSString()
+				+ Constants.IvcFolder + Constants.CurrentVersionFile, cv);
 	}
 
 	public int getFileVersion(String path) {

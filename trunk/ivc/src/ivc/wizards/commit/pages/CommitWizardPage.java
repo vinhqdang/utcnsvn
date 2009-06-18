@@ -36,6 +36,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.PlatformUI;
 
+/**
+ * 
+ * @author alexm
+ * 
+ *         Class used to display data regarding to the commit of modified resources
+ */
 public class CommitWizardPage extends WizardPage {
 	private SashForm sashForm;
 	private IResource[] resourcesToCommit;
@@ -50,8 +56,18 @@ public class CommitWizardPage extends WizardPage {
 	private Map<IResource, Status> statusMap;
 	private ResourceSelectionTree resourceSelectionTree;
 
-	public CommitWizardPage(IResource[] resourcesToCommit, Map<IResource, Status> statusMap, boolean fromSyncView) {
-		super("Commit Wizard", "Commit", ImageDescriptorManager.getImageDescriptor(ImageDescriptorManager.SHARE_WIZARD));
+	/**
+	 * Creates the wizard page given the specified parameters
+	 * 
+	 * @param resourcesToCommit
+	 *            the resources array
+	 * @param statusMap
+	 *            the status of the resources
+	 */
+	public CommitWizardPage(IResource[] resourcesToCommit,
+			Map<IResource, Status> statusMap) {
+		super("Commit Wizard", "Commit", ImageDescriptorManager
+				.getImageDescriptor(ImageDescriptorManager.SHARE_WIZARD));
 		setTitle("Commit");
 		includeUnversioned = true;
 
@@ -68,7 +84,8 @@ public class CommitWizardPage extends WizardPage {
 		outerLayout.marginHeight = 0;
 		outerLayout.marginWidth = 0;
 		outerContainer.setLayout(outerLayout);
-		outerContainer.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
+		outerContainer.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
+				| GridData.HORIZONTAL_ALIGN_FILL));
 
 		createControls(outerContainer);
 
@@ -115,22 +132,25 @@ public class CommitWizardPage extends WizardPage {
 						includeUnversionedButton = new Button(parent, SWT.CHECK);
 						includeUnversionedButton.setText("Include unversioned");
 						includeUnversionedButton.setSelection(includeUnversioned);
-						includeUnversionedButton.addSelectionListener(new SelectionListener() {
-							public void widgetSelected(SelectionEvent e) {
-								includeUnversioned = includeUnversionedButton.getSelection();
-								if (!includeUnversioned) {
-									resourceSelectionTree.removeUnversioned();
-								} else {
-									resourceSelectionTree.addUnversioned();
-								}
-								selectedResources = resourceSelectionTree.getSelectedResources();
-								setPageComplete(canFinish());
+						includeUnversionedButton
+								.addSelectionListener(new SelectionListener() {
+									public void widgetSelected(SelectionEvent e) {
+										includeUnversioned = includeUnversionedButton
+												.getSelection();
+										if (!includeUnversioned) {
+											resourceSelectionTree.removeUnversioned();
+										} else {
+											resourceSelectionTree.addUnversioned();
+										}
+										selectedResources = resourceSelectionTree
+												.getSelectedResources();
+										setPageComplete(canFinish());
 
-							}
+									}
 
-							public void widgetDefaultSelected(SelectionEvent e) {
-							}
-						});
+									public void widgetDefaultSelected(SelectionEvent e) {
+									}
+								});
 						return includeUnversionedButton;
 					}
 				});
@@ -141,43 +161,52 @@ public class CommitWizardPage extends WizardPage {
 				return 1;
 			}
 		};
-		resourceSelectionTree = new ResourceSelectionTree(composite, SWT.NONE, "Resources to commit", resourcesToCommit, statusMap, null, true,
+		resourceSelectionTree = new ResourceSelectionTree(composite, SWT.NONE,
+				"Resources to commit", resourcesToCommit, statusMap, null, true,
 				toolbarControlCreator);
 		if (!resourceSelectionTree.showIncludeUnversionedButton())
 			includeUnversionedButton.setVisible(false);
 
-		resourceSelectionTree.setRemoveFromViewValidator(new ResourceSelectionTree.IRemoveFromViewValidator() {
-			public boolean canRemove(ArrayList<IResource> resourceList, IStructuredSelection selection) {
-				return removalOk(resourceList, selection);
-			}
+		resourceSelectionTree
+				.setRemoveFromViewValidator(new ResourceSelectionTree.IRemoveFromViewValidator() {
+					public boolean canRemove(ArrayList<IResource> resourceList,
+							IStructuredSelection selection) {
+						return removalOk(resourceList, selection);
+					}
 
-			public String getErrorMessage() {
-				return removalError;
-			}
-		});
-		resourceSelectionTree.getTreeViewer().addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				selectedResources = resourceSelectionTree.getSelectedResources();
-			}
-		});
-		((CheckboxTreeViewer) resourceSelectionTree.getTreeViewer()).addCheckStateListener(new ICheckStateListener() {
-			public void checkStateChanged(CheckStateChangedEvent event) {
-				selectedResources = resourceSelectionTree.getSelectedResources();
-			}
-		});
-		resourceSelectionTree.getTreeViewer().addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				// IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-				// Object sel0 = sel.getFirstElement();
-				// if (sel0 instanceof IFile) {
-				// final ISVNLocalResource localResource = SVNWorkspaceRoot.getSVNResourceFor((IFile) sel0);
-				// try {
-				// new CompareDialog(getShell(), new IVCCompareEditorInput(localResource)).open();
-				// } catch (SVNException e1) {
-				// }
-				// }
-			}
-		});
+					public String getErrorMessage() {
+						return removalError;
+					}
+				});
+		resourceSelectionTree.getTreeViewer().addSelectionChangedListener(
+				new ISelectionChangedListener() {
+					public void selectionChanged(SelectionChangedEvent event) {
+						selectedResources = resourceSelectionTree.getSelectedResources();
+					}
+				});
+		((CheckboxTreeViewer) resourceSelectionTree.getTreeViewer())
+				.addCheckStateListener(new ICheckStateListener() {
+					public void checkStateChanged(CheckStateChangedEvent event) {
+						selectedResources = resourceSelectionTree.getSelectedResources();
+					}
+				});
+		resourceSelectionTree.getTreeViewer().addDoubleClickListener(
+				new IDoubleClickListener() {
+					public void doubleClick(DoubleClickEvent event) {
+						// IStructuredSelection sel = (IStructuredSelection)
+						// event.getSelection();
+						// Object sel0 = sel.getFirstElement();
+						// if (sel0 instanceof IFile) {
+						// final ISVNLocalResource localResource =
+						// SVNWorkspaceRoot.getSVNResourceFor((IFile) sel0);
+						// try {
+						// new CompareDialog(getShell(), new
+						// IVCCompareEditorInput(localResource)).open();
+						// } catch (SVNException e1) {
+						// }
+						// }
+					}
+				});
 		if (!includeUnversioned) {
 			resourceSelectionTree.removeUnversioned();
 		}
@@ -210,7 +239,8 @@ public class CommitWizardPage extends WizardPage {
 					folderDeletionSelected = true;
 					deletedFolders.add(resource);
 				}
-				// String propertyStatus = ResourceWithStatusUtil.getPropertyStatus(resource);
+				// String propertyStatus =
+				// ResourceWithStatusUtil.getPropertyStatus(resource);
 				// if (propertyStatus != null && propertyStatus.length() > 0)
 				// folderPropertyChanges.add(resource);
 			}
@@ -251,7 +281,8 @@ public class CommitWizardPage extends WizardPage {
 	private boolean isChild(IResource resource, IContainer folder) {
 		IContainer container = resource.getParent();
 		while (container != null) {
-			if (container.getFullPath().toString().equals(folder.getFullPath().toString()))
+			if (container.getFullPath().toString()
+					.equals(folder.getFullPath().toString()))
 				return true;
 			container = container.getParent();
 		}
@@ -286,7 +317,8 @@ public class CommitWizardPage extends WizardPage {
 		return "Commit";
 	}
 
-	public void createButtonsForButtonBar(Composite parent, CommitWizardDialog wizardDialog) {
+	public void createButtonsForButtonBar(Composite parent,
+			CommitWizardDialog wizardDialog) {
 	}
 
 }

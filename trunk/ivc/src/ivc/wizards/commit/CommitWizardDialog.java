@@ -9,6 +9,12 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * 
+ * @author alexm
+ * 
+ *         Dialog used to set the resources to commit
+ */
 public class CommitWizardDialog extends WizardDialog {
 
 	public boolean yesNo;
@@ -35,7 +41,8 @@ public class CommitWizardDialog extends WizardDialog {
 		}
 	}
 
-	public Button createButton(Composite parent, int id, String label, boolean defaultButton) {
+	public Button createButton(Composite parent, int id, String label,
+			boolean defaultButton) {
 		String customLabel;
 		if (id == IDialogConstants.FINISH_ID) {
 			if (yesNo)

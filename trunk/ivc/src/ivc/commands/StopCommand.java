@@ -27,11 +27,12 @@ public class StopCommand implements CommandIntf {
 	 * @see ivc.commands.CommandIntf#execute(ivc.commands.CommandArgs)
 	 */
 	@Override
-	/**
-	 * Announces the server that the client is disconnected in order to updates its list of peers
+	/*
+	 * * Announces the server that the client is disconnected in order to updates its list
+	 * of peers
 	 */
 	public Result execute(CommandArgs args) {
-		
+
 		// 2. handle initiation for each project
 		HashMap<String, IVCProject> projects = ProjectsManager.instance().getProjects();
 		if (projects != null) {
@@ -49,7 +50,8 @@ public class StopCommand implements CommandIntf {
 	}
 
 	private Result handleDisconnectProject(IVCProject ivcProject) {
-		ConnectionManager connectionManager = ConnectionManager.getInstance(ivcProject.getName());
+		ConnectionManager connectionManager = ConnectionManager.getInstance(ivcProject
+				.getName());
 		// 1. remove host from clients hosts
 		List<ClientIntf> hosts = connectionManager.getPeers();
 		if (hosts != null) {
@@ -57,7 +59,8 @@ public class StopCommand implements CommandIntf {
 			while (it.hasNext()) {
 				ClientIntf host = it.next();
 				try {
-					host.handleNewPeerDisconnected(ivcProject.getServerPath(), NetworkUtils.getHostAddress());
+					host.handleNewPeerDisconnected(ivcProject.getServerPath(),
+							NetworkUtils.getHostAddress());
 				} catch (RemoteException e) {
 					e.printStackTrace();
 					return new Result(true, Exceptions.COULD_NOT_DISCONNECT_FROM_HOST, e);

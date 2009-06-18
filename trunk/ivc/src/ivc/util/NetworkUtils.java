@@ -8,12 +8,13 @@ import java.net.UnknownHostException;
 
 /**
  * @author danielan
- *
+ * 
  */
 public class NetworkUtils {
-	
+
 	/**
 	 * Returns ip address of local host
+	 * 
 	 * @return
 	 */
 	public static String getHostAddress() {

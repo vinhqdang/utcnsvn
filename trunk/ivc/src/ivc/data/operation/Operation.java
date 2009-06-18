@@ -31,7 +31,8 @@ public class Operation implements Serializable, Cloneable {
 	private String filePath;
 
 	/*
-	 * Version of file on which this transformation took place Mandatory to be set for each transformation
+	 * Version of file on which this transformation took place Mandatory to be set for
+	 * each transformation
 	 */
 	private Integer fileVersion;
 
@@ -41,7 +42,7 @@ public class Operation implements Serializable, Cloneable {
 	 * position at which took place the operation
 	 */
 	private Integer position;
-	
+
 	/**
 	 * modified character
 	 */
@@ -207,7 +208,8 @@ public class Operation implements Serializable, Cloneable {
 			IFile addfile = project.getFile(filePath);
 			if (!addfile.exists()) {
 				try {
-					addfile.create(new ByteArrayInputStream(new byte[0]), IResource.FORCE, null);
+					addfile.create(new ByteArrayInputStream(new byte[0]),
+							IResource.FORCE, null);
 				} catch (CoreException e) {
 					e.printStackTrace();
 				}
@@ -249,7 +251,7 @@ public class Operation implements Serializable, Cloneable {
 	}
 
 	public StringBuffer applyContentTransformation(StringBuffer content) {
-		
+
 		switch (operationType) {
 		case CHARACTER_ADD:
 			if (content.length() >= position) {
@@ -269,6 +271,7 @@ public class Operation implements Serializable, Cloneable {
 
 	/**
 	 * Includes in this operation effects of the operation passed as parameter
+	 * 
 	 * @param op
 	 * @return
 	 */
@@ -291,28 +294,32 @@ public class Operation implements Serializable, Cloneable {
 		int typeOther = op.getOperationType();
 
 		// both local and remote operations are insertions
-		if (operationType == Operation.CHARACTER_ADD && typeOther == Operation.CHARACTER_ADD) {
+		if (operationType == Operation.CHARACTER_ADD
+				&& typeOther == Operation.CHARACTER_ADD) {
 			if (position >= posOther) {
 				newOp.setPosition(position + 1);
 			}
 		}
 
 		// operation1 is insertion and operation2 is deletion
-		if (operationType == Operation.CHARACTER_ADD && typeOther == Operation.CHARACTER_DELETE) {
+		if (operationType == Operation.CHARACTER_ADD
+				&& typeOther == Operation.CHARACTER_DELETE) {
 			if (position > posOther) {
 				newOp.setPosition(position - 1);
 			}
 		}
 
 		// operation1 is deletion and operation2 is insertion
-		if (operationType == Operation.CHARACTER_DELETE && typeOther == Operation.CHARACTER_ADD) {
+		if (operationType == Operation.CHARACTER_DELETE
+				&& typeOther == Operation.CHARACTER_ADD) {
 			if (position >= posOther) {
 				newOp.setPosition(position + 1);
 			}
 		}
 
 		// both operations are deletions
-		if (operationType == Operation.CHARACTER_DELETE && typeOther == Operation.CHARACTER_DELETE) {
+		if (operationType == Operation.CHARACTER_DELETE
+				&& typeOther == Operation.CHARACTER_DELETE) {
 			if (position > posOther) {
 				newOp.setPosition(position - 1);
 			}
@@ -322,6 +329,7 @@ public class Operation implements Serializable, Cloneable {
 
 	/**
 	 * Excludes from this operation effects of the operation passed as parameter
+	 * 
 	 * @param op
 	 * @return
 	 */
@@ -340,28 +348,32 @@ public class Operation implements Serializable, Cloneable {
 		int typeOther = op.getOperationType();
 
 		// both local and remote operations are insertions
-		if (operationType == Operation.CHARACTER_ADD && typeOther == Operation.CHARACTER_ADD) {
+		if (operationType == Operation.CHARACTER_ADD
+				&& typeOther == Operation.CHARACTER_ADD) {
 			if (position >= posOther) {
 				newOp.setPosition(position.intValue() - 1);
 			}
 		}
 
 		// operation1 is insertion and operation2 is deletion
-		if (operationType == Operation.CHARACTER_ADD && typeOther == Operation.CHARACTER_DELETE) {
+		if (operationType == Operation.CHARACTER_ADD
+				&& typeOther == Operation.CHARACTER_DELETE) {
 			if (position > posOther) {
 				newOp.setPosition(position.intValue() + 1);
 			}
 		}
 
 		// operation1 is deletion and operation2 is insertion
-		if (operationType == Operation.CHARACTER_DELETE && typeOther == Operation.CHARACTER_ADD) {
+		if (operationType == Operation.CHARACTER_DELETE
+				&& typeOther == Operation.CHARACTER_ADD) {
 			if (position >= posOther) {
 				newOp.setPosition(position.intValue() - 1);
 			}
 		}
 
 		// both operations are deletions
-		if (operationType == Operation.CHARACTER_DELETE && typeOther == Operation.CHARACTER_DELETE) {
+		if (operationType == Operation.CHARACTER_DELETE
+				&& typeOther == Operation.CHARACTER_DELETE) {
 			if (position > posOther) {
 				newOp.setPosition(position.intValue() + 1);
 			}
@@ -456,11 +468,11 @@ public class Operation implements Serializable, Cloneable {
 					return false;
 				if (!this.commited.equals(operation.getCommited()))
 					return false;
-			}			
+			}
 		} catch (Exception e) {
 			return false;
 		}
 		return true;
 	}
-		
+
 }

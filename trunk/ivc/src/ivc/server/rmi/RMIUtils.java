@@ -17,7 +17,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
-
 /**
  * @author danielan
  * 
@@ -25,7 +24,8 @@ import java.rmi.registry.LocateRegistry;
 public class RMIUtils {
 
 	/**
-	 * Binds on rmi registry a  new ServerImpl object
+	 * Binds on rmi registry a new ServerImpl object
+	 * 
 	 * @param hostAddress
 	 */
 	public static void exposeServerInterface(String hostAddress) {
@@ -36,7 +36,8 @@ public class RMIUtils {
 			// System.setSecurityManager(new IVCSecurityManager());
 			LocateRegistry.createRegistry(1099);
 			try {
-				Naming.rebind("rmi://" + hostAddress + ":" + 1099 + "/" + Constants.BIND_SERVER, server);
+				Naming.rebind("rmi://" + hostAddress + ":" + 1099 + "/"
+						+ Constants.BIND_SERVER, server);
 			} catch (Exception e) {
 				if (e instanceof AlreadyBoundException) {
 					e.printStackTrace();
@@ -52,13 +53,15 @@ public class RMIUtils {
 
 	/**
 	 * binds on rmi registry the ClientIntf reference given as input
+	 * 
 	 * @param hostAddress
 	 * @param client
 	 */
 	public static void exposeClientInterface(String hostAddress, ClientIntf client) {
 		// create registry
 		try {
-			Naming.rebind("rmi://" + NetworkUtils.getHostAddress() + ":" + 1099 + "/" + Constants.BIND_CLIENT + hostAddress, client);
+			Naming.rebind("rmi://" + NetworkUtils.getHostAddress() + ":" + 1099 + "/"
+					+ Constants.BIND_CLIENT + hostAddress, client);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		} catch (MalformedURLException e) {
@@ -68,13 +71,15 @@ public class RMIUtils {
 
 	/**
 	 * Lookup for a ClientIntf object by a hostAddress
+	 * 
 	 * @param hostAddress
 	 * @return
 	 * @throws RemoteException
 	 */
 	public static ClientIntf getClientIntf(String hostAddress) throws RemoteException {
 		try {
-			return (ClientIntf) Naming.lookup("rmi://" + NetworkUtils.getHostAddress() + ":" + 1099 + "/" + Constants.BIND_CLIENT + hostAddress);
+			return (ClientIntf) Naming.lookup("rmi://" + NetworkUtils.getHostAddress()
+					+ ":" + 1099 + "/" + Constants.BIND_CLIENT + hostAddress);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (NotBoundException e) {
@@ -85,12 +90,14 @@ public class RMIUtils {
 
 	/**
 	 * Unbinds a ClientIntf object from a hostAddress
+	 * 
 	 * @param hostAddress
 	 * @throws RemoteException
 	 */
 	public static void disconnectHost(String hostAddress) throws RemoteException {
 		try {
-			Naming.unbind("rmi://" + NetworkUtils.getHostAddress() + ":" + 1099 + "/" + Constants.BIND_CLIENT + hostAddress);
+			Naming.unbind("rmi://" + NetworkUtils.getHostAddress() + ":" + 1099 + "/"
+					+ Constants.BIND_CLIENT + hostAddress);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (NotBoundException e) {

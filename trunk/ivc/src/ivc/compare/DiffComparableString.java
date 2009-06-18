@@ -9,9 +9,21 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
 
+/**
+ * The class is used to have the possibility to pass a string to the comparer
+ * 
+ * @author alexm
+ * 
+ */
 public class DiffComparableString implements IDiffComparable {
 	private String content;
 
+	/**
+	 * Main constructor which creates the object from the supplied string
+	 * 
+	 * @param content
+	 *            the content of the IDiffComparable
+	 */
 	protected DiffComparableString(String content) {
 		this.content = content;
 	}

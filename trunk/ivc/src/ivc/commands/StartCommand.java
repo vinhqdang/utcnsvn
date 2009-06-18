@@ -34,8 +34,8 @@ public class StartCommand implements CommandIntf {
 	 * @see ivc.commands.CommandIntf#execute(ivc.commands.CommandArgs)
 	 */
 	@Override
-	/**
-	 * Finds all projects in the workspace that are involved in code sharing
+	/*
+	 * * Finds all projects in the workspace that are involved in code sharing
 	 */
 	public Result execute(CommandArgs args) {
 		// 1. find all projects
@@ -58,11 +58,13 @@ public class StartCommand implements CommandIntf {
 	}
 
 	private Result handleInitiateProject(IVCProject ivcProject) {
-		ConnectionManager connectionManager = ConnectionManager.getInstance(ivcProject.getName());
+		ConnectionManager connectionManager = ConnectionManager.getInstance(ivcProject
+				.getName());
 
 		// 1. initiate connections
 		try {
-			connectionManager.initiateConnections(ivcProject.getServerAddress(), ivcProject.getServerPath());
+			connectionManager.initiateConnections(ivcProject.getServerAddress(),
+					ivcProject.getServerPath());
 		} catch (IVCException e) {
 			e.printStackTrace();
 			return new Result(false, Exceptions.SERVER_CONNECTION_FAILED, e);
@@ -72,8 +74,9 @@ public class StartCommand implements CommandIntf {
 		}
 		// 2. append pending rcl transformations
 		try {
-			OperationHistoryList pendingRCL = connectionManager.getServer().returnPendingRCL(ivcProject.getServerPath(),
-					NetworkUtils.getHostAddress());
+			OperationHistoryList pendingRCL = connectionManager.getServer()
+					.returnPendingRCL(ivcProject.getServerPath(),
+							NetworkUtils.getHostAddress());
 			if (pendingRCL != null) {
 				UpdateAnnotationsCommand command = new UpdateAnnotationsCommand();
 				CommandArgs args = new CommandArgs();
@@ -96,12 +99,17 @@ public class StartCommand implements CommandIntf {
 			Iterator<String> it = hosts.iterator();
 			while (it.hasNext()) {
 				String host = it.next();
-				File rulfile = new File(ivcProject.getProject().getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog
-						+ "_" + host.replaceAll("\\.", "_"));
+				File rulfile = new File(ivcProject.getProject().getLocation()
+						.toOSString()
+						+ Constants.IvcFolder
+						+ Constants.RemoteUnCommitedLog
+						+ "_"
+						+ host.replaceAll("\\.", "_"));
 				if (!rulfile.exists()) {
 					try {
 						rulfile.createNewFile();
-						FileUtils.writeObjectToFile(rulfile.getAbsolutePath(), new OperationHistoryList());
+						FileUtils.writeObjectToFile(rulfile.getAbsolutePath(),
+								new OperationHistoryList());
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -111,15 +119,20 @@ public class StartCommand implements CommandIntf {
 
 		// 4. append pending rul transformations
 		try {
-			Map<String, OperationHistoryList> pendingRULs = connectionManager.getServer().returnPendingRUL(ivcProject.getServerPath(),
-					NetworkUtils.getHostAddress());
+			Map<String, OperationHistoryList> pendingRULs = connectionManager.getServer()
+					.returnPendingRUL(ivcProject.getServerPath(),
+							NetworkUtils.getHostAddress());
 			if (pendingRULs != null) {
 				Iterator<String> it = pendingRULs.keySet().iterator();
 				while (it.hasNext()) {
 					String host = it.next();
 					OperationHistoryList rul = new OperationHistoryList();
-					File rulfile = new File(ivcProject.getProject().getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog
-							+ "_" + host.replaceAll("\\.", "_"));
+					File rulfile = new File(ivcProject.getProject().getLocation()
+							.toOSString()
+							+ Constants.IvcFolder
+							+ Constants.RemoteUnCommitedLog
+							+ "_"
+							+ host.replaceAll("\\.", "_"));
 					if (!rulfile.exists()) {
 						try {
 							rulfile.createNewFile();
@@ -145,8 +158,6 @@ public class StartCommand implements CommandIntf {
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		
-		
 
 		return new Result(true, "Success", null);
 	}

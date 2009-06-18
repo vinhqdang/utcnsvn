@@ -24,11 +24,12 @@ public class RemoveResourceCommand extends TeamOperation {
 	}
 
 	@Override
-	/**
-	 * Creates a new structural operation of type REMOVE_FILE or REMOVE_FOLDER and calls the HandleOperationCommand to save
-	 *  it in the corresponding log files
+	/*
+	 * * Creates a new structural operation of type REMOVE_FILE or REMOVE_FOLDER and calls
+	 * the HandleOperationCommand to save it in the corresponding log files
 	 */
-	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	public void run(IProgressMonitor monitor) throws InvocationTargetException,
+			InterruptedException {
 		monitor.beginTask("Deleting resource", 1);
 		Operation operation = new Operation();
 		operation.setFileVersion(projectsManager.getFileVersion(resource));
@@ -40,7 +41,8 @@ public class RemoveResourceCommand extends TeamOperation {
 		if (resource instanceof IFolder) {
 			operation.setOperationType(Operation.REMOVE_FOLDER);
 		}
-		OperationHistoryList localLog = projectsManager.getIVCProjectByResource(resource).getLocalLog();
+		OperationHistoryList localLog = projectsManager.getIVCProjectByResource(resource)
+				.getLocalLog();
 		localLog.appendOperation(operation);
 		projectsManager.getIVCProjectByResource(resource).setLocalLog(localLog);
 

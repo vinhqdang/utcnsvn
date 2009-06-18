@@ -13,13 +13,18 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * 
+ * @author alexm
+ * 
+ *         The wizard page used to specify the checkout data
+ */
 public class CheckoutWizardPage extends BaseWizardPage {
 	public final String ERROR_USER_NULL = "Some fields are not filled";
 	private Text txtServerURL;
 	private Text txtPath;
 	private Validator validator;
-	
-	
+
 	public CheckoutWizardPage(String pageName) {
 		super(pageName);
 		setTitle(pageName);
@@ -33,8 +38,6 @@ public class CheckoutWizardPage extends BaseWizardPage {
 			}
 		};
 	}
-	
-	
 
 	/**
 	 * @return the txtServerURL
@@ -43,16 +46,13 @@ public class CheckoutWizardPage extends BaseWizardPage {
 		return txtServerURL;
 	}
 
-
-
 	/**
-	 * @param txtServerURL the txtServerURL to set
+	 * @param txtServerURL
+	 *            the txtServerURL to set
 	 */
 	public void setTxtServerURL(Text txtServerURL) {
 		this.txtServerURL = txtServerURL;
 	}
-
-
 
 	/**
 	 * @return the txtPath
@@ -61,16 +61,13 @@ public class CheckoutWizardPage extends BaseWizardPage {
 		return txtPath;
 	}
 
-
-
 	/**
-	 * @param txtPath the txtPath to set
+	 * @param txtPath
+	 *            the txtPath to set
 	 */
 	public void setTxtPath(Text txtPath) {
 		this.txtPath = txtPath;
 	}
-
-
 
 	@Override
 	public void createControl(Composite mainControl) {
@@ -80,7 +77,7 @@ public class CheckoutWizardPage extends BaseWizardPage {
 		createLabel(composite, "Server URL:");
 		txtServerURL = createTextField(composite);
 		validator.addControl(txtServerURL, "Url cannot be null");
-		
+
 		createLabel(composite, "Project Path:");
 		txtPath = createTextField(composite);
 		validator.addControl(txtPath, "Project path cannot be null");
@@ -89,10 +86,11 @@ public class CheckoutWizardPage extends BaseWizardPage {
 
 	@Override
 	public IWizardPage getNextPage() {
-		if (!validator.isValidated()){
+		if (!validator.isValidated()) {
 			return this;
 		}
-		FindHostProjectCommand find = new FindHostProjectCommand(txtServerURL.getText(), txtPath.getText());
+		FindHostProjectCommand find = new FindHostProjectCommand(txtServerURL.getText(),
+				txtPath.getText());
 		// fork, cancelable, process
 		try {
 			getContainer().run(false, true, find);
@@ -109,7 +107,12 @@ public class CheckoutWizardPage extends BaseWizardPage {
 		}
 	}
 
-	
+	/**
+	 * Method used by the validator to update the status of the wizard
+	 * 
+	 * @param message
+	 *            the message that has to be set on the window
+	 */
 	private void updateStatus(String message) {
 		setErrorMessage(message);
 		if (message == null)

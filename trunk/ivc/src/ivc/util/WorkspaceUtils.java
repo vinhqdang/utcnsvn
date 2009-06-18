@@ -18,7 +18,8 @@ public class WorkspaceUtils {
 	 * @return the IFile from the active workbench window
 	 */
 	public static IFile getCurrentFile() {
-		IEditorPart editor = IVCPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		IEditorPart editor = IVCPlugin.getDefault().getWorkbench()
+				.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		IEditorInput input = editor.getEditorInput();
 		IFile file = null;
 		if (input instanceof IFileEditorInput) {

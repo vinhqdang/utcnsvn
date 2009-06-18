@@ -6,6 +6,12 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
+/**
+ * 
+ * @author alexm
+ * 
+ *         The class is used to store to manage the status cache
+ */
 public class StatusCache implements IStatusCache {
 	private StatusSyncAccessor accessor;
 
@@ -80,7 +86,8 @@ final class StatusSyncAccessor {
 	 */
 	protected byte[] internalGetCachedStatusBytes(IResource resource) throws IVCException {
 		try {
-			byte[] info = ResourcesPlugin.getWorkspace().getSynchronizer().getSyncInfo(CacheManager.IVC_STATUS_KEY, resource);
+			byte[] info = ResourcesPlugin.getWorkspace().getSynchronizer().getSyncInfo(
+					CacheManager.IVC_STATUS_KEY, resource);
 			return info;
 		} catch (CoreException e) {
 			throw new IVCException(e);
@@ -94,9 +101,11 @@ final class StatusSyncAccessor {
 	 * @param syncInfo
 	 * @throws IVCException
 	 */
-	protected void setCachedStatusBytes(IResource resource, byte[] syncInfo) throws IVCException {
+	protected void setCachedStatusBytes(IResource resource, byte[] syncInfo)
+			throws IVCException {
 		try {
-			ResourcesPlugin.getWorkspace().getSynchronizer().setSyncInfo(CacheManager.IVC_STATUS_KEY, resource, syncInfo);
+			ResourcesPlugin.getWorkspace().getSynchronizer().setSyncInfo(
+					CacheManager.IVC_STATUS_KEY, resource, syncInfo);
 		} catch (CoreException e) {
 			throw new IVCException(e);
 		}

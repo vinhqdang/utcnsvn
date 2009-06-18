@@ -29,15 +29,15 @@ public class HandleOperationCommand implements CommandIntf {
 	private OperationHistory operationHist;
 	private IVCProject ivcProject;
 
-	
 	@Override
-	/**
-	 * Writes a new created operation in all log files. A new created operation has to be added in local log file and 
-	 * remote uncommitted log files of all peers. 
+	/*
+	 * * Writes a new created operation in all log files. A new created operation has to
+	 * be added in local log file and remote uncommitted log files of all peers.
 	 */
 	public Result execute(CommandArgs args) {
 		// init local variables
-		operationHist = (OperationHistory) args.getArgumentValue(Constants.OPERATION_HIST);
+		operationHist = (OperationHistory) args
+				.getArgumentValue(Constants.OPERATION_HIST);
 		IProject project = (IProject) args.getArgumentValue(Constants.IPROJECT);
 		ivcProject = ProjectsManager.instance().getIVCProjectByName(project.getName());
 
@@ -61,22 +61,28 @@ public class HandleOperationCommand implements CommandIntf {
 		thl.appendOperationHistory(operationHist);
 		List<String> disconnected = new ArrayList<String>();
 		try {
-			List<Peer> allHosts = connMan.getServer().getAllClientHosts(ivcProject.getServerPath());
+			List<Peer> allHosts = connMan.getServer().getAllClientHosts(
+					ivcProject.getServerPath());
 			Iterator<Peer> it = allHosts.iterator();
 			while (it.hasNext()) {
 				Peer peer = it.next();
-				if (peer.getConnectionStatus().equalsIgnoreCase(Constants.CONNECTED) && connMan.getPeerByAddress(peer.getHostAddress()) != null) {
-					ClientIntf clientIntf = connMan.getPeerByAddress(peer.getHostAddress());
+				if (peer.getConnectionStatus().equalsIgnoreCase(Constants.CONNECTED)
+						&& connMan.getPeerByAddress(peer.getHostAddress()) != null) {
+					ClientIntf clientIntf = connMan.getPeerByAddress(peer
+							.getHostAddress());
 					if (clientIntf != null) {
-						clientIntf.updateRUL(ivcProject.getServerPath(), NetworkUtils.getHostAddress(), thl);
+						clientIntf.updateRUL(ivcProject.getServerPath(), NetworkUtils
+								.getHostAddress(), thl);
 					}
 				} else {
-					if (!peer.getHostAddress().equalsIgnoreCase(NetworkUtils.getHostAddress())) {
+					if (!peer.getHostAddress().equalsIgnoreCase(
+							NetworkUtils.getHostAddress())) {
 						disconnected.add(peer.getHostAddress());
 					}
 				}
 			}
-			connMan.getServer().updatePendingRUL(ivcProject.getServerPath(), NetworkUtils.getHostAddress(), disconnected, thl);
+			connMan.getServer().updatePendingRUL(ivcProject.getServerPath(),
+					NetworkUtils.getHostAddress(), disconnected, thl);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}

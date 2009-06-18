@@ -58,10 +58,12 @@ public class CheckoutCommand implements IRunnableWithProgress {
 
 	@Override
 	/*
-	 * * Creates a local copy of a project from the repository. The command has to get the project from a specified server location and project path
-	 * from that server, create a project inside the local Eclipse and generate the user workspace data model
+	 * * Creates a local copy of a project from the repository. The command has to get the
+	 * project from a specified server location and project path from that server, create
+	 * a project inside the local Eclipse and generate the user workspace data model
 	 */
-	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	public void run(IProgressMonitor monitor) throws InvocationTargetException,
+			InterruptedException {
 		// init fields
 		monitor.beginTask("Init local properties", 5);
 		serverAddress = (String) args.getArgumentValue(Constants.SERVER_ADDRESS);
@@ -123,31 +125,39 @@ public class CheckoutCommand implements IRunnableWithProgress {
 	private void createLogFiles() {
 		try {
 			// create document directory
-			File ivcfolder = new File(project.getLocation().toOSString() + Constants.IvcFolder);
+			File ivcfolder = new File(project.getLocation().toOSString()
+					+ Constants.IvcFolder);
 			ivcfolder.mkdir();
 			// svr host file
-			File svrfile = new File(project.getLocation().toOSString() + Constants.IvcFolder + Constants.ServerFile);
+			File svrfile = new File(project.getLocation().toOSString()
+					+ Constants.IvcFolder + Constants.ServerFile);
 			svrfile.createNewFile();
-			FileUtils.writeObjectToFile(svrfile.getAbsolutePath(), serverAddress + "\\" + projectPath);
+			FileUtils.writeObjectToFile(svrfile.getAbsolutePath(), serverAddress + "\\"
+					+ projectPath);
 			// local log file
-			File llfile = new File(project.getLocation().toOSString() + Constants.IvcFolder + Constants.LocalLog);
+			File llfile = new File(project.getLocation().toOSString()
+					+ Constants.IvcFolder + Constants.LocalLog);
 			llfile.createNewFile();
 			// remote committed log
-			File rclfile = new File(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteCommitedLog);
+			File rclfile = new File(project.getLocation().toOSString()
+					+ Constants.IvcFolder + Constants.RemoteCommitedLog);
 			rclfile.createNewFile();
 			List<String> peerHosts = connectionManager.getPeerHosts();
 			if (peerHosts != null) {
 				Iterator<String> it = peerHosts.iterator();
 				while (it.hasNext()) {
 					String peerHost = it.next();
-					File rlufile = new File(project.getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
+					File rlufile = new File(project.getLocation().toOSString()
+							+ Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
 							+ peerHost.replaceAll("\\.", "_"));
 					rlufile.createNewFile();
 				}
 			}
-			File cvFile = new File(project.getLocation().toOSString() + Constants.IvcFolder + Constants.CurrentVersionFile);
+			File cvFile = new File(project.getLocation().toOSString()
+					+ Constants.IvcFolder + Constants.CurrentVersionFile);
 			cvFile.createNewFile();
-			HashMap<String, Integer> cv = (HashMap<String, Integer>) connectionManager.getServer().getVersionNumber(projectPath);
+			HashMap<String, Integer> cv = (HashMap<String, Integer>) connectionManager
+					.getServer().getVersionNumber(projectPath);
 			cv.put(projectName, cv.get(projectPath));
 			FileUtils.writeObjectToFile(cvFile.getAbsolutePath(), cv);
 		} catch (IOException e) {
@@ -185,7 +195,8 @@ public class CheckoutCommand implements IRunnableWithProgress {
 			}
 			Iterator<String> itfld = bv.getFolders().iterator();
 			while (itfld.hasNext()) {
-				File f = new File(project.getLocation().toOSString() + "\\" + itfld.next());
+				File f = new File(project.getLocation().toOSString() + "\\"
+						+ itfld.next());
 				f.mkdirs();
 			}
 			// 5. create file structure
@@ -194,7 +205,8 @@ public class CheckoutCommand implements IRunnableWithProgress {
 				String filePath = itFiles.next();
 				StringBuffer baseContent = bv.getFiles().get(filePath);
 				try {
-					File f = new File(project.getLocation().toOSString() + "\\" + filePath);
+					File f = new File(project.getLocation().toOSString() + "\\"
+							+ filePath);
 					f.createNewFile();
 					FileUtils.writeStringBufferToFile(f.getAbsolutePath(), baseContent);
 				} catch (IOException e) {

@@ -12,6 +12,12 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.team.ui.IConfigurationWizard;
 import org.eclipse.ui.IWorkbench;
 
+/**
+ * 
+ * @author alexm
+ * 
+ *         Class used to create a wizard which shares a project
+ */
 public class SharingWizard extends Wizard implements IConfigurationWizard {
 	IProject project;
 	IWorkbench workbench;
@@ -44,7 +50,8 @@ public class SharingWizard extends Wizard implements IConfigurationWizard {
 			return false;
 		CommandArgs args = new CommandArgs();
 		args.putArgument(Constants.SERVER_ADDRESS, sharingWizardPage.getServerUrl());
-		args.putArgument(Constants.PROJECT_PATH,"\\"+ sharingWizardPage.getProjectPath());
+		args.putArgument(Constants.PROJECT_PATH, "\\"
+				+ sharingWizardPage.getProjectPath());
 		args.putArgument(Constants.IPROJECT, project);
 		args.putArgument(Constants.USERNAME, sharingWizardPage.getUserName());
 		args.putArgument(Constants.PASSWORD, sharingWizardPage.getPassword());
