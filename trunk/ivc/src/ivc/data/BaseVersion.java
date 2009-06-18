@@ -10,73 +10,81 @@ import java.util.Map;
 
 /**
  * @author danielan
- *
+ * 
  */
-public class BaseVersion implements Serializable{
-	
+public class BaseVersion implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private String projectName;
 	LinkedList<String> folders;
-	private Map<String,StringBuffer> files;
+	private Map<String, StringBuffer> files;
+
+	public BaseVersion() {
+		files = new HashMap<String, StringBuffer>();
+		folders = new LinkedList<String>();
+	}
+
 	/**
 	 * @return the projectName
 	 */
 	public String getProjectName() {
 		return projectName;
 	}
+
 	/**
-	 * @param projectName the projectName to set
+	 * @param projectName
+	 *            the projectName to set
 	 */
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
 	}
+
 	/**
 	 * @return the files
 	 */
 	public Map<String, StringBuffer> getFiles() {
 		return files;
 	}
+
 	/**
-	 * @param files the files to set
+	 * @param files
+	 *            the files to set
 	 */
 	public void setFiles(Map<String, StringBuffer> files) {
 		this.files = files;
 	}
-	
-	public void addFile(String filePath, StringBuffer strB){
-		if (files == null){
-			files = new HashMap<String, StringBuffer>();			
+
+	public void addFile(String filePath, StringBuffer strB) {
+		if (files == null) {
+			files = new HashMap<String, StringBuffer>();
 		}
-		files.put(filePath,strB);
+		files.put(filePath, strB);
 	}
-	
-	public LinkedList<String> getFolders(){
+
+	public LinkedList<String> getFolders() {
 		return folders;
 	}
-	
+
 	public void setFolders(LinkedList<String> folders) {
 		this.folders = folders;
 	}
-	
-	public void addFolder(String folderPath){
-		if (folders == null){
-			folders = new LinkedList<String>();			
+
+	public void addFolder(String folderPath) {
+		if (folders == null) {
+			folders = new LinkedList<String>();
 		}
 		folders.add(folderPath);
 	}
-	
-	public StringBuffer getFileContent(String filePath){
-		if (files.containsKey(filePath)){
+
+	public StringBuffer getFileContent(String filePath) {
+		if (files.containsKey(filePath)) {
 			StringBuffer sb = files.get(filePath);
 			return sb;
 		}
 		return null;
 	}
-	
-	
 
 }
