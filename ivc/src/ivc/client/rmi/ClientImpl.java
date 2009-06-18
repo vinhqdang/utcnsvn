@@ -28,18 +28,20 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 		super();
 	}
 
-	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see ivc.rmi.client.ClientIntf#createRLUFile(java.lang.String)
 	 */
 	@Override
-	public void createRULFile(String projectServerPath, String host) throws RemoteException {
-		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(projectServerPath);
+	public void createRULFile(String projectServerPath, String host)
+			throws RemoteException {
+		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(
+				projectServerPath);
 		String projPath = project.getProject().getLocation().toOSString();
 		if (projPath != null) {
-			File rlufile = new File(projPath + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_" + host.replaceAll("\\.", "_"));
+			File rlufile = new File(projPath + Constants.IvcFolder
+					+ Constants.RemoteUnCommitedLog + "_" + host.replaceAll("\\.", "_"));
 			try {
 				rlufile.createNewFile();
 			} catch (IOException e) {
@@ -51,14 +53,17 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ivc.rmi.client.ClientIntf#updateRCL(java.lang.String, ivc.data.OperationHistoryList)
+	 * @see ivc.rmi.client.ClientIntf#updateRCL(java.lang.String,
+	 * ivc.data.OperationHistoryList)
 	 */
 	@Override
-	public void updateRCL(String projectServerPath, String sourceHost, OperationHistoryList ohl) throws RemoteException {
+	public void updateRCL(String projectServerPath, String sourceHost,
+			OperationHistoryList ohl) throws RemoteException {
 		if (ohl == null || ohl.getOperationHist() == null) {
 			return;
 		}
-		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(projectServerPath);
+		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(
+				projectServerPath);
 		UpdateAnnotationsCommand command = new UpdateAnnotationsCommand();
 		CommandArgs args = new CommandArgs();
 		args.putArgument(Constants.IVCPROJECT, project);
@@ -77,14 +82,18 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 
 	/*
 	 * (non-Javadoc)
-	 *  
-	 * @see ivc.rmi.client.ClientIntf#handleNewPeerConnected(java.lang.String, java.lang.String)
+	 * 
+	 * @see ivc.rmi.client.ClientIntf#handleNewPeerConnected(java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
-	public void handleNewPeerConnected(String projectServerPath, String hostAddress) throws RemoteException {
-		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(projectServerPath);
+	public void handleNewPeerConnected(String projectServerPath, String hostAddress)
+			throws RemoteException {
+		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(
+				projectServerPath);
 		if (project != null) {
-			ConnectionManager connManager = ConnectionManager.getInstance(project.getName());
+			ConnectionManager connManager = ConnectionManager.getInstance(project
+					.getName());
 			try {
 				connManager.connectToInterface(hostAddress);
 			} catch (IVCException e) {
@@ -93,12 +102,14 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 			}
 		}
 		// if don't have rul for them ... create one
-		File f = new File(project.getProject().getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
+		File f = new File(project.getProject().getLocation().toOSString()
+				+ Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
 				+ hostAddress.replaceAll("\\.", "_"));
 		if (!f.exists()) {
 			try {
 				f.createNewFile();
-				FileUtils.writeObjectToFile(f.getAbsolutePath(), new OperationHistoryList());
+				FileUtils.writeObjectToFile(f.getAbsolutePath(),
+						new OperationHistoryList());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -108,11 +119,14 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ivc.rmi.client.ClientIntf#updateRUL(java.lang.String, java.lang.String, ivc.data.OperationHistoryList)
+	 * @see ivc.rmi.client.ClientIntf#updateRUL(java.lang.String, java.lang.String,
+	 * ivc.data.OperationHistoryList)
 	 */
 	@Override
-	public void updateRUL(String projectServerPath, String sourceHost, OperationHistoryList thl) throws RemoteException {
-		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(projectServerPath);
+	public void updateRUL(String projectServerPath, String sourceHost,
+			OperationHistoryList thl) throws RemoteException {
+		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(
+				projectServerPath);
 
 		UpdateAnnotationsCommand command = new UpdateAnnotationsCommand();
 		CommandArgs args = new CommandArgs();
@@ -130,11 +144,14 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ivc.rmi.client.ClientIntf#handleNewPeerDisconnected(java.lang.String, java.lang.String)
+	 * @see ivc.rmi.client.ClientIntf#handleNewPeerDisconnected(java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
-	public void handleNewPeerDisconnected(String projectServerPath, String hostAddress) throws RemoteException {
-		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(projectServerPath);
+	public void handleNewPeerDisconnected(String projectServerPath, String hostAddress)
+			throws RemoteException {
+		IVCProject project = ProjectsManager.instance().getIVCProjectByServerPath(
+				projectServerPath);
 		ConnectionManager.getInstance(project.getName()).disconnectFromHost(hostAddress);
 
 	}

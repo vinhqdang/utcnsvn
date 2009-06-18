@@ -24,7 +24,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 public class ProjectsManager {
 
 	/**
-	 * static instance of the single ProjectsManager object in the system; returned by getInstance
+	 * static instance of the single ProjectsManager object in the system; returned by
+	 * getInstance
 	 */
 	private static ProjectsManager instance;
 
@@ -54,6 +55,7 @@ public class ProjectsManager {
 	public boolean projectInRepository(IProject project) {
 		return projects.containsKey(project.getName());
 	}
+
 	/**
 	 * Finds all ivc type projects
 	 */
@@ -67,6 +69,7 @@ public class ProjectsManager {
 
 	/**
 	 * Removes a project from the set of kept projects
+	 * 
 	 * @param project
 	 * @throws RemoteException
 	 */
@@ -79,6 +82,7 @@ public class ProjectsManager {
 
 	/**
 	 * Tries to add a project that has the .ivc folder in kept set of loaded projects
+	 * 
 	 * @param project
 	 */
 	public void tryAddProject(IProject project) {
@@ -87,9 +91,11 @@ public class ProjectsManager {
 			// it is an active ivc project
 			if (!projects.containsKey(project)) {
 				// read server path
-				String fullserverPath = (String) FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder
-						+ Constants.ServerFile);
-				String serverAddress = fullserverPath.substring(0, fullserverPath.indexOf('\\'));
+				String fullserverPath = (String) FileUtils.readObjectFromFile(project
+						.getLocation().toOSString()
+						+ Constants.IvcFolder + Constants.ServerFile);
+				String serverAddress = fullserverPath.substring(0, fullserverPath
+						.indexOf('\\'));
 				String serverPath = fullserverPath.replace(serverAddress + '\\', "");
 				serverPath = serverPath.toLowerCase();
 				IVCProject ivcProj = new IVCProject();
@@ -106,6 +112,7 @@ public class ProjectsManager {
 
 	/**
 	 * Searches project by name
+	 * 
 	 * @param projectName
 	 * @return
 	 */
@@ -115,8 +122,10 @@ public class ProjectsManager {
 		}
 		return null;
 	}
+
 	/**
 	 * Searches project by IResource object
+	 * 
 	 * @param resource
 	 * @return
 	 */
@@ -125,8 +134,9 @@ public class ProjectsManager {
 	}
 
 	/**
-	 * Returns the IVCProject with the name projectName. Project name is considered the name
-	 * the project has in the local workspace
+	 * Returns the IVCProject with the name projectName. Project name is considered the
+	 * name the project has in the local workspace
+	 * 
 	 * @param projectName
 	 * @return
 	 */
@@ -139,6 +149,7 @@ public class ProjectsManager {
 
 	/**
 	 * Returns an IVCProject based on a project server path
+	 * 
 	 * @param projectServerPath
 	 * @return
 	 */
@@ -162,8 +173,10 @@ public class ProjectsManager {
 	public boolean isManaged(IResource resource) {
 		return cacheManager.isManaged(resource);
 	}
+
 	/**
-	 *  Updates the status of a resource
+	 * Updates the status of a resource
+	 * 
 	 * @param resource
 	 * @param status
 	 * @param recursive
@@ -177,10 +190,12 @@ public class ProjectsManager {
 			updateTree(resource.getParent());
 		}
 	}
- /**
-  * Updates tree of resources
-  * @param resource
-  */
+
+	/**
+	 * Updates tree of resources
+	 * 
+	 * @param resource
+	 */
 	private void updateTree(IResource resource) {
 		if (resource != null) {
 			ResourceStatus resStatus = cacheManager.getResourceStatus(resource);
@@ -247,9 +262,10 @@ public class ProjectsManager {
 		}
 		return instance;
 	}
-	
+
 	/**
-	 * Returns the file version of an IResource object based on .cv file 
+	 * Returns the file version of an IResource object based on .cv file
+	 * 
 	 * @param resource
 	 * @return
 	 */

@@ -14,6 +14,12 @@ import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
+/**
+ * 
+ * @author alexm
+ * 
+ *         Wizard used to checkout a new project
+ */
 public class CheckoutWizard extends Wizard implements INewWizard, IImportWizard {
 	private CheckoutWizardPage mainPage;
 	private NewProjectWizardPage projectPage;
@@ -58,6 +64,11 @@ public class CheckoutWizard extends Wizard implements INewWizard, IImportWizard 
 
 	}
 
+	/**
+	 * gets the Project wizard page
+	 * 
+	 * @return the ProjectWizard page
+	 */
 	public NewProjectWizardPage getProjectWizardPage() {
 		return projectPage;
 	}

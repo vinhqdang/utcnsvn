@@ -23,7 +23,9 @@ public class ImageDescriptorManager {
 
 	/**
 	 * Returns an image descriptor
-	 * @param imageUrl the url to the image 
+	 * 
+	 * @param imageUrl
+	 *            the url to the image
 	 * @return
 	 */
 	public static ImageDescriptor getImageDescriptor(String imageUrl) {
@@ -40,7 +42,9 @@ public class ImageDescriptorManager {
 
 	/**
 	 * Returns an eclipse Image object from a specified URL
-	 * @param imageUrl url of the image
+	 * 
+	 * @param imageUrl
+	 *            url of the image
 	 * @return
 	 */
 	public static org.eclipse.swt.graphics.Image getImage(String imageUrl) {

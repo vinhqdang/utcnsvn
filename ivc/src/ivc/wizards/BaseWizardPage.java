@@ -1,6 +1,5 @@
 package ivc.wizards;
 
-
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
@@ -17,37 +16,60 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public abstract class BaseWizardPage extends  WizardPage  {
+/**
+ * 
+ * @author alexm
+ * 
+ *         The wizard page base class. This class contains methods used to design the
+ *         classes in a cleaner way
+ */
+public abstract class BaseWizardPage extends WizardPage {
 
-	
 	protected BaseWizardPage(String pageName) {
 		super(pageName);
-	
+
 	}
 
 	public BaseWizardPage(String pageName, String title, ImageDescriptor titleImage) {
 		super(pageName, title, titleImage);
-	
+
 	}
 
+	/**
+	 * Creates a text field in the parent container
+	 * 
+	 * @param parent
+	 *            the parent composite
+	 * @return the new text box
+	 */
 	public Text createTextField(Composite parent) {
 		Text text = new Text(parent, SWT.SINGLE | SWT.BORDER);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		data.verticalAlignment = GridData.CENTER;
-		data.horizontalIndent=4;
+		data.horizontalIndent = 4;
 		data.grabExcessVerticalSpace = false;
 		data.widthHint = IDialogConstants.ENTRY_FIELD_WIDTH;
 		text.setLayoutData(data);
 		return text;
 	}
 
+	/**
+	 * Creates a new control decoration for the control
+	 * 
+	 * @param destControl
+	 *            the destination control
+	 * @param hoverText
+	 *            the tooltip text
+	 * @return the new control
+	 */
 	public ControlDecoration createControlDecoration(Control destControl, String hoverText) {
-		ControlDecoration controlDecoration = new ControlDecoration(destControl, SWT.LEFT | SWT.TOP);
+		ControlDecoration controlDecoration = new ControlDecoration(destControl, SWT.LEFT
+				| SWT.TOP);
 		controlDecoration.setDescriptionText(hoverText);
 
-		FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(
-				FieldDecorationRegistry.DEC_ERROR);
-		
+		FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
+				.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
+
 		controlDecoration.setImage(fieldDecoration.getImage());
 		return controlDecoration;
 	}
@@ -61,6 +83,13 @@ public abstract class BaseWizardPage extends  WizardPage  {
 		return button;
 	}
 
+	/**
+	 * Creates a new combo
+	 * 
+	 * @param parent
+	 *            the parent composite
+	 * @return a new combo
+	 */
 	protected Combo createCombo(Composite parent) {
 		Combo combo = new Combo(parent, SWT.READ_ONLY);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
@@ -69,6 +98,15 @@ public abstract class BaseWizardPage extends  WizardPage  {
 		return combo;
 	}
 
+	/**
+	 * Creates a new indented label
+	 * 
+	 * @param parent
+	 *            the parent composite
+	 * @param text
+	 *            the text of the label
+	 * @return the newly created label
+	 */
 	public static Label createLabel(Composite parent, String text) {
 		return createIndentedLabel(parent, text, 0);
 	}
@@ -84,6 +122,15 @@ public abstract class BaseWizardPage extends  WizardPage  {
 		return label;
 	}
 
+	/**
+	 * Creates a new composite
+	 * 
+	 * @param parent
+	 *            the parent control
+	 * @param numColumns
+	 *            the number of columns
+	 * @return the newly created composite
+	 */
 	protected Composite createComposite(Composite parent, int numColumns) {
 		Composite composite = new Composite(parent, SWT.NULL);
 

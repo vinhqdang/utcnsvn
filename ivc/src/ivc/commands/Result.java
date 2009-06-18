@@ -2,22 +2,22 @@ package ivc.commands;
 
 import java.io.Serializable;
 
-public class Result implements Serializable{
-	
+public class Result implements Serializable {
+
 	/**
 	 * default serial version
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private boolean isSuccess;
 	private String message;
 	private Throwable error;
 	private Object resultData;
-	
-	public Result(){
+
+	public Result() {
 		super();
 	}
-	
+
 	public Result(boolean isSuccess, String message, Throwable error) {
 		this.isSuccess = isSuccess;
 		this.message = message;
@@ -55,11 +55,5 @@ public class Result implements Serializable{
 	public void setResultData(Object resultData) {
 		this.resultData = resultData;
 	}
-	
-	
-	
-	
-	
-	
 
 }

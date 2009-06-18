@@ -27,10 +27,21 @@ public class DiffComparableIFile implements IDiffComparable {
 	public IFile resource;
 	private String charset = null;
 
+	/**
+	 * Returns resource from which the object was created
+	 * 
+	 * @return the resource from which the object was created
+	 */
 	public IResource getResource() {
 		return resource;
 	}
 
+	/**
+	 * The main constructor of the class which has the IFile as parameter
+	 * 
+	 * @param file
+	 *            the file from which to create the IDiffComparable object
+	 */
 	protected DiffComparableIFile(IFile file) {
 		resource = file;
 	}
@@ -111,7 +122,8 @@ public class DiffComparableIFile implements IDiffComparable {
 	}
 
 	/**
-	 * the following methods are only implemented to support a simple compare between two IFiles
+	 * the following methods are only implemented to support a simple compare between two
+	 * IFiles
 	 */
 
 	@Override

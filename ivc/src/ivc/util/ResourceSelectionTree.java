@@ -48,6 +48,13 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
+/**
+ * 
+ * @author alexm
+ * 
+ *         This class is used to provide the interface to check / uncheck resources before
+ *         committing them
+ */
 @SuppressWarnings("unchecked")
 public class ResourceSelectionTree extends Composite {
 	private Tree tree;
@@ -85,8 +92,30 @@ public class ResourceSelectionTree extends Composite {
 	public final static int MODE_FLAT = 1;
 	public final static int MODE_TREE = 2;
 
-	public ResourceSelectionTree(Composite parent, int style, String label, IResource[] resources, Map<IResource, Status> statusMap,
-			LabelProvider labelProvider, boolean checkbox, IToolbarControlCreator toolbarControlCreator) {
+	/**
+	 * Creates a new object with the given parameters
+	 * 
+	 * @param parent
+	 *            the parent of the component
+	 * @param style
+	 *            the style
+	 * @param label
+	 *            the label
+	 * @param resources
+	 *            the list of resources
+	 * @param statusMap
+	 *            a map with the statuses of the resources
+	 * @param labelProvider
+	 *            the label provider
+	 * @param checkbox
+	 *            display checkboxes
+	 * @param toolbarControlCreator
+	 *            the toolbar control creator
+	 */
+	public ResourceSelectionTree(Composite parent, int style, String label,
+			IResource[] resources, Map<IResource, Status> statusMap,
+			LabelProvider labelProvider, boolean checkbox,
+			IToolbarControlCreator toolbarControlCreator) {
 		super(parent, style);
 		this.label = label;
 		this.resources = resources;
@@ -111,21 +140,33 @@ public class ResourceSelectionTree extends Composite {
 					}
 				}
 			} catch (Exception e) {
-				IVCPlugin.openError(getShell(), "Commit dialog error", e.getMessage(), e, 0);
+				IVCPlugin.openError(getShell(), "Commit dialog error", e.getMessage(), e,
+						0);
 			}
 		}
 		createControls();
 	}
 
+	/**
+	 * returns the TreeViewer
+	 * 
+	 * @return the treeViewer
+	 */
 	public TreeViewer getTreeViewer() {
 		return treeViewer;
 	}
 
+	/**
+	 * Returns the array of the selected resources
+	 * 
+	 * @return the array with the selected resources
+	 */
 	public IResource[] getSelectedResources() {
 		if (!checkbox)
 			return resources;
 		ArrayList selected = new ArrayList();
-		Object[] checkedResources = ((CheckboxTreeViewer) treeViewer).getCheckedElements();
+		Object[] checkedResources = ((CheckboxTreeViewer) treeViewer)
+				.getCheckedElements();
 		for (int i = 0; i < checkedResources.length; i++) {
 			if (resourceList.contains(checkedResources[i]))
 				selected.add(checkedResources[i]);
@@ -155,7 +196,8 @@ public class ResourceSelectionTree extends Composite {
 
 		int buttonGroupColumns = 1;
 		if (toolbarControlCreator != null) {
-			buttonGroupColumns = buttonGroupColumns + toolbarControlCreator.getControlCount();
+			buttonGroupColumns = buttonGroupColumns
+					+ toolbarControlCreator.getControlCount();
 		}
 
 		ToolBar toolbar = new ToolBar(viewerPane, SWT.FLAT);
@@ -178,7 +220,8 @@ public class ResourceSelectionTree extends Composite {
 				refresh();
 			}
 		};
-		flatAction.setImageDescriptor(ImageDescriptorManager.getImageDescriptor(ImageDescriptorManager.TREE_FLAT));
+		flatAction.setImageDescriptor(ImageDescriptorManager
+				.getImageDescriptor(ImageDescriptorManager.TREE_FLAT));
 		toolbarManager.add(flatAction);
 
 		treeAction = new Action("Tree", Action.AS_CHECK_BOX) {
@@ -190,7 +233,8 @@ public class ResourceSelectionTree extends Composite {
 				refresh();
 			}
 		};
-		treeAction.setImageDescriptor(ImageDescriptorManager.getImageDescriptor(ImageDescriptorManager.TREE_AFFECTED_PATHS));
+		treeAction.setImageDescriptor(ImageDescriptorManager
+				.getImageDescriptor(ImageDescriptorManager.TREE_AFFECTED_PATHS));
 		toolbarManager.add(treeAction);
 
 		compressedAction = new Action("Compressed", Action.AS_CHECK_BOX) {
@@ -202,7 +246,9 @@ public class ResourceSelectionTree extends Composite {
 				refresh();
 			}
 		};
-		compressedAction.setImageDescriptor(ImageDescriptorManager.getImageDescriptor(ImageDescriptorManager.TREE_AFFECTED_PATHS_COMPRESSED));
+		compressedAction
+				.setImageDescriptor(ImageDescriptorManager
+						.getImageDescriptor(ImageDescriptorManager.TREE_AFFECTED_PATHS_COMPRESSED));
 		toolbarManager.add(compressedAction);
 
 		toolbarManager.update(true);
@@ -253,11 +299,12 @@ public class ResourceSelectionTree extends Composite {
 			if (mode == MODE_TREE) {
 				treeViewer.collapseAll();
 			}
-			((CheckboxTreeViewer) treeViewer).addCheckStateListener(new ICheckStateListener() {
-				public void checkStateChanged(CheckStateChangedEvent event) {
-					handleCheckStateChange(event);
-				}
-			});
+			((CheckboxTreeViewer) treeViewer)
+					.addCheckStateListener(new ICheckStateListener() {
+						public void checkStateChanged(CheckStateChangedEvent event) {
+							handleCheckStateChange(event);
+						}
+					});
 		}
 
 		MenuManager menuMgr = new MenuManager();
@@ -276,6 +323,12 @@ public class ResourceSelectionTree extends Composite {
 		((CheckboxTreeViewer) treeViewer).setAllChecked(state);
 	}
 
+	/**
+	 * Fills the tree menu
+	 * 
+	 * @param menuMgr
+	 *            the menu manager
+	 */
 	protected void fillTreeMenu(IMenuManager menuMgr) {
 		if (checkbox) {
 			Action selectAllAction = new Action("Select All") {
@@ -330,7 +383,8 @@ public class ResourceSelectionTree extends Composite {
 		if (removeFromViewValidator != null) {
 			if (!removeFromViewValidator.canRemove(resourceList, selection)) {
 				if (removeFromViewValidator.getErrorMessage() != null) {
-					MessageDialog.openError(getShell(), "ResourceSelectionTree.remove", removeFromViewValidator.getErrorMessage());
+					MessageDialog.openError(getShell(), "ResourceSelectionTree.remove",
+							removeFromViewValidator.getErrorMessage());
 				}
 				return;
 			}
@@ -354,7 +408,8 @@ public class ResourceSelectionTree extends Composite {
 		Iterator iter = resourceList.iterator();
 		while (iter.hasNext()) {
 			IResource checkResource = (IResource) iter.next();
-			if (checkResource.getFullPath().toString().equals(resource.getFullPath().toString())
+			if (checkResource.getFullPath().toString().equals(
+					resource.getFullPath().toString())
 					|| (mode != MODE_FLAT && isChild(checkResource, resource)))
 				removedResources.add(checkResource);
 		}
@@ -417,7 +472,8 @@ public class ResourceSelectionTree extends Composite {
 	private boolean isChild(IResource resource, IResource parent) {
 		IContainer container = resource.getParent();
 		while (container != null) {
-			if (container.getFullPath().toString().equals(parent.getFullPath().toString()))
+			if (container.getFullPath().toString()
+					.equals(parent.getFullPath().toString()))
 				return true;
 			container = container.getParent();
 		}
@@ -426,13 +482,15 @@ public class ResourceSelectionTree extends Composite {
 
 	private void handleCheckStateChange(CheckStateChangedEvent event) {
 		((CheckboxTreeViewer) treeViewer).setGrayed(event.getElement(), false);
-		((CheckboxTreeViewer) treeViewer).setSubtreeChecked(event.getElement(), event.getChecked());
+		((CheckboxTreeViewer) treeViewer).setSubtreeChecked(event.getElement(), event
+				.getChecked());
 		IResource resource = (IResource) event.getElement();
 		updateParentState(resource, event.getChecked());
 	}
 
 	private void updateParentState(IResource child, boolean baseChildState) {
-		if (mode == MODE_FLAT || child == null || child.getParent() == null || resourceList.contains(child.getParent())) {
+		if (mode == MODE_FLAT || child == null || child.getParent() == null
+				|| resourceList.contains(child.getParent())) {
 			return;
 		}
 		CheckboxTreeViewer checkboxTreeViewer = (CheckboxTreeViewer) treeViewer;
@@ -445,7 +503,8 @@ public class ResourceSelectionTree extends Composite {
 		Object[] children = null;
 		children = resourceSelectionContentProvider.getChildren(parent);
 		for (int i = children.length - 1; i >= 0; i--) {
-			if (checkboxTreeViewer.getChecked(children[i]) != baseChildState || checkboxTreeViewer.getGrayed(children[i])) {
+			if (checkboxTreeViewer.getChecked(children[i]) != baseChildState
+					|| checkboxTreeViewer.getGrayed(children[i])) {
 				allSameState = false;
 				break;
 			}
@@ -478,11 +537,13 @@ public class ResourceSelectionTree extends Composite {
 		if (compressedFolders == null) {
 			compressedFolderList = new ArrayList();
 			for (int i = 0; i < resources.length; i++) {
-				if (resources[i] instanceof IContainer && !compressedFolderList.contains(resources[i]))
+				if (resources[i] instanceof IContainer
+						&& !compressedFolderList.contains(resources[i]))
 					compressedFolderList.add(resources[i]);
 				if (!(resources[i] instanceof IContainer)) {
 					IContainer parent = resources[i].getParent();
-					if (parent != null && !(parent instanceof IWorkspaceRoot) && !compressedFolderList.contains(parent)) {
+					if (parent != null && !(parent instanceof IWorkspaceRoot)
+							&& !compressedFolderList.contains(parent)) {
 						compressedFolderList.add(parent);
 					}
 				}
@@ -499,7 +560,8 @@ public class ResourceSelectionTree extends Composite {
 		for (int i = 0; i < resources.length; i++) {
 			if (!(resources[i] instanceof IContainer)) {
 				IContainer parentFolder = resources[i].getParent();
-				if (parentFolder != null && parentFolder.equals(parent) && !children.contains(parentFolder))
+				if (parentFolder != null && parentFolder.equals(parent)
+						&& !children.contains(parentFolder))
 					children.add(resources[i]);
 			}
 		}
@@ -516,7 +578,8 @@ public class ResourceSelectionTree extends Composite {
 				children.add(folders[i]);
 		}
 		for (int i = 0; i < resources.length; i++) {
-			if (!(resources[i] instanceof IContainer) && resources[i].getParent() != null && resources[i].getParent().equals(parent))
+			if (!(resources[i] instanceof IContainer) && resources[i].getParent() != null
+					&& resources[i].getParent().equals(parent))
 				children.add(resources[i]);
 		}
 		IResource[] childArray = new IResource[children.size()];
@@ -533,9 +596,11 @@ public class ResourceSelectionTree extends Composite {
 					folderList.add(resources[i]);
 				IResource parent = resources[i];
 				while (parent != null && !(parent instanceof IWorkspaceRoot)) {
-					if (!(parent.getParent() instanceof IWorkspaceRoot) && folderList.contains(parent.getParent()))
+					if (!(parent.getParent() instanceof IWorkspaceRoot)
+							&& folderList.contains(parent.getParent()))
 						break;
-					if (parent.getParent() == null || parent.getParent() instanceof IWorkspaceRoot) {
+					if (parent.getParent() == null
+							|| parent.getParent() instanceof IWorkspaceRoot) {
 						rootList.add(parent);
 					}
 					parent = parent.getParent();
@@ -612,7 +677,8 @@ public class ResourceSelectionTree extends Composite {
 	private class ResourceComparator implements Comparator<IResource> {
 		public int compare(IResource resource0, IResource resource1) {
 
-			return resource0.getFullPath().toOSString().compareTo(resource1.getFullPath().toOSString());
+			return resource0.getFullPath().toOSString().compareTo(
+					resource1.getFullPath().toOSString());
 		}
 	}
 
@@ -623,12 +689,14 @@ public class ResourceSelectionTree extends Composite {
 	}
 
 	public static interface IRemoveFromViewValidator {
-		public boolean canRemove(ArrayList<IResource> resourceList, IStructuredSelection selection);
+		public boolean canRemove(ArrayList<IResource> resourceList,
+				IStructuredSelection selection);
 
 		public String getErrorMessage();
 	}
 
-	public void setRemoveFromViewValidator(IRemoveFromViewValidator removeFromViewValidator) {
+	public void setRemoveFromViewValidator(
+			IRemoveFromViewValidator removeFromViewValidator) {
 		this.removeFromViewValidator = removeFromViewValidator;
 	}
 

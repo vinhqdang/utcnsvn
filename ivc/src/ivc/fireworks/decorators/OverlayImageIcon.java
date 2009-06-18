@@ -10,7 +10,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 
 /**
- * @author iilea
+ * @author alexm
  * 
  *         Class is used for overlaying image icons
  */
@@ -52,9 +52,9 @@ public class OverlayImageIcon extends CompositeImageDescriptor {
 		drawImage(baseImage.getImageData(), 0, 0);
 
 		for (int i = 0; i < images.size(); i++) {
-			ImageIcon icon=images.get(i);
+			ImageIcon icon = images.get(i);
 			ImageData imageData = ImageDescriptorManager.getImageData(icon.path);
-			Position position=icon.position;
+			Position position = icon.position;
 			switch (position) {
 			// Draw on the top left corner
 			case TOP_LEFT:
@@ -73,7 +73,8 @@ public class OverlayImageIcon extends CompositeImageDescriptor {
 
 			// Draw on bottom right corner
 			case BOTTOM_RIGHT:
-				drawImage(imageData, sizeOfImage.x - imageData.width, sizeOfImage.y - imageData.height);
+				drawImage(imageData, sizeOfImage.x - imageData.width, sizeOfImage.y
+						- imageData.height);
 				break;
 
 			}
@@ -81,10 +82,9 @@ public class OverlayImageIcon extends CompositeImageDescriptor {
 
 	}
 
-
 	/**
-	 * @see org.eclipse.jface.resource.CompositeImageDescriptor#getSize() Get
-	 *      the size of the object
+	 * @see org.eclipse.jface.resource.CompositeImageDescriptor#getSize() Get the size of
+	 *      the object
 	 */
 	protected Point getSize() {
 		return sizeOfImage;

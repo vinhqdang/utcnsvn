@@ -24,10 +24,25 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
+/**
+ * 
+ * @author alexm This
+ * 
+ *         This class provides the main methods used to execute actions
+ */
 public abstract class BaseActionDelegate implements IWorkbenchWindowActionDelegate {
 	private ISelection selection;
 	private Shell shell;
 
+	/**
+	 * This method is used by the subclasses to return the list of selected resources and
+	 * all the children
+	 * 
+	 * @param forCommit
+	 *            speciffies if the resources are returned for a commit operation
+	 * @return the list of selected resources and all the children
+	 * @throws CoreException
+	 */
 	public IResource[] findAllResources(boolean forCommit) throws CoreException {
 		ArrayList<IResource> resourcesTo = new ArrayList<IResource>();
 		IResource[] resources = getSelectedResources();
@@ -35,26 +50,42 @@ public abstract class BaseActionDelegate implements IWorkbenchWindowActionDelega
 			if (!resource.isTeamPrivateMember()) {
 				if (forCommit) {
 					if ((ProjectsManager.instance().isManaged(resource))) {
-						if (ProjectsManager.instance().getStatus(resource).compareTo(Status.Modified) > 0) {
+						if (ProjectsManager.instance().getStatus(resource).compareTo(
+								Status.Modified) > 0) {
 							continue;
 						}
 					}
 				}
+				// adds the resurce to the final resources list
 				addResource(resourcesTo, resource, forCommit);
 			}
 		}
-		// resourcesTo.addAll(ProjectsManager.instance().getIVCProjectByName(resources[0].getProject().getName()).getDeleted());
+		// resourcesTo.addAll(ProjectsManager.instance().getIVCProjectByName(resources[0].
+		// getProject().getName()).getDeleted());
 		IResource[] result = new IResource[resourcesTo.size()];
 		resourcesTo.toArray(result);
 
 		return result;
 	}
 
-	private void addResource(List<IResource> resources, IResource resource, boolean forCommit) throws CoreException {
+	/**
+	 * Adds a resource to a existing list and recursively calls itself for the children
+	 * 
+	 * @param resources
+	 *            the list of resources to retrieve
+	 * @param resource
+	 *            the current resource
+	 * @param forCommit
+	 *            speciffies if the resources are returned for a commit operation
+	 * @throws CoreException
+	 */
+	private void addResource(List<IResource> resources, IResource resource,
+			boolean forCommit) throws CoreException {
 		if (!resources.contains(resource)) {
 			if (forCommit) {
 				if ((ProjectsManager.instance().isManaged(resource))) {
-					if (ProjectsManager.instance().getStatus(resource).compareTo(Status.Modified) > 0) {
+					if (ProjectsManager.instance().getStatus(resource).compareTo(
+							Status.Modified) > 0) {
 						return;
 					}
 				}
@@ -90,6 +121,11 @@ public abstract class BaseActionDelegate implements IWorkbenchWindowActionDelega
 		return ProjectsManager.instance().isManaged(resource);
 	}
 
+	/**
+	 * Is used to return the current shell or a new shell
+	 * 
+	 * @return the current shell
+	 */
 	public Shell getShell() {
 		if (shell != null) {
 			return shell;
@@ -104,6 +140,15 @@ public abstract class BaseActionDelegate implements IWorkbenchWindowActionDelega
 		}
 	}
 
+	/**
+	 * Returns a list of selected adaptables
+	 * 
+	 * @param selection
+	 *            the current selection
+	 * @param c
+	 *            the class of the adaptables
+	 * @returna list of selected adaptables
+	 */
 	protected Object[] getSelectedAdaptables(ISelection selection, Class<?> c) {
 		ArrayList<Object> result = null;
 		if (selection != null && !selection.isEmpty()) {
@@ -137,20 +182,34 @@ public abstract class BaseActionDelegate implements IWorkbenchWindowActionDelega
 		return null;
 	}
 
+	/**
+	 * Returns an object array of adaptables from getSelectedAdaptables function
+	 * 
+	 * @param c
+	 *            the class of the adaptables
+	 * @return an object array of adaptables from getSelectedAdaptables function
+	 */
 	protected Object[] getSelectedResources(Class<?> c) {
 		return getSelectedAdaptables(selection, c);
 	}
 
+	/**
+	 * Returns the selected resources
+	 * 
+	 * @return
+	 */
 	protected IResource[] getSelectedResources() {
 		ArrayList<IResource> resourceArray = new ArrayList<IResource>();
 		IResource[] resources = (IResource[]) getSelectedResources(IResource.class);
 		for (int i = 0; i < resources.length; i++)
 			resourceArray.add(resources[i]);
-		ResourceMapping[] resourceMappings = (ResourceMapping[]) getSelectedAdaptables(selection, ResourceMapping.class);
+		ResourceMapping[] resourceMappings = (ResourceMapping[]) getSelectedAdaptables(
+				selection, ResourceMapping.class);
 		for (int i = 0; i < resourceMappings.length; i++) {
 			ResourceMapping resourceMapping = (ResourceMapping) resourceMappings[i];
 			try {
-				ResourceTraversal[] traversals = resourceMapping.getTraversals(null, null);
+				ResourceTraversal[] traversals = resourceMapping
+						.getTraversals(null, null);
 				for (int j = 0; j < traversals.length; j++) {
 					IResource[] traversalResources = traversals[j].getResources();
 					for (int k = 0; k < traversalResources.length; k++) {
@@ -167,6 +226,10 @@ public abstract class BaseActionDelegate implements IWorkbenchWindowActionDelega
 		return selectedResources;
 	}
 
+	/**
+	 * 
+	 * @return the current selection
+	 */
 	protected ISelection getSelection() {
 		return selection;
 	}

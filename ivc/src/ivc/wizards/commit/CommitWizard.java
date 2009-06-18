@@ -4,6 +4,12 @@ import ivc.wizards.commit.pages.CommitWizardPage;
 
 import org.eclipse.jface.wizard.Wizard;
 
+/**
+ * 
+ * @author alexm
+ * 
+ *         Class used to create a wizard wich has the purpose of committing data
+ */
 public class CommitWizard extends Wizard {
 	private CommitWizardPage svnWizardDialogPage;
 	private CommitWizardDialog parentDialog;

@@ -8,6 +8,12 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * 
+ * @author alexm
+ * 
+ *         Page used for sharing the project
+ */
 public class SharingWizardPage extends BaseWizardPage {
 	private Text txtServerURL;
 	private Text txtProjectPath;
@@ -19,7 +25,8 @@ public class SharingWizardPage extends BaseWizardPage {
 	public SharingWizardPage() {
 		super("Select repository");
 		setTitle("Select repository");
-		ImageDescriptor img = ImageDescriptorManager.getImageDescriptor(ImageDescriptorManager.SHARE_WIZARD);
+		ImageDescriptor img = ImageDescriptorManager
+				.getImageDescriptor(ImageDescriptorManager.SHARE_WIZARD);
 		setImageDescriptor(img);
 		validator = new Validator() {
 			@Override
@@ -79,6 +86,12 @@ public class SharingWizardPage extends BaseWizardPage {
 		return validator.isValidated();
 	}
 
+	/**
+	 * Updates the status message after the validation
+	 * 
+	 * @param message
+	 *            the new status message
+	 */
 	private void updateStatus(String message) {
 
 		setErrorMessage(message);

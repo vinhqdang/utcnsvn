@@ -1,13 +1,18 @@
 package ivc.wizards.validation;
 
-
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Text;
 
-public abstract class TextRequiredValidator implements ModifyListener,IValidation {
-
+/**
+ * 
+ * @author alexm
+ * 
+ *         Class used to validate text boxes and to display control validations if the
+ *         entered data is invalid
+ */
+public abstract class TextRequiredValidator implements ModifyListener, IValidation {
 
 	private ControlDecoration controlDecoration;
 	private boolean valid = false;
@@ -28,9 +33,9 @@ public abstract class TextRequiredValidator implements ModifyListener,IValidatio
 		resetError();
 	}
 
-
 	public boolean isValid() {
 		return valid;
 	}
+
 	public abstract void resetError();
 }

@@ -13,9 +13,10 @@ import org.eclipse.compare.rangedifferencer.RangeDifferencer;
 import org.eclipse.core.resources.IFile;
 
 /**
- * Class used to compare two contents. For now it is used to compare a file with an other input stream which is currently supplied from the file's
- * history. The class creates as the result of the comparison a OperationHistory object which contains the operations executed to create the new
- * contents of the file when we have the old contents
+ * Class used to compare two contents. For now it is used to compare a file with an other
+ * input stream which is currently supplied from the file's history. The class creates as
+ * the result of the comparison a OperationHistory object which contains the operations
+ * executed to create the new contents of the file when we have the old contents
  * 
  * @author alexm
  * 
@@ -35,7 +36,8 @@ public class StringComparer {
 	}
 
 	/**
-	 * Executes the compare and creates the OperationHistoryObject given the two inputs in the constructor.
+	 * Executes the compare and creates the OperationHistoryObject given the two inputs in
+	 * the constructor.
 	 */
 	public void compare() {
 
@@ -49,13 +51,17 @@ public class StringComparer {
 			RangeDifference[] diff = RangeDifferencer.findDifferences(CL, CR);
 			System.out.println("Changes to file: " + diff.length);
 			for (int i = 0; i < diff.length; i++) {
-				String removedText = SR.substring(CR.getTokenStart(diff[i].rightStart()), CR.getTokenStart(diff[i].rightEnd()));
+				String removedText = SR.substring(CR.getTokenStart(diff[i].rightStart()),
+						CR.getTokenStart(diff[i].rightEnd()));
 				System.out.println("-|" + removedText + "|");
-				addOperations(removedText, Operation.CHARACTER_DELETE, CL.getTokenStart(diff[i].leftStart()));
+				addOperations(removedText, Operation.CHARACTER_DELETE, CL
+						.getTokenStart(diff[i].leftStart()));
 
-				String addedText = SL.substring(CL.getTokenStart(diff[i].leftStart()), CL.getTokenStart(diff[i].leftEnd()));
+				String addedText = SL.substring(CL.getTokenStart(diff[i].leftStart()), CL
+						.getTokenStart(diff[i].leftEnd()));
 				System.out.println("+|" + addedText + "|");
-				addOperations(addedText, Operation.CHARACTER_ADD, CL.getTokenStart(diff[i].leftStart()));
+				addOperations(addedText, Operation.CHARACTER_ADD, CL
+						.getTokenStart(diff[i].leftStart()));
 			}
 			System.out.println(history.getOperations());
 		} catch (Exception e) {

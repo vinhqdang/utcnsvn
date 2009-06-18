@@ -55,18 +55,19 @@ public class UpdateCommand extends TeamOperation {
 		return result;
 	}
 
-	
 	/**
-	 * Applies all operations contained in the remote committed 
-	 * log file and update version the local current version for the files that had changes
+	 * Applies all operations contained in the remote committed log file and update
+	 * version the local current version for the files that had changes
 	 */
 	private void applyRCL() {
 		IProject project = ivcProject.getProject();
 		// read current version
 		HashMap<String, Integer> currentLocalVersion = ivcProject.getCurrentVersion();
 		try {
-			ServerIntf server = ConnectionManager.getInstance(project.getName()).getServer();
-			HashMap<String, Integer> currentCommitedVersion = (HashMap<String, Integer>) server.getVersionNumber(projectPath);
+			ServerIntf server = ConnectionManager.getInstance(project.getName())
+					.getServer();
+			HashMap<String, Integer> currentCommitedVersion = (HashMap<String, Integer>) server
+					.getVersionNumber(projectPath);
 			rcl = ivcProject.getRemoteCommitedLog();
 			Iterator<OperationHistory> it = rcl.iterator();
 
@@ -93,7 +94,8 @@ public class UpdateCommand extends TeamOperation {
 						Iterator<Operation> itt = operations.descendingIterator();
 						while (itt.hasNext()) {
 							Operation tr = itt.next();
-							if (tr.getOperationType() == Operation.CHARACTER_ADD || tr.getOperationType() == Operation.CHARACTER_DELETE) {
+							if (tr.getOperationType() == Operation.CHARACTER_ADD
+									|| tr.getOperationType() == Operation.CHARACTER_DELETE) {
 								// handle file content modifications
 								try {
 									content = tr.applyContentTransformation(content);
@@ -108,7 +110,9 @@ public class UpdateCommand extends TeamOperation {
 							}
 						}
 						// update file content
-						FileUtils.writeStringBufferToFile(project.getLocation().toOSString() + "\\" + filePath, content);
+						FileUtils.writeStringBufferToFile(project.getLocation()
+								.toOSString()
+								+ "\\" + filePath, content);
 						// update file version
 						Integer serverVersion = currentCommitedVersion.get(filePath);
 						currentLocalVersion.put(filePath, serverVersion);
@@ -145,13 +149,15 @@ public class UpdateCommand extends TeamOperation {
 	}
 
 	/**
-	 * ll must be transformed to include effects of rcl we say that we apply an inclusion transformation over operations in ll
+	 * ll must be transformed to include effects of rcl we say that we apply an inclusion
+	 * transformation over operations in ll
 	 */
 	private void updateLL() {
 		OperationHistoryList ll = ivcProject.getLocalLog();
 		ll = ll.includeOperationHistoryList(rcl);
 		ivcProject.setLocalLog(ll);
-		ConnectionManager connectionManager = ConnectionManager.getInstance(ivcProject.getName());
+		ConnectionManager connectionManager = ConnectionManager.getInstance(ivcProject
+				.getName());
 		try {
 			List<Peer> all = connectionManager.getServer().getAllClientHosts(projectPath);
 			List<String> disconnected = new ArrayList<String>();
@@ -161,11 +167,14 @@ public class UpdateCommand extends TeamOperation {
 				if (!connectionManager.getPeerHosts().contains(peer.getHostAddress())) {
 					disconnected.add(peer.getHostAddress());
 				} else {
-					ClientIntf client = connectionManager.getPeerByAddress(peer.getHostAddress());
-					client.updateRUL(ivcProject.getServerPath(), NetworkUtils.getHostAddress(), ll);
+					ClientIntf client = connectionManager.getPeerByAddress(peer
+							.getHostAddress());
+					client.updateRUL(ivcProject.getServerPath(), NetworkUtils
+							.getHostAddress(), ll);
 				}
 			}
-			connectionManager.getServer().updatePendingRUL(projectPath, NetworkUtils.getHostAddress(), disconnected, ll);
+			connectionManager.getServer().updatePendingRUL(projectPath,
+					NetworkUtils.getHostAddress(), disconnected, ll);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -173,23 +182,26 @@ public class UpdateCommand extends TeamOperation {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	/**
-	 * Handles all operations needed to be done at update. 
+	/*
+	 * * Handles all operations needed to be done at update.
 	 */
-	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	public void run(IProgressMonitor monitor) throws InvocationTargetException,
+			InterruptedException {
 		// init local variables
 		this.monitor = monitor;
 		monitor.beginTask("Updating resources", 3);
 		ivcProject = (IVCProject) commandArgs.getArgumentValue(Constants.IVCPROJECT);
 		projectPath = ivcProject.getServerPath();
 		if (commandArgs.getArgumentValue(Constants.FILE_PATHS) != null) {
-			filesToUpdate = (List<String>) commandArgs.getArgumentValue(Constants.FILE_PATHS);
-		}	
+			filesToUpdate = (List<String>) commandArgs
+					.getArgumentValue(Constants.FILE_PATHS);
+		}
 
 		// 1. apply rcl and update version
 		monitor.setTaskName("Applying Remote Commited Log");
 		applyRCL();
-		// 2. update ll to include effects of rcl & update rul of others to contain modified version of ll
+		// 2. update ll to include effects of rcl & update rul of others to contain
+		// modified version of ll
 		monitor.internalWorked(1);
 		monitor.setTaskName("Updating Local Log");
 		updateLL();

@@ -10,6 +10,12 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * 
+ * @author alexm
+ * 
+ *         Class used to specify the new project name
+ */
 public class NewProjectWizardPage extends BaseWizardPage {
 
 	private Text txtProjectName;
@@ -21,7 +27,8 @@ public class NewProjectWizardPage extends BaseWizardPage {
 	public NewProjectWizardPage(String pageName) {
 		super(pageName);
 		this.setTitle(pageName);
-		ImageDescriptor img = ImageDescriptorManager.getImageDescriptor(ImageDescriptorManager.SHARE_WIZARD);
+		ImageDescriptor img = ImageDescriptorManager
+				.getImageDescriptor(ImageDescriptorManager.SHARE_WIZARD);
 		setImageDescriptor(img);
 	}
 
@@ -34,6 +41,11 @@ public class NewProjectWizardPage extends BaseWizardPage {
 		txtProjectName = createTextField(composite);
 	}
 
+	/**
+	 * Tests if the creation of the project with the specified name
+	 * 
+	 * @return true or false depending if the project can or cannot be created
+	 */
 	public boolean testProjectName() {
 		if (txtProjectName == null) {
 			setErrorMessage("Project name cannot be null");
@@ -46,7 +58,7 @@ public class NewProjectWizardPage extends BaseWizardPage {
 				setErrorMessage("A project with the same name already exists");
 				return false;
 			}
-			
+
 		}
 		return true;
 	}

@@ -65,7 +65,8 @@ public class MergeChangesCommand implements CommandIntf {
 			if (thl2.getOperationsForFile(filePath) != null) {
 				LinkedList<Operation> trs1 = thl1.getOperationsForFile(filePath);
 				LinkedList<Operation> trs2 = thl2.getOperationsForFile(filePath);
-				if (trs2.getFirst().getOperationType() == Operation.REMOVE_FILE || trs2.getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
+				if (trs2.getFirst().getOperationType() == Operation.REMOVE_FILE
+						|| trs2.getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
 					newThl2.appendOperation(trs2.getFirst());
 				} else {
 					// merge lists of content transformations
@@ -100,7 +101,8 @@ public class MergeChangesCommand implements CommandIntf {
 			if (thl1.getOperationsForFile(filePath) != null) {
 				LinkedList<Operation> trs1 = thl1.getOperationsForFile(filePath);
 				LinkedList<Operation> trs2 = thl2.getOperationsForFile(filePath);
-				if (trs1.getFirst().getOperationType() == Operation.REMOVE_FILE || trs1.getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
+				if (trs1.getFirst().getOperationType() == Operation.REMOVE_FILE
+						|| trs1.getFirst().getOperationType() == Operation.REMOVE_FOLDER) {
 					newThl1.appendOperation(trs2.getFirst());
 				} else {
 					// merge lists of content transformations
@@ -127,8 +129,9 @@ public class MergeChangesCommand implements CommandIntf {
 	}
 
 	/**
-	 * merge:H H := []; append(RCL, H); UL := []; append(LL, UL); for (i:=0; i<|RUL|; i++) append(RUL[i], UL); for (i:=0; i<|UL|; i++) { O := UL[i];
-	 * j:=0; while (j<|H| and H[j]!O) j++; O0 := transformSOCT2(O, sublist(H,j,|H|)); append(O0, H); } return H;
+	 * merge:H H := []; append(RCL, H); UL := []; append(LL, UL); for (i:=0; i<|RUL|; i++)
+	 * append(RUL[i], UL); for (i:=0; i<|UL|; i++) { O := UL[i]; j:=0; while (j<|H| and
+	 * H[j]!O) j++; O0 := transformSOCT2(O, sublist(H,j,|H|)); append(O0, H); } return H;
 	 */
 
 	/**

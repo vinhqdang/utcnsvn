@@ -5,6 +5,12 @@ import ivc.managers.ProjectsManager;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IWorkbenchWindow;
 
+/**
+ * Action used to remove the status of the first selected resource
+ * 
+ * @author alexm
+ * 
+ */
 public class ClearCacheAction extends BaseActionDelegate {
 
 	@Override

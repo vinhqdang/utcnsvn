@@ -20,18 +20,26 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 
+/**
+ * 
+ * @author alexm
+ * 
+ *         The class is used to retrieve the changes when the file content was modified
+ */
 public class FileModificationListener implements IResourceChangeListener {
 
 	private ProjectsManager projectsManager = ProjectsManager.instance();
 
 	/**
-	 * This field is used to ignore all modifications if an update operation is performed. It stops the program from evaluating an update like a
-	 * modification on an existing file
+	 * This field is used to ignore all modifications if an update operation is performed.
+	 * It stops the program from evaluating an update like a modification on an existing
+	 * file
 	 */
 	public static boolean ignoreModifications = false;
 
 	/**
-	 * The list of resources which contain transformations of the kind speciffied in the WATCHED_CHANGES field
+	 * The list of resources which contain transformations of the kind speciffied in the
+	 * WATCHED_CHANGES field
 	 */
 	private List<IResource> modifiedResources = new ArrayList<IResource>();
 
@@ -49,11 +57,13 @@ public class FileModificationListener implements IResourceChangeListener {
 					IResource resource = delta.getResource();
 
 					/**
-					 * We test if the resource is managed, if so, we add the resource to the list of modified resources
+					 * We test if the resource is managed, if so, we add the resource to
+					 * the list of modified resources
 					 */
 					if (ProjectsManager.instance().isManaged(resource)) {
 						if (resource.getType() == IResource.FILE) {
-							if (delta.getKind() == IResourceDelta.CHANGED && resource.exists()) {
+							if (delta.getKind() == IResourceDelta.CHANGED
+									&& resource.exists()) {
 								if ((delta.getFlags() & WATCHED_CHANGES) != 0) {
 									if (!ignoreModifications) {
 										modifiedResources.add(resource);
@@ -68,7 +78,8 @@ public class FileModificationListener implements IResourceChangeListener {
 			});
 
 			/**
-			 * We go trough the list of modified resources, retrieve the changes and update the status of the resource to modiffied
+			 * We go trough the list of modified resources, retrieve the changes and
+			 * update the status of the resource to modiffied
 			 */
 			for (IResource resource : modifiedResources) {
 				try {
@@ -88,9 +99,10 @@ public class FileModificationListener implements IResourceChangeListener {
 	}
 
 	/**
-	 * This method uses a StringComparer instance and generates the differences between two files. The actual input to the comparer are the file and
-	 * the latest version of the file in history. After we get the differences a operation command is created to update the annotations of this file
-	 * to the other users.
+	 * This method uses a StringComparer instance and generates the differences between
+	 * two files. The actual input to the comparer are the file and the latest version of
+	 * the file in history. After we get the differences a operation command is created to
+	 * update the annotations of this file to the other users.
 	 * 
 	 * @param file
 	 *            the file for which we need the differences
@@ -102,7 +114,8 @@ public class FileModificationListener implements IResourceChangeListener {
 			// We create a new comparer for the file and it's history
 			StringComparer comparer = new StringComparer(file, states[0].getContents());
 			comparer.compare();
-			// We create a operation history and execute the command to update the annotations
+			// We create a operation history and execute the command to update the
+			// annotations
 			OperationHistory oh = comparer.getOperationHistory();
 			HandleOperationCommand hoc = new HandleOperationCommand();
 			CommandArgs args = new CommandArgs();

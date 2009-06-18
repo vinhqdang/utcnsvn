@@ -2,6 +2,12 @@ package ivc.repository;
 
 import org.eclipse.core.resources.IResource;
 
+/**
+ * 
+ * @author alexm
+ * 
+ *         the interface is used to manage the status cache
+ */
 public interface IStatusCache {
 	/**
 	 * Returns if a resource has a cached status

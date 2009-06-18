@@ -19,7 +19,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 public class ConnectionManager implements Serializable {
 
 	/**
@@ -40,12 +39,12 @@ public class ConnectionManager implements Serializable {
 	/**
 	 * list of addresses to connected clients
 	 */
-	private  List<String> peersHosts;
+	private List<String> peersHosts;
 
 	/**
 	 * reference to the connected server
 	 */
-	private  ServerIntf server;
+	private ServerIntf server;
 
 	private ConnectionManager() {
 	}
@@ -55,7 +54,8 @@ public class ConnectionManager implements Serializable {
 	 * 
 	 * @throws IVCException
 	 */
-	public Map<String, ClientIntf> initiateConnections(String serverAddress, String projectPath) throws IVCException {
+	public Map<String, ClientIntf> initiateConnections(String serverAddress,
+			String projectPath) throws IVCException {
 		// connect to server
 		server = connectToServer(serverAddress);
 
@@ -77,13 +77,16 @@ public class ConnectionManager implements Serializable {
 					Peer peerHost = it.next();
 					ClientIntf peer = null;
 					try {
-						if (!peerHost.getHostAddress().equalsIgnoreCase(NetworkUtils.getHostAddress())) {
+						if (!peerHost.getHostAddress().equalsIgnoreCase(
+								NetworkUtils.getHostAddress())) {
 							peer = connectToInterface(peerHost.getHostAddress());
 							if (peer != null) {
 								peers.put(peerHost.getHostAddress(), peer);
 								peersHosts.add(peerHost.getHostAddress());
-								// notify the other peer that i'm awake now and it can communicate with me
-								peer.handleNewPeerConnected(projectPath, NetworkUtils.getHostAddress());
+								// notify the other peer that i'm awake now and it can
+								// communicate with me
+								peer.handleNewPeerConnected(projectPath, NetworkUtils
+										.getHostAddress());
 							}
 						}
 					} catch (IVCException e) {
@@ -99,8 +102,10 @@ public class ConnectionManager implements Serializable {
 		}
 		return peers;
 	}
+
 	/**
-	 * Calls connect method from server 
+	 * Calls connect method from server
+	 * 
 	 * @param serverAddress
 	 * @return
 	 * @throws IVCException
@@ -120,13 +125,14 @@ public class ConnectionManager implements Serializable {
 			throw new IVCException(Exceptions.SERVER_CONNECTION_FAILED);
 		}
 	}
-	
+
 	/**
 	 * Returns a reference to the server
+	 * 
 	 * @param serverAddress
 	 * @return
 	 */
-	public static ServerIntf getServer(String serverAddress){
+	public static ServerIntf getServer(String serverAddress) {
 		try {
 			return (ServerIntf) Naming.lookup(serverAddress);
 		} catch (MalformedURLException e) {
@@ -140,12 +146,14 @@ public class ConnectionManager implements Serializable {
 	}
 
 	/**
-	 * Ecposes client interface on server repository by means of server invokation 
+	 * Ecposes client interface on server repository by means of server invokation
+	 * 
 	 * @param projectPath
 	 */
 	public void exposeInterface(String projectPath) {
 		try {
-			server.exposeClientIntf(NetworkUtils.getHostAddress(), projectPath, new ClientImpl());
+			server.exposeClientIntf(NetworkUtils.getHostAddress(), projectPath,
+					new ClientImpl());
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -155,7 +163,8 @@ public class ConnectionManager implements Serializable {
 		ClientIntf client;
 		try {
 			client = server.getClientIntf(hostAddress);
-			if (client != null && !hostAddress.equalsIgnoreCase(NetworkUtils.getHostAddress()) ) {
+			if (client != null
+					&& !hostAddress.equalsIgnoreCase(NetworkUtils.getHostAddress())) {
 				peers.put(hostAddress, client);
 				peersHosts.add(hostAddress);
 				return client;
@@ -207,9 +216,11 @@ public class ConnectionManager implements Serializable {
 		peersHosts.remove(hostAddress);
 		peers.remove(hostAddress);
 	}
-	
+
 	/**
-	 * Method that retrieves an instance of a ConnectionManager object based on preoject name
+	 * Method that retrieves an instance of a ConnectionManager object based on preoject
+	 * name
+	 * 
 	 * @param projectName
 	 * @return
 	 */
