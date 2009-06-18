@@ -14,10 +14,14 @@ import java.util.Date;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IWorkbenchWindow;
-
+/**
+ * 
+ * @author alexm
+ * The class is used to mark a resource as added to the repository 
+ */
 public class AddToRepositoryAction extends BaseActionDelegate {
 
-	@Override
+	
 	public void dispose() {
 	}
 
@@ -26,6 +30,7 @@ public class AddToRepositoryAction extends BaseActionDelegate {
 
 	}
 
+	
 	@Override
 	public void run(IAction action) {
 
@@ -44,7 +49,10 @@ public class AddToRepositoryAction extends BaseActionDelegate {
 			}
 		}
 	}
-
+/*
+ * (non-Javadoc)
+ * @see ivc.actions.BaseActionDelegate#menuItemEnabled()
+ */
 	public boolean menuItemEnabled() {
 		for (IResource resource : getSelectedResources()) {
 			if (resourceInRepository(resource))

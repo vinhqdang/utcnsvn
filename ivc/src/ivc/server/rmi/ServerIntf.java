@@ -1,5 +1,5 @@
 /**
- * 
+ * Defines server API
  */
 package ivc.server.rmi;
 

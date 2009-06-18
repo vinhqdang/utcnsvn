@@ -1,5 +1,7 @@
 /**
- * 
+ * Contains methods for reading and writing the content of files from the disk and methods to transform from stream objects to string. 
+ * Methods for reading and writing objects to files handle serialized objects
+ * Methods that work with streams transform them to StringBufferObjects or write a StringBuffer into a file (just strings, not serialized objects)
  */
 package ivc.util;
 

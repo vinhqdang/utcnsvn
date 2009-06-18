@@ -1,5 +1,5 @@
 /**
- * 
+ * implements methods described by ServerIntf
  */
 package ivc.server.rmi;
 
@@ -23,6 +23,7 @@ import java.util.Set;
 
 /**
  * @author danielan
+ * Holds users and passwords
  * 
  */
 final class Users {

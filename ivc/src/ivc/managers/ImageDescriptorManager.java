@@ -21,6 +21,11 @@ public class ImageDescriptorManager {
 	public static final String TREE_AFFECTED_PATHS = "img\\tree.png";
 	public static final String TREE_AFFECTED_PATHS_COMPRESSED = "img\\tree_compressed.gif";
 
+	/**
+	 * Returns an image descriptor
+	 * @param imageUrl the url to the image 
+	 * @return
+	 */
 	public static ImageDescriptor getImageDescriptor(String imageUrl) {
 		URL url;
 		try {
@@ -33,6 +38,11 @@ public class ImageDescriptorManager {
 		return null;
 	}
 
+	/**
+	 * Returns an eclipse Image object from a specified URL
+	 * @param imageUrl url of the image
+	 * @return
+	 */
 	public static org.eclipse.swt.graphics.Image getImage(String imageUrl) {
 		URL url;
 		try {
