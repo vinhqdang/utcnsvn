@@ -72,7 +72,6 @@ public class OperationHistory implements Serializable, Cloneable {
 			try {
 				return (OperationHistory) clone();
 			} catch (CloneNotSupportedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return new OperationHistory();
 			}
@@ -86,7 +85,6 @@ public class OperationHistory implements Serializable, Cloneable {
 			try {
 				newOp = (Operation) ownOp.clone();
 			} catch (CloneNotSupportedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			Iterator<Operation> itoOther = oh.getOperations().descendingIterator();

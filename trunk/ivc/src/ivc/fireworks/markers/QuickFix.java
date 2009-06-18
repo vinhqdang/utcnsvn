@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IMarkerResolution2;
 
+
 public class QuickFix implements IMarkerResolution2 {
 	private String label;
 	private String description;

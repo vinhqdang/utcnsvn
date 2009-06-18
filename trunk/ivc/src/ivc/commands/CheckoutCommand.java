@@ -1,5 +1,6 @@
 package ivc.commands;
 
+import ivc.client.rmi.ClientIntf;
 import ivc.data.BaseVersion;
 import ivc.data.exception.Exceptions;
 import ivc.data.exception.IVCException;
@@ -7,8 +8,7 @@ import ivc.data.operation.OperationHistoryList;
 import ivc.listeners.FileModificationListener;
 import ivc.managers.ConnectionManager;
 import ivc.repository.IVCRepositoryProvider;
-import ivc.rmi.client.ClientIntf;
-import ivc.rmi.server.ServerIntf;
+import ivc.server.rmi.ServerIntf;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
 import ivc.util.NetworkUtils;
@@ -57,6 +57,10 @@ public class CheckoutCommand implements IRunnableWithProgress {
 	}
 
 	@Override
+	/**
+	 * Creates a local copy of a project from the repository. The command has to get the project from a specified server location 
+	 * and project path from that server, create a project inside the local Eclipse and generate the user workspace data model
+	 */
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		// init fields
 		monitor.beginTask("Init local properties", 5);
@@ -117,9 +121,6 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		result = new Result(true, "Success", null);
 	}
 
-	/**
-	 * 
-	 */
 	private void createLogFiles() {
 		try {
 			// create document directory
@@ -155,9 +156,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		}
 	}
 
-	/**
-	 * 
-	 */
+	
 	private void createPeersRemoteFiles() {
 		List<ClientIntf> peers = connectionManager.getPeers();
 		if (peers != null) {
@@ -173,9 +172,7 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		}
 	}
 
-	/**
-	 * 
-	 */
+	
 	private void createProjectFiles(IProgressMonitor monitor) {
 		ServerIntf server = connectionManager.getServer();
 		try {
@@ -187,7 +184,6 @@ public class CheckoutCommand implements IRunnableWithProgress {
 
 				pfile.delete(true, monitor);
 			} catch (CoreException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			Iterator<String> itfld = bv.getFolders().iterator();

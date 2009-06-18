@@ -6,7 +6,7 @@ import ivc.data.exception.IVCException;
 import ivc.managers.ConnectionManager;
 import ivc.managers.ProjectsManager;
 import ivc.repository.IVCRepositoryProvider;
-import ivc.rmi.server.ServerIntf;
+import ivc.server.rmi.ServerIntf;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
 
@@ -47,6 +47,11 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 	}
 
 	@Override
+	/**
+	 * Shares a project from the local host. The class establishes connection with the server and sends over 
+	 * the base version of the project. This base version is saved by the server in a specific file, that will 
+	 * from now on available through server methods invocation. 
+	 */
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
 		// init local properties
@@ -101,7 +106,6 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 				try {
 					server.receiveBaseVersion(projectPath, bv);
 				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -122,7 +126,6 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 
 			}
 		} catch (IVCException e1) {
-			// TODO Auto-generated catch block
 			result = new Result(false, Exceptions.SERVER_CONNECTION_FAILED, e1);
 			e1.printStackTrace();
 			return;
@@ -151,7 +154,6 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 			File cvFile = new File(localProjPath + Constants.IvcFolder + Constants.CurrentVersionFile);
 			cvFile.createNewFile();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -177,7 +179,6 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 				cv.put(project.getName(), 1);
 				FileUtils.writeObjectToFile(project.getLocation().toOSString() + Constants.IvcFolder + Constants.CurrentVersionFile, cv);
 			} catch (CoreException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -195,7 +196,6 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 				IPath relPath = file.getProjectRelativePath();
 				bv.addFile(relPath.toOSString(), sb);
 			} catch (CoreException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -213,7 +213,6 @@ public class ShareProjectCommand implements IRunnableWithProgress {
 					handleResource(subfolder);
 				}
 			} catch (CoreException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

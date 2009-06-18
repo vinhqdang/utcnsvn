@@ -9,7 +9,7 @@ import ivc.data.operation.Operation;
 import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
 import ivc.managers.ConnectionManager;
-import ivc.rmi.server.ServerIntf;
+import ivc.server.rmi.ServerIntf;
 import ivc.util.Constants;
 
 import java.rmi.RemoteException;
@@ -27,14 +27,12 @@ public class GetUserCopyCommand implements CommandIntf {
 
 	private StringBuffer fileContent;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ivc.commands.CommandIntf#execute(ivc.commands.CommandArgs)
-	 */
+	
 	@Override
+	/**
+	 * Computes the current version of the remote file based on the operations stored in the log files of the current user workspace
+	 */
 	public Result execute(CommandArgs args) {
-		// TODO Auto-generated method stub
 		hostAddress = (String) args.getArgumentValue(Constants.HOST_ADDRESS);
 		ivcProject = (IVCProject) args.getArgumentValue(Constants.IVCPROJECT);
 		filePath = (String) args.getArgumentValue(Constants.FILE_PATH);

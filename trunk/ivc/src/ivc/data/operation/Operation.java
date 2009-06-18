@@ -37,8 +37,14 @@ public class Operation implements Serializable, Cloneable {
 
 	private Date date;
 
+	/**
+	 * position at which took place the operation
+	 */
 	private Integer position;
-
+	
+	/**
+	 * modified character
+	 */
 	private Character chr;
 
 	private Boolean commited;
@@ -203,7 +209,6 @@ public class Operation implements Serializable, Cloneable {
 				try {
 					addfile.create(new ByteArrayInputStream(new byte[0]), IResource.FORCE, null);
 				} catch (CoreException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -214,7 +219,6 @@ public class Operation implements Serializable, Cloneable {
 				try {
 					addfolder.create(IResource.FORCE, true, null);
 				} catch (CoreException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -225,7 +229,6 @@ public class Operation implements Serializable, Cloneable {
 				try {
 					remfile.delete(IResource.FORCE, null);
 				} catch (CoreException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -236,7 +239,6 @@ public class Operation implements Serializable, Cloneable {
 				try {
 					remfolder.delete(IResource.FORCE, null);
 				} catch (CoreException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -265,6 +267,11 @@ public class Operation implements Serializable, Cloneable {
 		return content;
 	}
 
+	/**
+	 * Includes in this operation effects of the operation passed as parameter
+	 * @param op
+	 * @return
+	 */
 	public Operation includeOperation(Operation op) {
 		Operation newOp = new Operation();
 		newOp.setCommited(op.getCommited());
@@ -313,25 +320,19 @@ public class Operation implements Serializable, Cloneable {
 		return newOp;
 	}
 
+	/**
+	 * Excludes from this operation effects of the operation passed as parameter
+	 * @param op
+	 * @return
+	 */
 	public Operation excludeOperation(Operation op) {
 		Operation newOp = new Operation();
 		try {
 			newOp = (Operation) clone();
 
 		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// newOp.setCommited(op.getCommited());
-		// newOp.setDate(op.getDate());
-		// newOp.setFilePath(op.getFilePath());
-		// newOp.setFileVersion(op.getFileVersion());
-		// newOp.setOperationType(op.getOperationType());
-		// newOp.setText(chr);
-		// newOp.setUserID(op.getUserID());
-		// newOp.setSid(op.getSid());
-		// newOp.setPosition(position);
-
 		// the positions of the operations
 		int posOther = op.getPosition();
 
@@ -461,22 +462,5 @@ public class Operation implements Serializable, Cloneable {
 		}
 		return true;
 	}
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#clone()
-	 */
-
-	// protected Object getCopy() {
-	// Operation op = new Operation();
-	// op.setCommited((commited != null)? commited.booleanValue():false);
-	// op.setDate((date != null)? new Date(date.getTime()): new Date());
-	// op.setFilePath((filePath != null)? new String(filePath): "");
-	// op.setOperationType((operationType != null) ? operationType.intValue(): 0);
-	// op.setPosition((position!= null)? position.intValue(): 0);
-	// op.setSid((sid != null )?sid.intValue() : 0);
-	// op.setText((chr!= null)?chr.charValue():' ');
-	// op.setUserID((userID!= null)? new String(userID):"");
-	// return op;
-	// }
+		
 }

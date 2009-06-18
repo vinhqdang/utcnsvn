@@ -3,11 +3,11 @@
  */
 package ivc.commands;
 
+import ivc.client.rmi.ClientIntf;
 import ivc.data.IVCProject;
 import ivc.data.exception.Exceptions;
 import ivc.managers.ConnectionManager;
 import ivc.managers.ProjectsManager;
-import ivc.rmi.client.ClientIntf;
 import ivc.util.NetworkUtils;
 
 import java.rmi.RemoteException;
@@ -27,6 +27,9 @@ public class StopCommand implements CommandIntf {
 	 * @see ivc.commands.CommandIntf#execute(ivc.commands.CommandArgs)
 	 */
 	@Override
+	/**
+	 * Announces the server that the client is disconnected in order to updates its list of peers
+	 */
 	public Result execute(CommandArgs args) {
 		
 		// 2. handle initiation for each project
@@ -56,7 +59,6 @@ public class StopCommand implements CommandIntf {
 				try {
 					host.handleNewPeerDisconnected(ivcProject.getServerPath(), NetworkUtils.getHostAddress());
 				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return new Result(true, Exceptions.COULD_NOT_DISCONNECT_FROM_HOST, e);
 				}

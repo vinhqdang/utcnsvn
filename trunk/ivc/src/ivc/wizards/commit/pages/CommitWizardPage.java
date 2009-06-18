@@ -169,7 +169,6 @@ public class CommitWizardPage extends WizardPage {
 			public void doubleClick(DoubleClickEvent event) {
 				// IStructuredSelection sel = (IStructuredSelection) event.getSelection();
 				// Object sel0 = sel.getFirstElement();
-				// TODO 2 repair on double click
 				// if (sel0 instanceof IFile) {
 				// final ISVNLocalResource localResource = SVNWorkspaceRoot.getSVNResourceFor((IFile) sel0);
 				// try {

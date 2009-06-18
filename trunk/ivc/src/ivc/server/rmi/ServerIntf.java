@@ -1,12 +1,12 @@
 /**
  * 
  */
-package ivc.rmi.server;
+package ivc.server.rmi;
 
+import ivc.client.rmi.ClientIntf;
 import ivc.data.BaseVersion;
 import ivc.data.Peer;
 import ivc.data.operation.OperationHistoryList;
-import ivc.rmi.client.ClientIntf;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -57,19 +57,20 @@ public interface ServerIntf extends Remote {
 	
 	public void exposeClientIntf(String hostAddress,String projectPath, ClientIntf client) throws RemoteException ;
 	
+	public void disconnectHost(String hostAddress) throws RemoteException;
+	
 	public ClientIntf getClientIntf(String hostAddress) throws RemoteException;
 	
 	public List<Peer> getAllClientHosts(String projectPath) throws RemoteException;
 	
 	public List<Peer> getConnectedClientHosts(String projectPath) throws RemoteException;
 	
-	public void disconnectHost(String hostAddress) throws RemoteException;
+	public void removePeerProject(String hostAddress, String projectPath)throws RemoteException;
 	
 	public boolean authenticateHost(String userName, String password) throws RemoteException;
 	
 	public boolean checkProjectPath(String projectPath) throws RemoteException;
-	
-	public void removePeerProject(String hostAddress, String projectPath)throws RemoteException;
+
 	 
 	
 }

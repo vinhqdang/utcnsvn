@@ -2,10 +2,9 @@ package ivc.commands;
 
 import ivc.data.exception.Exceptions;
 import ivc.managers.ConnectionManager;
-import ivc.rmi.server.ServerIntf;
+import ivc.server.rmi.ServerIntf;
 
 import java.lang.reflect.InvocationTargetException;
-import java.rmi.RemoteException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -21,6 +20,10 @@ public class FindHostProjectCommand implements IRunnableWithProgress {
 	}
 
 	@Override
+	/**
+	 * Validates parameters given at checkout project time by user through the wizard fields. The command checks 
+	 * connection with server and searches for the project the user tries to checkout
+	 */
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		monitor.beginTask("Initiating connection", 2);
 		ServerIntf server;

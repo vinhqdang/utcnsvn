@@ -28,7 +28,6 @@ public class ImageDescriptorManager {
 
 			return ImageDescriptor.createFromURL(url);
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -41,7 +40,6 @@ public class ImageDescriptorManager {
 
 			return ImageDescriptor.createFromURL(url).createImage();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -54,7 +52,6 @@ public class ImageDescriptorManager {
 
 			return ImageDescriptor.createFromURL(url).createImage().getImageData();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;

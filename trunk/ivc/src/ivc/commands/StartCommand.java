@@ -34,6 +34,9 @@ public class StartCommand implements CommandIntf {
 	 * @see ivc.commands.CommandIntf#execute(ivc.commands.CommandArgs)
 	 */
 	@Override
+	/**
+	 * Finds all projects in the workspace that are involved in code sharing
+	 */
 	public Result execute(CommandArgs args) {
 		// 1. find all projects
 		ProjectsManager.instance().findProjects();
@@ -85,7 +88,6 @@ public class StartCommand implements CommandIntf {
 				}
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// 3. create missing rul files
@@ -122,7 +124,6 @@ public class StartCommand implements CommandIntf {
 						try {
 							rulfile.createNewFile();
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					} else {
@@ -142,7 +143,6 @@ public class StartCommand implements CommandIntf {
 				}
 			}
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

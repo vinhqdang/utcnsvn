@@ -155,7 +155,6 @@ public class IVCPlugin extends AbstractUIPlugin implements IStartup {
 	 */
 	@Override
 	public void earlyStartup() {
-		// TODO Auto-generated method stub
 
 	}
 

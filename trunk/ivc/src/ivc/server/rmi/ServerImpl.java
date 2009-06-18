@@ -1,12 +1,12 @@
 /**
  * 
  */
-package ivc.rmi.server;
+package ivc.server.rmi;
 
+import ivc.client.rmi.ClientIntf;
 import ivc.data.BaseVersion;
 import ivc.data.Peer;
 import ivc.data.operation.OperationHistoryList;
-import ivc.rmi.client.ClientIntf;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
 
@@ -51,7 +51,6 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 	 */
 	protected ServerImpl() throws RemoteException {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/*
@@ -266,7 +265,6 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 				try {
 					f.createNewFile();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -351,7 +349,6 @@ public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
 					mthl.put(sourceHost, thl);
 					FileUtils.writeObjectToFile(f.getAbsolutePath(), mthl);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			} else {

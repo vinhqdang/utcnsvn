@@ -207,7 +207,6 @@ public class Decorator extends LabelProvider implements ILabelDecorator {
 	 * @return A Vector with the keys of the images that will be used for decorating the resources of the project.
 	 */
 	public static Vector findDecorationImage(Status status) {
-		// TODO change for different types of status
 		// create a new Vector
 		Vector images = new Vector();
 		// add an image key to the vector

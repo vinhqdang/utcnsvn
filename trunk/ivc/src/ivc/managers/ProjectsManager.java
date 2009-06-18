@@ -5,7 +5,7 @@ import ivc.repository.CacheManager;
 import ivc.repository.IVCRepositoryProvider;
 import ivc.repository.ResourceStatus;
 import ivc.repository.Status;
-import ivc.rmi.server.ServerIntf;
+import ivc.server.rmi.ServerIntf;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
 import ivc.util.NetworkUtils;
@@ -23,8 +23,19 @@ import org.eclipse.core.resources.ResourcesPlugin;
 
 public class ProjectsManager {
 
+	/**
+	 * static instance of the single ProjectsManager object in the system; returned by getInstance
+	 */
 	private static ProjectsManager instance;
+
+	/**
+	 * lis of loaded projects
+	 */
 	private HashMap<String, IVCProject> projects;
+
+	/**
+	 * reference to a cache manager
+	 */
 	private CacheManager cacheManager;
 
 	private ResourceStatus getAddedStatus() {
@@ -48,15 +59,6 @@ public class ProjectsManager {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IProject[] wsProjects = workspace.getRoot().getProjects();
 		for (IProject project : wsProjects) {
-			// try {
-			// for (IResource resource : project.members()) {
-			// remove(resource);
-			// }
-			//
-			// } catch (Exception e) {
-			// e.printStackTrace();
-			// }
-
 			tryAddProject(project);
 		}
 	}
@@ -89,26 +91,6 @@ public class ProjectsManager {
 				// Decorator.getDecorator().refresh(list);
 			}
 		}
-		// IFolder folder = project.getFolder(Constants.IvcFolder);
-		// if (folder.exists() && project.isOpen()) {
-		// // it is an active ivc project
-		// if (!projects.containsKey(project)) {
-		// // read server path
-		// String fullserverPath = (String) FileUtils.readObjectFromFile(project.getLocation().toOSString() + Constants.IvcFolder
-		// + Constants.ServerFile);
-		// String serverAddress = fullserverPath.substring(0, fullserverPath.indexOf('\\'));
-		// String serverPath = fullserverPath.replace(serverAddress + '\\', "");
-		// IVCProject ivcProj = new IVCProject();
-		// ivcProj.setProject(project);
-		// ivcProj.setName(project.getName());
-		// ivcProj.setServerPath(serverPath);
-		// ivcProj.setServerAddress(serverAddress);
-		// projects.put(project.getName(), ivcProj);
-		// List<IResource> list = new ArrayList<IResource>();
-		// list.add(project);
-		// Decorator.getDecorator().refresh(list);
-		// }
-		// }
 	}
 
 	public IProject getProjectByName(String projectName) {
@@ -226,7 +208,6 @@ public class ProjectsManager {
 		return instance;
 	}
 
-	// TODO 2 use method
 	public int getFileVersion(IResource resource) {
 		if (!IVCRepositoryProvider.isShared(resource.getProject()))
 			return 0;

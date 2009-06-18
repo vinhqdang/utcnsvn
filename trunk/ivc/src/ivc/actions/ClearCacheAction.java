@@ -9,19 +9,16 @@ public class ClearCacheAction extends BaseActionDelegate {
 
 	@Override
 	public boolean menuItemEnabled() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void init(IWorkbenchWindow arg0) {
-		// TODO Auto-generated method stub
 
 	}
 

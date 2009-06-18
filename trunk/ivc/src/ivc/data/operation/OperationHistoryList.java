@@ -180,7 +180,6 @@ public class OperationHistoryList implements Serializable {
 				}
 				FileUtils.writeStringBufferToFile(project.getLocation().toOSString() + "\\" + filePath, baseContent);
 			} catch (CoreException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}		

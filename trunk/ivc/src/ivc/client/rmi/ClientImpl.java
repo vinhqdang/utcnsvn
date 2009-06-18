@@ -1,10 +1,9 @@
-package ivc.rmi.client;
+package ivc.client.rmi;
 
 import ivc.commands.CommandArgs;
 import ivc.commands.UpdateAnnotationsCommand;
 import ivc.data.IVCProject;
 import ivc.data.exception.IVCException;
-import ivc.data.operation.Operation;
 import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
 import ivc.managers.ConnectionManager;
@@ -29,12 +28,7 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 		super();
 	}
 
-	@Override
-	public void receiveTransformation(Operation operation) throws RemoteException {
-		// TODO 1.receive transformation
-
-	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -49,7 +43,6 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 			try {
 				rlufile.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -77,9 +70,6 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 			args.putArgument(Constants.OPERATION_HIST, oh);
 			command.execute(args);
 		}
-		// OperationHistoryList oldThl = project.getRemoteCommitedLog();
-		// OperationHistoryList newThl = oldThl.appendOperationHistoryList(thl);
-		// project.setRemoteCommitedLog(newThl);
 		OperationHistoryList rul = project.getRemoteUncommitedLog(sourceHost);
 		OperationHistoryList newrul = rul.removeOperationHistList(ohl);
 		project.setRemoteUncommitedLog(newrul, sourceHost);
@@ -98,7 +88,6 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 			try {
 				connManager.connectToInterface(hostAddress);
 			} catch (IVCException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return;
 			}
@@ -111,7 +100,6 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 				f.createNewFile();
 				FileUtils.writeObjectToFile(f.getAbsolutePath(), new OperationHistoryList());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -137,24 +125,6 @@ public class ClientImpl extends UnicastRemoteObject implements ClientIntf {
 			args.putArgument(Constants.OPERATION_HIST, oh);
 			command.execute(args);
 		}
-		// File f = new File(project.getProject().getLocation().toOSString() + Constants.IvcFolder + Constants.RemoteUnCommitedLog + "_"
-		// + sourceHost.replaceAll("\\.", "_"));
-		// if (!f.exists()) {
-		// try {
-		// f.createNewFile();
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// }
-		// Object ofromFile = FileUtils.readObjectFromFile(f.getAbsolutePath());
-		// if (ofromFile == null) {
-		// ofromFile = new OperationHistoryList();
-		// }
-		// OperationHistoryList currentThl = (OperationHistoryList) ofromFile;
-		// OperationHistoryList newThl = currentThl.appendOperationHistoryList(thl);
-		// FileUtils.writeObjectToFile(f.getAbsolutePath(), newThl);
-
 	}
 
 	/*
