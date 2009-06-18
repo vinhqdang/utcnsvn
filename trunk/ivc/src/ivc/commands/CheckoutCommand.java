@@ -57,9 +57,9 @@ public class CheckoutCommand implements IRunnableWithProgress {
 	}
 
 	@Override
-	/**
-	 * Creates a local copy of a project from the repository. The command has to get the project from a specified server location 
-	 * and project path from that server, create a project inside the local Eclipse and generate the user workspace data model
+	/*
+	 * * Creates a local copy of a project from the repository. The command has to get the project from a specified server location and project path
+	 * from that server, create a project inside the local Eclipse and generate the user workspace data model
 	 */
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		// init fields
@@ -111,7 +111,6 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		} finally {
 			FileModificationListener.ignoreModifications = false;
 		}
-
 		try {
 			IVCRepositoryProvider.map(project, IVCRepositoryProvider.ID);
 		} catch (TeamException e) {
@@ -156,7 +155,6 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		}
 	}
 
-	
 	private void createPeersRemoteFiles() {
 		List<ClientIntf> peers = connectionManager.getPeers();
 		if (peers != null) {
@@ -172,7 +170,6 @@ public class CheckoutCommand implements IRunnableWithProgress {
 		}
 	}
 
-	
 	private void createProjectFiles(IProgressMonitor monitor) {
 		ServerIntf server = connectionManager.getServer();
 		try {
