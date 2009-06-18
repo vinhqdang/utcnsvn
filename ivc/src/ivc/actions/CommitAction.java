@@ -29,13 +29,11 @@ public class CommitAction extends BaseActionDelegate {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void init(IWorkbenchWindow arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -116,7 +114,6 @@ public class CommitAction extends BaseActionDelegate {
 					ProjectsManager.instance().setCommitedStatus(resource);
 
 				} catch (Exception e) {
-					// TODO 2 delete
 					e.printStackTrace();
 				}
 			}

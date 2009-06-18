@@ -3,6 +3,7 @@
  */
 package ivc.commands;
 
+import ivc.client.rmi.ClientIntf;
 import ivc.data.IVCProject;
 import ivc.data.Peer;
 import ivc.data.operation.Operation;
@@ -10,8 +11,7 @@ import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
 import ivc.listeners.FileModificationListener;
 import ivc.managers.ConnectionManager;
-import ivc.rmi.client.ClientIntf;
-import ivc.rmi.server.ServerIntf;
+import ivc.server.rmi.ServerIntf;
 import ivc.util.Constants;
 import ivc.util.FileUtils;
 import ivc.util.NetworkUtils;
@@ -56,7 +56,10 @@ public class UpdateCommand extends TeamOperation {
 	}
 
 	
-	
+	/**
+	 * Applies all operations contained in the remote committed 
+	 * log file and update version the local current version for the files that had changes
+	 */
 	private void applyRCL() {
 		IProject project = ivcProject.getProject();
 		// read current version
@@ -164,13 +167,15 @@ public class UpdateCommand extends TeamOperation {
 			}
 			connectionManager.getServer().updatePendingRUL(projectPath, NetworkUtils.getHostAddress(), disconnected, ll);
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
+	/**
+	 * Handles all operations needed to be done at update. 
+	 */
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		// init local variables
 		this.monitor = monitor;

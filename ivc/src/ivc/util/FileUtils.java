@@ -31,13 +31,11 @@ public class FileUtils {
 			try {
 				f.createNewFile();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			try {
 				fos = new FileOutputStream(filePath);
 			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -50,7 +48,6 @@ public class FileUtils {
 			oos.close();
 			fos.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -70,20 +67,16 @@ public class FileUtils {
 							ois.close();
 							fis.close();
 						} catch (ClassNotFoundException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return obj;
@@ -116,7 +109,6 @@ public class FileUtils {
 			bw.write(buf.toString());
 			bw.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

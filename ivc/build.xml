@@ -1,6 +1,6 @@
 <?xml version="1.0" ?> 
 
-<project name="utcnsvn" default="run" basedir=".">
+<project name="ivc" default="build-client" basedir=".">
 <!--   The directories 
   --> 
   <property name="root" value="${basedir}/.." /> 
@@ -10,12 +10,13 @@
   <property name="src-client" value="${basedir}/src/ivc" /> 
   <property name="dest-client" value="${basedir}/bin" /> 
   <property name="lib.dir" value="${basedir}/lib" /> 
-  <property name="eclipse.plugin.dir" value="D:\Own\Scoala\Java\eclipse\plugins" /> 
+  <property name="eclipse.plugin.dir" value="D:\personal\school\utilitare\eclipse\plugins" /> 
 
 	 <path id="classpath">
-	        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+	    <fileset dir="${lib.dir}" includes="**/*.jar"/>
 	 	<fileset dir="${eclipse.plugin.dir}" includes="**/*.jar"/>
-	    </path>
+	 	<fileset dir="${basedir}/src/ivc/data"/>
+	</path>
 
 <!--   Delete existing server class files 
   --> 

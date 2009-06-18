@@ -1,11 +1,11 @@
 package ivc.managers;
 
+import ivc.client.rmi.ClientImpl;
+import ivc.client.rmi.ClientIntf;
 import ivc.data.Peer;
 import ivc.data.exception.Exceptions;
 import ivc.data.exception.IVCException;
-import ivc.rmi.client.ClientImpl;
-import ivc.rmi.client.ClientIntf;
-import ivc.rmi.server.ServerIntf;
+import ivc.server.rmi.ServerIntf;
 import ivc.util.NetworkUtils;
 
 import java.io.Serializable;
@@ -19,19 +19,32 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+
 public class ConnectionManager implements Serializable {
 
 	/**
-	 * 
+	 * default serial version id
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * static map of connection managers
+	 */
 	private static Map<String, ConnectionManager> managers;
 
+	/**
+	 * list of references to connected clients
+	 */
 	private Map<String, ClientIntf> peers;
 
+	/**
+	 * list of addresses to connected clients
+	 */
 	private  List<String> peersHosts;
 
+	/**
+	 * reference to the connected server
+	 */
 	private  ServerIntf server;
 
 	private ConnectionManager() {
@@ -82,52 +95,58 @@ public class ConnectionManager implements Serializable {
 				}
 			}
 		} catch (RemoteException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		return peers;
 	}
-
+	/**
+	 * Calls connect method from server 
+	 * @param serverAddress
+	 * @return
+	 * @throws IVCException
+	 */
 	public ServerIntf connectToServer(String serverAddress) throws IVCException {
 		try {
 			server = (ServerIntf) Naming.lookup(serverAddress);
 			return server;
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new IVCException(Exceptions.SERVER_CONNECTION_FAILED);
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new IVCException(Exceptions.SERVER_CONNECTION_FAILED);
 		} catch (NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new IVCException(Exceptions.SERVER_CONNECTION_FAILED);
 		}
 	}
 	
+	/**
+	 * Returns a reference to the server
+	 * @param serverAddress
+	 * @return
+	 */
 	public static ServerIntf getServer(String serverAddress){
 		try {
 			return (ServerIntf) Naming.lookup(serverAddress);
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
 	}
 
+	/**
+	 * Ecposes client interface on server repository by means of server invokation 
+	 * @param projectPath
+	 */
 	public void exposeInterface(String projectPath) {
 		try {
 			server.exposeClientIntf(NetworkUtils.getHostAddress(), projectPath, new ClientImpl());
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -142,7 +161,6 @@ public class ConnectionManager implements Serializable {
 				return client;
 			}
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// if connection succedded : add intf to list of peers and write to
@@ -181,7 +199,6 @@ public class ConnectionManager implements Serializable {
 		try {
 			server.disconnectHost(NetworkUtils.getHostAddress());
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -190,7 +207,12 @@ public class ConnectionManager implements Serializable {
 		peersHosts.remove(hostAddress);
 		peers.remove(hostAddress);
 	}
-
+	
+	/**
+	 * Method that retrieves an instance of a ConnectionManager object based on preoject name
+	 * @param projectName
+	 * @return
+	 */
 	public static ConnectionManager getInstance(String projectName) {
 		if (managers == null) {
 			managers = new HashMap<String, ConnectionManager>();

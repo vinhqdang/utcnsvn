@@ -3,13 +3,13 @@
  */
 package ivc.commands;
 
+import ivc.client.rmi.ClientIntf;
 import ivc.data.IVCProject;
 import ivc.data.Peer;
 import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
 import ivc.managers.ConnectionManager;
 import ivc.managers.ProjectsManager;
-import ivc.rmi.client.ClientIntf;
 import ivc.util.Constants;
 import ivc.util.NetworkUtils;
 
@@ -29,12 +29,12 @@ public class HandleOperationCommand implements CommandIntf {
 	private OperationHistory operationHist;
 	private IVCProject ivcProject;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ivc.data.command.CommandIntf#execute(ivc.data.command.CommandArgs)
-	 */
+	
 	@Override
+	/**
+	 * Writes a new created operation in all log files. A new created operation has to be added in local log file and 
+	 * remote uncommitted log files of all peers. 
+	 */
 	public Result execute(CommandArgs args) {
 		// init local variables
 		operationHist = (OperationHistory) args.getArgumentValue(Constants.OPERATION_HIST);
@@ -78,7 +78,6 @@ public class HandleOperationCommand implements CommandIntf {
 			}
 			connMan.getServer().updatePendingRUL(ivcProject.getServerPath(), NetworkUtils.getHostAddress(), disconnected, thl);
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

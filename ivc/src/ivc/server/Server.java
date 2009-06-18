@@ -1,11 +1,14 @@
 /**
  * 
  */
-package ivc.rmi.server;
+package ivc.server;
 
+import ivc.server.rmi.RMIUtils;
 import ivc.util.NetworkUtils;
 
 import java.rmi.RemoteException;
+
+
 
 /**
  * @author danielan
@@ -14,6 +17,7 @@ import java.rmi.RemoteException;
 public class Server {
 
 	/**
+	 * Main method that starts the server application
 	 * @param args
 	 * @throws RemoteException
 	 */

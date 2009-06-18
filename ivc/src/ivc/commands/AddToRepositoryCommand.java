@@ -11,10 +11,14 @@ import java.util.Date;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.team.ui.TeamOperation;
 import org.eclipse.ui.IWorkbenchPart;
 
+
+/**
+ * @author danielan
+ * 
+ */
 public class AddToRepositoryCommand extends TeamOperation {
 	private IResource resource;
 
@@ -24,9 +28,13 @@ public class AddToRepositoryCommand extends TeamOperation {
 	}
 
 	@Override
+	/**
+	 * Creates new structural operation of type ADD_FILE or ADD_FOLDER whenever a new resource is created. After the 
+	 * creation of the new operation it calls the HandleOperationCommand to store this operation in the corresponding log files
+	 */
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		if (!ProjectsManager.instance().isManaged(resource)) {
-			// TODO 1. add file to repository
+			//  1. add file to repository
 			monitor.beginTask("Adding resource to workspace", 1);
 			Operation operation = new Operation();
 			if (resource instanceof IFile) {

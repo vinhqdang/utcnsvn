@@ -7,7 +7,7 @@ import java.util.Map;
 public class CommandArgs implements Serializable{
 
 	/**
-	 * 
+	 * default serial version id
 	 */
 	private static final long serialVersionUID = 1L;
 	

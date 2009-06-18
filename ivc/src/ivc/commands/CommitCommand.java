@@ -3,6 +3,7 @@
  */
 package ivc.commands;
 
+import ivc.client.rmi.ClientIntf;
 import ivc.data.IVCProject;
 import ivc.data.Peer;
 import ivc.data.exception.Exceptions;
@@ -10,7 +11,6 @@ import ivc.data.operation.OperationHistory;
 import ivc.data.operation.OperationHistoryList;
 import ivc.managers.ConnectionManager;
 import ivc.managers.ProjectsManager;
-import ivc.rmi.client.ClientIntf;
 import ivc.util.Constants;
 import ivc.util.NetworkUtils;
 
@@ -52,7 +52,9 @@ public class CommitCommand extends TeamOperation {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	// add version 1; delete version remains
+	/**
+	 * Handle operations needed at commit
+	 */
 	public void run(IProgressMonitor monitor) {
 		// init local fields
 		this.monitor = monitor;
@@ -76,7 +78,6 @@ public class CommitCommand extends TeamOperation {
 		}
 		try {
 			// send commited changes to the server
-			// TODO 1. add newly added files to base version
 			connectionManager.getServer().updateHeadVersion(ivcProject.getServerPath(), changedFiles);
 
 			// increment file versions
@@ -119,7 +120,6 @@ public class CommitCommand extends TeamOperation {
 				}
 			}
 		} else {
-			// TODO: 1. handle add and remove files
 			changedFiles.appendOperationHistoryList(ll);
 		}
 
@@ -158,7 +158,6 @@ public class CommitCommand extends TeamOperation {
 				}
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return true;
@@ -198,7 +197,6 @@ public class CommitCommand extends TeamOperation {
 			ivcProject.setCurrentVersion(localVersion);
 			connectionManager.getServer().updateVersionNumber(ivcProject.getServerPath(), currentCommitedVersion);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -243,7 +241,6 @@ public class CommitCommand extends TeamOperation {
 
 	private void updatePendingRUL() throws RemoteException {
 		// notify peers that are not on line
-
 		List<Peer> all = connectionManager.getServer().getAllClientHosts(ivcProject.getServerPath());
 		List<String> disconnected = new ArrayList<String>();
 		Iterator<Peer> itp = all.iterator();

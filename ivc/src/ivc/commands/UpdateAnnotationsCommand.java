@@ -36,8 +36,11 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 	 * @see ivc.data.command.CommandIntf#execute(ivc.data.command.CommandArgs)
 	 */
 	@Override
+	/**
+	 * 
+	 * 
+	 */
 	public Result execute(CommandArgs args) {
-		// TODO 1. implement update annotations command
 		project = (IVCProject) args.getArgumentValue(Constants.IVCPROJECT);
 		rl = (OperationHistory) args.getArgumentValue(Constants.OPERATION_HIST);
 		remoteAddress = (String) args.getArgumentValue(Constants.HOST_ADDRESS);
@@ -190,7 +193,6 @@ public class UpdateAnnotationsCommand implements CommandIntf {
 			try {
 				MarkersManager.updateMarkers(file);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

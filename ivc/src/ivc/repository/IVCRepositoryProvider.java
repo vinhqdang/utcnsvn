@@ -27,7 +27,6 @@ public class IVCRepositoryProvider extends RepositoryProvider {
 					if ((resource.getType() == IResource.FOLDER) && ((resource.getName().equals("bin")) || (resource.getName().equals(".ivc")))) {
 						resource.setTeamPrivateMember(true);
 						return true;
-						// TODO setdefault values
 					} else {
 						ProjectsManager.instance().setDefaultStatus(resource);
 						return true;
@@ -43,7 +42,6 @@ public class IVCRepositoryProvider extends RepositoryProvider {
 
 	@Override
 	public String getID() {
-		// TODO Auto-generated method stub
 		return ID;
 	}
 
@@ -54,7 +52,6 @@ public class IVCRepositoryProvider extends RepositoryProvider {
 
 	@Override
 	public boolean canHandleLinkedResources() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 

@@ -24,6 +24,10 @@ public class RemoveResourceCommand extends TeamOperation {
 	}
 
 	@Override
+	/**
+	 * Creates a new structural operation of type REMOVE_FILE or REMOVE_FOLDER and calls the HandleOperationCommand to save
+	 *  it in the corresponding log files
+	 */
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		monitor.beginTask("Deleting resource", 1);
 		Operation operation = new Operation();

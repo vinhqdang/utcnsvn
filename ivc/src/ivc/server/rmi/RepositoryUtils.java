@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ivc.rmi.server;
+package ivc.server.rmi;
 
 import ivc.util.Constants;
 
@@ -23,35 +23,27 @@ public class RepositoryUtils {
 		try {
 			bvFile.createNewFile();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		File cvFile = new File(Constants.RepositoryFolder + projectPath + Constants.CurrentVersionFile);
 		try {
 			cvFile.createNewFile();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		File rclFile = new File(Constants.RepositoryFolder + projectPath + Constants.PendingRemoteCommitedLog);
 		try {
 			rclFile.createNewFile();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		File transFile = new File(Constants.RepositoryFolder + projectPath + Constants.CommitedLog);
 		try {
 			transFile.createNewFile();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// BaseVersion bv =
-		// (BaseVersion)FileHandler.readObjectFromFile(ServerBusiness.PROJECTPATH
-		// + "\\.ivc\\.bv");
-		// createFolderStructure(bv.getFolders());
-		// createFileStructure(bv.getFiles());
+		
 	}
 
 	public static boolean checkProjectPath(String projectPath){

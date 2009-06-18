@@ -1,10 +1,10 @@
 /**
  * 
  */
-package ivc.rmi.server;
+package ivc.server.rmi;
 
+import ivc.client.rmi.ClientIntf;
 import ivc.data.exception.IVCException;
-import ivc.rmi.client.ClientIntf;
 import ivc.util.Constants;
 import ivc.util.NetworkUtils;
 
@@ -14,6 +14,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+
 
 /**
  * @author danielan
@@ -48,10 +49,8 @@ public class RMIUtils {
 		try {
 			Naming.rebind("rmi://" + NetworkUtils.getHostAddress() + ":" + 1099 + "/" + Constants.BIND_CLIENT + hostAddress, client);
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -60,10 +59,8 @@ public class RMIUtils {
 		try {
 			return (ClientIntf) Naming.lookup("rmi://" + NetworkUtils.getHostAddress() + ":" + 1099 + "/" + Constants.BIND_CLIENT + hostAddress);
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -73,10 +70,8 @@ public class RMIUtils {
 		try {
 			Naming.unbind("rmi://" + NetworkUtils.getHostAddress() + ":" + 1099 + "/" + Constants.BIND_CLIENT + hostAddress);
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
